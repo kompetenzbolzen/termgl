@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{136559fc-b520-4b29-b0e8-3c65612b3f81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Headers">
+      <UniqueIdentifier>{ca493b7f-1c64-4d61-8eb5-f8f92504d57d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Source">
+      <UniqueIdentifier>{66d5bf72-191b-41f8-82bc-153596a427de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{41cd36d9-535a-4f7e-a947-79dd5136ed9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Header">
+      <UniqueIdentifier>{37e4a21a-712c-4c0d-8cf7-fa21a20424cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Source">
+      <UniqueIdentifier>{c887f383-8151-41d2-a9e0-ccdeb35b9538}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cRender.h">
+      <Filter>Engine\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="cObject.h">
+      <Filter>Engine\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="cObjectHandler.h">
+      <Filter>Engine\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="cCrossroad.h">
+      <Filter>Game\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="cTrafficLight.h">
+      <Filter>Game\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cPeasantTrafficLight.h">
+      <Filter>Game\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cCar.h">
+      <Filter>Game\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cPeasant.h">
+      <Filter>Game\Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cRender.cpp">
+      <Filter>Engine\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="cObject.cpp">
+      <Filter>Engine\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="cObjectHandler.cpp">
+      <Filter>Engine\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="cCrossroad.cpp">
+      <Filter>Game\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="cTrafficLight.cpp">
+      <Filter>Game\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="cPeasantTrafficLight.cpp">
+      <Filter>Game\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="cCar.cpp">
+      <Filter>Game\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="cPeasant.cpp">
+      <Filter>Game\Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

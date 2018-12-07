@@ -9,7 +9,7 @@
 	#include <term.h>
 	#include <sys/ioctl.h>
 
-	typedef char WORD;
+	typedef int WORD;
 #elif _WIN32
   #include <Windows.h>
 #else

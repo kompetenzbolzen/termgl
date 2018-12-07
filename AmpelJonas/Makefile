@@ -1,11 +1,17 @@
 CC      = /usr/bin/g++
 CFLAGS  = -Wall -g
-LDFLAGS = -lm -lpthread
+LDFLAGS = -lm -lpthread -lcurses
+OUTPUT = Kreuzung
 
-OBJ = main.o cCar.o cCrossroad.o cObject.o cObjectHandler.o cPeasant.o cPeasantTrafficLight.o cRender.o cTrafficLight.o 
+OBJ = main.o cCar.o cCrossroad.o cObject.o cObjectHandler.o cPeasant.o cPeasantTrafficLight.o cRender.o cTrafficLight.o
 
 prog: $(OBJ)
-	$(CC) $(CFLAGS) -o prog $(OBJ) $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $(OUTPUT) $(OBJ) $(LDFLAGS)
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $<
+
+.PHONY: clean
+
+clean:
+	rm -f $(OUTPUT) *.o

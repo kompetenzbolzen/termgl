@@ -13,8 +13,8 @@ cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
 	struct winsize w;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
-	sizeX = w.ws_row;
-	sizeY = w.ws_col;
+	sizeX = w.ws_col;
+	sizeY = w.ws_row - 1;
 
 	if(sizeX < _sx || sizeY < _sy) //Notify Program tha screen is too small for desired Size
 		iLastError = _ERR_SCREEN_TOO_SMALL_;
@@ -38,11 +38,11 @@ cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
 
 	//Initialize 2D array
 	cScreen = (char**)malloc(sizeof *cScreen * sizeX);
-	for (int i = 0; i < _sx; i++)
+	for (int i = 0; i < sizeX; i++)
 		cScreen[i] = (char*)malloc(sizeof *cScreen[i] * sizeY);
 
 	wColor = (WORD**)malloc(sizeof *wColor * sizeX);
-	for (int i = 0; i < _sx; i++)
+	for (int i = 0; i < sizeX; i++)
 		wColor[i] = (WORD*)malloc(sizeof *wColor[i] * sizeY);
 
 	clear(); //Init backround array
@@ -150,7 +150,7 @@ int cRender::render(void)
 			SetConsoleTextAttribute(hstdout, wColor[o][i] | _COL_INTENSITY);
 			cout << cScreen[o][i];
 			#elif __linux__
-			cout << "\033["<< wColor[o][i] <<"m"<< cScreen[o][i] <<"\033[0m";
+			cout << "\033["<< wColor[o][i] <<"m"<< cScreen[o][i];
 			#endif
 		}
 		cout << endl; //New Line Feed

@@ -1,32 +1,53 @@
 #include "cRender.h"
 
+
 cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
 {
 	bBlockRender = false; //If this Constructor is used, this instance is not inherited, thus render() doesn't need to be blocked
+	iLastError = _OK_;
 
+
+
+#ifdef __linux__ //In Linux, setting Console size is not supported, so it gets Size of Console (Window) instead.
+
+	struct winsize w;
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+
+	sizeX = w.ws_row;
+	sizeY = w.ws_col;
+
+	if(sizeX < _sx || sizeY < _sy) //Notify Program tha screen is too small for desired Size
+		iLastError = _ERR_SCREEN_TOO_SMALL_;
+
+#elif _WIN32 //Windows Specific Code
 	hstdout = GetStdHandle(STD_OUTPUT_HANDLE); //get handle
+
 	GetConsoleScreenBufferInfo(hstdout, &csbi); //get current console settings
 	wDefColor = csbi.wAttributes; //Get default console color
 
 	SetConsoleWindowSize(_sx + 1, _sy + 1); //set the windows size to _sx * _sy (+1 so no scrolling accurs)
 
+	sizeX = _sx;
+	sizeY = _sy;
+#endif
+
+
+
 	cBackound = _backound;
 	wBackColor = _color;
 
-	sizeX = _sx;
-	sizeY = _sy;
-
 	//Initialize 2D array
-	cScreen = (char**)malloc(sizeof *cScreen * _sx);
+	cScreen = (char**)malloc(sizeof *cScreen * sizeX);
 	for (int i = 0; i < _sx; i++)
-		cScreen[i] = (char*)malloc(sizeof *cScreen[i] * _sy);
+		cScreen[i] = (char*)malloc(sizeof *cScreen[i] * sizeY);
 
-	wColor = (WORD**)malloc(sizeof *wColor * _sx);
+	wColor = (WORD**)malloc(sizeof *wColor * sizeX);
 	for (int i = 0; i < _sx; i++)
-		wColor[i] = (WORD*)malloc(sizeof *wColor[i] * _sy);
+		wColor[i] = (WORD*)malloc(sizeof *wColor[i] * sizeY);
 
 	clear(); //Init backround array
-}
+}//render() WINDOWS
+
 
 cRender::cRender() {}
 
@@ -83,7 +104,7 @@ int cRender::drawLine(char _c, sPos _pos1, sPos _pos2, bool _overrideCollision, 
 			drawPoint(_c, sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5)}, _overrideCollision, _color); //+0.5 for rounding error
 		}
 	}
-	
+
 	return 0;
 }
 
@@ -118,15 +139,19 @@ int cRender::drawRectangle(char _border, char _fill, sPos _pos1, sPos _pos2, WOR
 
 int cRender::render(void)
 {
-	SetConsoleCursorPosition(hstdout, COORD{ 0,0 }); //Set cursor position to be able to alter the image without the effect of it shifting to the top
+	gotoxy(0,0);
 
 	if (bBlockRender)
 		return _ERR_RENDER_BLOCKED_BY_CHILD_;
 
 	for (int i = 0; i < sizeY; i++) {
 		for (int o = 0; o < sizeX; o++) {
+			#ifdef _WIN32
 			SetConsoleTextAttribute(hstdout, wColor[o][i] | _COL_INTENSITY);
 			cout << cScreen[o][i];
+			#elif __linux__
+			cout << "\033["<< wColor[o][i] <<"m"<< cScreen[o][i] <<"\033[0m";
+			#endif
 		}
 		cout << endl; //New Line Feed
 	}
@@ -144,6 +169,7 @@ int cRender::clear(void)
 	return 0;
 }
 
+#ifdef _WIN32
 //Source: http://www.cplusplus.com/forum/windows/121444/
 int cRender::SetConsoleWindowSize(int x, int y)
 {
@@ -181,3 +207,27 @@ int cRender::SetConsoleWindowSize(int x, int y)
 	if (!SetConsoleWindowInfo(h, TRUE, &info))
 		return 1;
 }
+#endif
+
+int cRender::getLastError()
+{
+	return iLastError;
+}
+
+#ifdef _WIN32
+void cRender::gotoxy( int x, int y )
+{
+  COORD p = { x, y };
+  SetConsoleCursorPosition( GetStdHandle( STD_OUTPUT_HANDLE ), p );
+}
+
+#elif __linux__
+
+void cRender::gotoxy( int x, int y )
+{
+  int err;
+  if (!cur_term)
+    setupterm( NULL, STDOUT_FILENO, &err );
+  putp( tparm( tigetstr( "cup" ), y, x, 0, 0, 0, 0, 0, 0, 0 ) );
+}
+#endif

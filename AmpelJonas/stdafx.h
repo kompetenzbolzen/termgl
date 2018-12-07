@@ -1,6 +1,6 @@
-// stdafx.h: Includedatei für Standardsystem-Includedateien
-// oder häufig verwendete projektspezifische Includedateien,
-// die nur in unregelmäßigen Abständen geändert werden.
+// stdafx.h: Includedatei fï¿½r Standardsystem-Includedateien
+// oder hï¿½ufig verwendete projektspezifische Includedateien,
+// die nur in unregelmï¿½ï¿½igen Abstï¿½nden geï¿½ndert werden.
 //
 
 #pragma once
@@ -8,7 +8,11 @@
 
 #include <stdio.h>
 #include <iostream>
+
+#ifdef _WIN32
 #include <tchar.h>
+#endif
+
 #include <vector>
 
 

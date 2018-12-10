@@ -1,14 +1,8 @@
-#include "stdafx.h"
+#include "cRender.h"
+#include "cObject.h"
+#include "cObjectHandler.h"
 
 int main()
 {
-	cCrossroad *crossroad;
-	crossroad = new cCrossroad;
-	crossroad->run();
-	delete crossroad;
-
-	cout << endl;
-	cin.get();
-
 	return 0;
 }

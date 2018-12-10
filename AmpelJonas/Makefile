@@ -3,7 +3,7 @@ CFLAGS  = -Wall -g
 LDFLAGS = -lm -lpthread -lcurses
 OUTPUT = Kreuzung
 
-OBJ = main.o cCar.o cCrossroad.o cObject.o cObjectHandler.o cPeasant.o cPeasantTrafficLight.o cRender.o cTrafficLight.o
+OBJ = main.o cObject.o cObjectHandler.o cRender.o
 
 prog: $(OBJ)
 	$(CC) $(CFLAGS) -o $(OUTPUT) $(OBJ) $(LDFLAGS)

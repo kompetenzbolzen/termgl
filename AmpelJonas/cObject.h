@@ -1,7 +1,7 @@
 #pragma once
-#include "stdafx.h"
+#include "cRender.h"
 
-struct sObject 
+struct sObject
 
 {
 	sPos pos;
@@ -27,6 +27,5 @@ public:
 private:
 	//wColor, cScreen, sizeX and sizeY are inherited from cRender
 	sPos pos;
-	
-};
 
+};

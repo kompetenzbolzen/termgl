@@ -46,8 +46,8 @@ void cCrossroad::run()
 
 	//init
 	backround->setPosition(0, 0);
-	backround->drawRectangle('°', '°', sPos{ 0, _SIZE_Y_ / 2 - 4 }, sPos{ _SIZE_X_ - 1, _SIZE_Y_ / 2 + 4 }, _COL_DEFAULT, _COL_DEFAULT);
-	backround->drawRectangle('°', '°', sPos{ _SIZE_X_ / 2 - 6, 0 }, sPos{ _SIZE_X_ / 2 + 6, _SIZE_Y_ }, _COL_DEFAULT, _COL_DEFAULT);
+	backround->drawRectangle('ï¿½', 'ï¿½', sPos{ 0, _SIZE_Y_ / 2 - 4 }, sPos{ _SIZE_X_ - 1, _SIZE_Y_ / 2 + 4 }, _COL_DEFAULT, _COL_DEFAULT);
+	backround->drawRectangle('ï¿½', 'ï¿½', sPos{ _SIZE_X_ / 2 - 6, 0 }, sPos{ _SIZE_X_ / 2 + 6, _SIZE_Y_ }, _COL_DEFAULT, _COL_DEFAULT);
 
 	//add objects to handler
 	handler.createObject(backround);
@@ -153,8 +153,8 @@ void cCrossroad::run()
 				break;
 			}
 		}
-		
-		
+
+
 		carWest.drive();
 		carEast.drive();
 		carNorth.drive();
@@ -173,5 +173,6 @@ void cCrossroad::run()
 		iWait--;
 		iFrames++;
 		backround->drawText(to_string(iFrames) , sPos{ 0,0 }, _COL_DEFAULT); //Framecounter
+		usleep(100*1000);
 	}
 }

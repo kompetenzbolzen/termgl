@@ -11,10 +11,11 @@
 
 #ifdef _WIN32
 #include <tchar.h>
+#elif __linux__
+#include <unistd.h>
 #endif
 
 #include <vector>
-
 
 #include "cRender.h"
 #include "cObject.h"

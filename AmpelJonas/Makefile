@@ -1,7 +1,7 @@
 CC      = /usr/bin/g++
 CFLAGS  = -Wall -g
-LDFLAGS = -lm -lpthread -lcurses
-OUTPUT = Kreuzung
+LDFLAGS = -lm -lcurses
+OUTPUT = Engine
 
 OBJ = main.o cObject.o cObjectHandler.o cRender.o
 

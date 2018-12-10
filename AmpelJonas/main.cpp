@@ -23,12 +23,23 @@ int main()
 
 		b.write();
 		a.render();
-		//usleep(10*1000);
+		usleep(10*1000);
 
-		if(x.getPosition().x <= 0 || x.getPosition().x >= a.getSize().x - 1)
+		if(x.getPosition().x <= 0)
 			dir1 *= -1;
-		if(x.getPosition().y <= 0 || x.getPosition().y >= a.getSize().y)
+		else if(x.getPosition().x >= a.getSize().x)
+		{
+			dir1 *= -1;
+			x.setPosition({a.getSize().x, x.getPosition().y});
+		}
+
+		if(x.getPosition().y <= 0)
 			dir2 *= -1;
+		else if(x.getPosition().y >= a.getSize().y)
+		{
+			dir2 *= -1;
+			x.setPosition({x.getPosition().x, a.getSize().y});
+		}
 	}
 
 	a.render();

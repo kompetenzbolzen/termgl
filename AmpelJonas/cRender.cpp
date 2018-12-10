@@ -5,7 +5,7 @@ cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
 {
 	bBlockRender = false; //If this Constructor is used, this instance is not inherited, thus render() doesn't need to be blocked
 	iLastError = _OK_;
-
+	sizeX = sizeY = 0;
 
 
 #ifdef __linux__ //In Linux, setting Console size is not supported, so it gets Size of Console (Window) instead.
@@ -13,11 +13,14 @@ cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
 	struct winsize w;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
-	sizeX = w.ws_col;
-	sizeY = w.ws_row - 1;
+
 
 	if(sizeX < _sx || sizeY < _sy) //Notify Program tha screen is too small for desired Size
 		iLastError = _ERR_SCREEN_TOO_SMALL_;
+
+	wDefColor = _color;
+
+	setBufferSize( getConsoleWindowSize() );
 
 #elif _WIN32 //Windows Specific Code
 	hstdout = GetStdHandle(STD_OUTPUT_HANDLE); //get handle
@@ -27,26 +30,14 @@ cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
 
 	SetConsoleWindowSize(_sx + 1, _sy + 1); //set the windows size to _sx * _sy (+1 so no scrolling accurs)
 
-	sizeX = _sx;
-	sizeY = _sy;
+	setBufferSize({_sx,_sy});
 #endif
-
-
 
 	cBackound = _backound;
 	wBackColor = _color;
 
-	//Initialize 2D array
-	cScreen = (char**)malloc(sizeof *cScreen * sizeX);
-	for (int i = 0; i < sizeX; i++)
-		cScreen[i] = (char*)malloc(sizeof *cScreen[i] * sizeY);
-
-	wColor = (WORD**)malloc(sizeof *wColor * sizeX);
-	for (int i = 0; i < sizeX; i++)
-		wColor[i] = (WORD*)malloc(sizeof *wColor[i] * sizeY);
-
 	clear(); //Init backround array
-}//render() WINDOWS
+}//render()
 
 
 cRender::cRender() {}
@@ -139,6 +130,8 @@ int cRender::drawRectangle(char _border, char _fill, sPos _pos1, sPos _pos2, WOR
 
 int cRender::render(void)
 {
+	setBufferSize(getConsoleWindowSize());
+
 	gotoxy(0,0);
 
 	if (bBlockRender)
@@ -230,4 +223,46 @@ void cRender::gotoxy( int x, int y )
     setupterm( NULL, STDOUT_FILENO, &err );
   putp( tparm( tigetstr( "cup" ), y, x, 0, 0, 0, 0, 0, 0, 0 ) );
 }
+
+sPos cRender::getConsoleWindowSize()
+{
+	struct winsize w;
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+
+	return {w.ws_col, w.ws_row - 1};
+}
 #endif
+
+void cRender::setBufferSize(sPos _size)
+{
+	if(_size.x == sizeX && _size.y == sizeY)
+		return;
+
+	if(sizeX!=0 && sizeY!=0) //resize. delete first
+	{
+		for (int i = 0; i < sizeX; i++) {
+			free(cScreen[i]);
+			free(wColor[i]);
+		}
+
+		free(cScreen);
+		free(wColor);
+	}
+
+	sizeX = _size.x;
+	sizeY = _size.y;
+
+	//Initialize 2D array
+	cScreen = (char**)malloc(sizeof *cScreen * sizeX);
+	for (int i = 0; i < sizeX; i++)
+		cScreen[i] = (char*)malloc(sizeof *cScreen[i] * sizeY);
+
+	wColor = (WORD**)malloc(sizeof *wColor * sizeX);
+	for (int i = 0; i < sizeX; i++)
+		wColor[i] = (WORD*)malloc(sizeof *wColor[i] * sizeY);
+}
+
+sPos cRender::getSize()
+{
+	return {sizeX, sizeY};
+}

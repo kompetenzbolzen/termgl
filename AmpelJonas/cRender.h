@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdlib.h>
 #include <string>
 #include <math.h>
 #include <iostream>
@@ -96,6 +97,9 @@ public:
 	int getLastError();
 	//Returns last Error that was not returnable
 
+	sPos getSize();
+	//Returns actual Size of screen
+
 
 protected:
 	cRender(); //Empty Constructor for being inheritable
@@ -124,4 +128,8 @@ private:
 	//Slightly adapted from: http://www.cplusplus.com/forum/windows/121444/
 #endif
 	void gotoxy( int x, int y );
+	void setBufferSize(sPos _size);
+#ifdef __linux__
+	sPos getConsoleWindowSize();
+#endif
 };

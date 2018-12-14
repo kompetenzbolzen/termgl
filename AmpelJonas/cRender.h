@@ -91,8 +91,11 @@ public:
 	int render(void);
 	//Prints cScreen
 
-	int clear(void);
+	int clear();
+	int clear(bool _forceReRender);
 	//clears cScreen + wColor
+	// for _forceReRender == true, the bChanged[][] is set to true to force Re-Render of whole Screen
+	// clear(void) calls clear(_forceReRender = false)
 
 	int getLastError();
 	//Returns last Error that was not returnable
@@ -104,10 +107,13 @@ public:
 protected:
 	cRender(); //Empty Constructor for being inheritable
 
+	void setBufferSize(sPos _size);
+
 	bool bBlockRender; //Used by children to block render function
 
 	char **cScreen; //Pixel Map
 	WORD **wColor;  //Color Map
+	bool **bChanged; //Pixel Change Map
 
 	char cBackound; //Default backround
 	WORD wBackColor;
@@ -128,7 +134,9 @@ private:
 	//Slightly adapted from: http://www.cplusplus.com/forum/windows/121444/
 #endif
 	void gotoxy( int x, int y );
-	void setBufferSize(sPos _size);
+
+	void forceReRender();
+
 #ifdef __linux__
 	sPos getConsoleWindowSize();
 #endif

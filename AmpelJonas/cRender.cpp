@@ -7,20 +7,20 @@ cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
 	iLastError = _OK_;
 	sizeX = sizeY = 0;
 
+	cBackound = _backound;
+	wBackColor = _color;
 
 #ifdef __linux__ //In Linux, setting Console size is not supported, so it gets Size of Console (Window) instead.
 
 	struct winsize w;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
+	wDefColor = _COL_DEFAULT;
 
+	setBufferSize( getConsoleWindowSize() );
 
 	if(sizeX < _sx || sizeY < _sy) //Notify Program tha screen is too small for desired Size
 		iLastError = _ERR_SCREEN_TOO_SMALL_;
-
-	wDefColor = _color;
-
-	setBufferSize( getConsoleWindowSize() );
 
 #elif _WIN32 //Windows Specific Code
 	hstdout = GetStdHandle(STD_OUTPUT_HANDLE); //get handle
@@ -33,10 +33,8 @@ cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
 	setBufferSize({_sx,_sy});
 #endif
 
-	cBackound = _backound;
-	wBackColor = _color;
-
-	clear(); //Init backround array
+	clear(true); //Init backround array
+	//forceReRender();
 }//render()
 
 
@@ -48,10 +46,12 @@ cRender::~cRender()
 	for (int i = 0; i < sizeX; i++) {
 		free(cScreen[i]);
 		free(wColor[i]);
+		free(bChanged[i]);
 	}
 
 	free(cScreen);
 	free(wColor);
+	free(bChanged);
 }
 
 int cRender::drawPoint(char _c, sPos _pos, bool _overrideCollision, WORD _color)
@@ -67,6 +67,9 @@ int cRender::drawPoint(char _c, sPos _pos, bool _overrideCollision, WORD _color)
 		wColor[_pos.x][_pos.y] = wDefColor;
 	else
 		wColor[_pos.x][_pos.y] = _color;
+
+	if(!bBlockRender) //Changemap is not allocated in inherited Classes
+		bChanged[_pos.x][_pos.y] = true;
 
 	return 0;
 }
@@ -130,37 +133,57 @@ int cRender::drawRectangle(char _border, char _fill, sPos _pos1, sPos _pos2, WOR
 
 int cRender::render(void)
 {
-	setBufferSize(getConsoleWindowSize());
-
-	gotoxy(0,0);
-
 	if (bBlockRender)
 		return _ERR_RENDER_BLOCKED_BY_CHILD_;
 
+	setBufferSize(getConsoleWindowSize());
+
 	for (int i = 0; i < sizeY; i++) {
 		for (int o = 0; o < sizeX; o++) {
-			#ifdef _WIN32
-			SetConsoleTextAttribute(hstdout, wColor[o][i] | _COL_INTENSITY);
-			cout << cScreen[o][i];
-			#elif __linux__
-			cout << "\033["<< wColor[o][i] <<"m"<< cScreen[o][i];
-			#endif
+			if(bChanged[o][i])
+			{
+				gotoxy(o,i);
+
+				#ifdef _WIN32
+
+				SetConsoleTextAttribute(hstdout, wColor[o][i] | _COL_INTENSITY);
+				cout << cScreen[o][i];
+
+				#elif __linux__
+
+				cout << "\033["<< wColor[o][i] <<"m"<< cScreen[o][i];
+
+				#endif
+			}
+			//else {}
+			bChanged[o][i] = false;
 		}
-		cout << endl; //New Line Feed
 	}
 	return 0;
 }
 
-int cRender::clear(void)
+int cRender::clear(bool _forceReRender)
 {
 	for (int i = 0; i < sizeY; i++) {
 		for (int o = 0; o < sizeX; o++) {
-			cScreen[o][i] = cBackound;
-			wColor[o][i] = wBackColor;
+			if(((cScreen[o][i] == cBackound) && (wColor[o][i] == wBackColor)) && !_forceReRender)
+				bChanged[o][i] 	= false;
+			else
+			{
+				cScreen[o][i] 	= cBackound;
+				wColor[o][i] 		= wBackColor;
+				bChanged[o][i] 	= true;
+			}
 		}
 	}
 	return 0;
 }
+
+int cRender::clear()
+{
+	clear(false);
+}
+
 
 #ifdef _WIN32
 //Source: http://www.cplusplus.com/forum/windows/121444/
@@ -243,10 +266,12 @@ void cRender::setBufferSize(sPos _size)
 		for (int i = 0; i < sizeX; i++) {
 			free(cScreen[i]);
 			free(wColor[i]);
+			free(bChanged[i]);
 		}
 
 		free(cScreen);
 		free(wColor);
+		free(bChanged);
 	}
 
 	sizeX = _size.x;
@@ -260,9 +285,24 @@ void cRender::setBufferSize(sPos _size)
 	wColor = (WORD**)malloc(sizeof *wColor * sizeX);
 	for (int i = 0; i < sizeX; i++)
 		wColor[i] = (WORD*)malloc(sizeof *wColor[i] * sizeY);
+
+	bChanged = (bool**)malloc(sizeof *bChanged * sizeX);
+	for (int i = 0; i < sizeX; i++)
+		bChanged[i] = (bool*)malloc(sizeof *bChanged[i] * sizeY);
+
+	clear(true);
 }
 
 sPos cRender::getSize()
 {
 	return {sizeX, sizeY};
+}
+
+void cRender::forceReRender()
+{
+	for (int i = 0; i < sizeY; i++) {
+		for (int o = 0; o < sizeX; o++) {
+				bChanged[o][i] 	= true;
+		}
+	}
 }

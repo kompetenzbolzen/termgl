@@ -13,7 +13,7 @@ int cObjectHandler::createObject(cObject *_object)
 
 int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 {
-	if (_object >= objects.size()) //prevent segmentation faults 
+	if (_object >= objects.size()) //prevent segmentation faults
 		return 1;
 
 	if (!objects[_object])
@@ -41,7 +41,7 @@ int cObjectHandler::write()
 {
 	render->clear();
 
-	for (int i = 0; i < objects.size(); i++)
+	for (unsigned long int i = 0; i < objects.size(); i++)
 	{
 		if (objects[i]) // Check if objects[i] is existent
 		{

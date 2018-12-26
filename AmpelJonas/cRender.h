@@ -142,5 +142,7 @@ private:
 	void setConsoleEcho(bool _enable);
 #ifdef __linux__
 	sPos getConsoleWindowSize();
+
+	void setConsoleCursor(bool _enable);
 #endif
 };

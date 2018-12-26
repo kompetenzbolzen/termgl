@@ -23,6 +23,8 @@ cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
 	if(sizeX < _sx || sizeY < _sy) //Notify Program tha screen is too small for desired Size
 		iLastError = _ERR_SCREEN_TOO_SMALL_;
 
+	setConsoleCursor(false);
+
 #elif _WIN32 //Windows Specific Code
 	hstdout = GetStdHandle(STD_OUTPUT_HANDLE); //get handle
 
@@ -54,6 +56,12 @@ cRender::~cRender()
 	free(cScreen);
 	free(wColor);
 	free(bChanged);
+
+	setConsoleEcho(true);
+	
+	#ifdef __linux__
+	setConsoleCursor(true);
+	#endif
 }
 
 int cRender::drawPoint(char _c, sPos _pos, bool _overrideCollision, WORD _color)
@@ -185,7 +193,7 @@ int cRender::clear(bool _forceReRender)
 
 int cRender::clear()
 {
-	return clear(false); //false doesn't work!
+	return clear(false);
 }
 
 
@@ -335,4 +343,9 @@ void cRender::setConsoleEcho(bool _enable)
 
     (void) tcsetattr(STDIN_FILENO, TCSANOW, &tty);
 #endif
+}
+
+void cRender::setConsoleCursor(bool _enable)
+{
+	_enable ? write (STDOUT_FILENO, "\e[?25h", 6) : write (STDOUT_FILENO, "\e[?25l", 6);
 }

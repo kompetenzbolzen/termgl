@@ -3,10 +3,53 @@
 #include "cRender.h"
 #include "cObject.h"
 #include "cObjectHandler.h"
+#include "cInput.h"
 
 int main()
 {
-	unsigned long int framecounter = 0;
+	cRender a(' ', _COL_DEFAULT, 20,20);
+	cInput in;
+	a.render();
+
+	sPos size = a.getSize();
+	sPos pos = {size.x / 2, size.y / 2};
+
+	while(1)
+	{
+		sInputEvent ie = in.poll();
+		if(ie.type != _EVENT_NULL)
+		{
+			if(ie.type == _EVENT_KEY)
+			{
+				switch (ie.c)
+				{
+					case 'A':
+						pos.y--;
+						break;
+					case 'B':
+						pos.y++;
+						break;
+					case 'C':
+						pos.x++;
+						break;
+					case 'D':
+						pos.x--;
+						break;
+				};
+			}
+			else if (ie.type == _EVENT_MOUSE)
+			{
+				pos.x = ie.x;
+				pos.y = ie.y;
+			}
+
+			a.clear();
+			a.drawPoint('X', pos, true, _COL_GREEN);
+			a.render();
+		}
+	}
+
+	/*unsigned long int framecounter = 0;
 	cRender a(' ', _COL_DEFAULT, 10,10);
 	a.render();
 
@@ -45,7 +88,9 @@ int main()
 		framecounter++;
 		//cin.get();
 		//usleep(100*1000);
-	}
+		if(framecounter >= 1000)
+			break;
+	}*/
 
 	/*cObjectHandler b(&a);
 	cObject x(1,1);

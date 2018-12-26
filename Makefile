@@ -1,7 +1,7 @@
 CC      = /usr/bin/g++
 CFLAGS  = -Wall -g
 LDFLAGS = -lm -lcurses
-OUTPUT = Engine
+OUTPUT = bin/Engine
 
 OBJ = main.o cObject.o cObjectHandler.o cRender.o cInput.o
 

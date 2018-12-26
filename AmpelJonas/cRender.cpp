@@ -5,7 +5,8 @@ cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
 {
 	bBlockRender = false; //If this Constructor is used, this instance is not inherited, thus render() doesn't need to be blocked
 	iLastError = _OK_;
-	sizeX = sizeY = 0;
+	sizeX = 0;
+	sizeY = 0;
 
 	cBackound = _backound;
 	wBackColor = _color;
@@ -33,6 +34,7 @@ cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
 	setBufferSize({_sx,_sy});
 #endif
 
+	setConsoleEcho(false);
 	clear(true); //Init backround array
 	//forceReRender();
 }//render()
@@ -140,25 +142,27 @@ int cRender::render(void)
 
 	for (int i = 0; i < sizeY; i++) {
 		for (int o = 0; o < sizeX; o++) {
+			gotoxy(o,i); //Moving this out of if fixed Render problem... Not optimal, though better for performance
 			if(bChanged[o][i])
 			{
-				gotoxy(o,i);
-
 				#ifdef _WIN32
 
 				SetConsoleTextAttribute(hstdout, wColor[o][i] | _COL_INTENSITY);
-				cout << cScreen[o][i];
+				//cout << cScreen[o][i];
+				printf("%c", cScreen[o][i]);
 
 				#elif __linux__
-
-				cout << "\033["<< wColor[o][i] <<"m"<< cScreen[o][i];
-
+				//cout << "\033["<< wColor[o][i] <<"m"<< cScreen[o][i];
+				printf("\033[%im%c", wColor[o][i], cScreen[o][i]);
 				#endif
 			}
-			//else {}
-			bChanged[o][i] = false;
+		bChanged[o][i] = false;
 		}
+
 	}
+
+	gotoxy(sizeX - 1, sizeY - 1);
+
 	return 0;
 }
 
@@ -181,7 +185,7 @@ int cRender::clear(bool _forceReRender)
 
 int cRender::clear()
 {
-	clear(false);
+	return clear(false); //false doesn't work!
 }
 
 
@@ -305,4 +309,30 @@ void cRender::forceReRender()
 				bChanged[o][i] 	= true;
 		}
 	}
+}
+
+void cRender::setConsoleEcho(bool _enable)
+{
+#ifdef WIN32
+    HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD mode;
+    GetConsoleMode(hStdin, &mode);
+
+    if( !_enable )
+        mode &= ~ENABLE_ECHO_INPUT;
+    else
+        mode |= ENABLE_ECHO_INPUT;
+
+    SetConsoleMode(hStdin, mode );
+
+#else
+    struct termios tty;
+    tcgetattr(STDIN_FILENO, &tty);
+    if( !_enable )
+        tty.c_lflag &= ~ECHO;
+    else
+        tty.c_lflag |= ECHO;
+
+    (void) tcsetattr(STDIN_FILENO, TCSANOW, &tty);
+#endif
 }

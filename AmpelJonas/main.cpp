@@ -9,7 +9,45 @@ int main()
 	unsigned long int framecounter = 0;
 	cRender a(' ', _COL_DEFAULT, 10,10);
 	a.render();
-	cObjectHandler b(&a);
+
+	sPos pos = {0,10};
+	int dirX = 1;
+	int dirY = -1;
+
+	while(1)
+	{
+		pos.x += 2 * dirX;
+		pos.y += 1 * dirY;
+
+		if(pos.x >= a.getSize().x) {
+			pos.x = a.getSize().x;
+			dirX *= -1;
+		}
+		if(pos.x <= 0) {
+			pos.x = 0;
+			dirX *= -1;
+		}
+
+		if(pos.y >= a.getSize().y) {
+			pos.y = a.getSize().y;
+			dirY *= -1;
+		}
+		if(pos.y <= 0) {
+			pos.y = 0;
+			dirY *= -1;
+		}
+
+		a.clear();
+		a.drawPoint('X', pos, true, _COL_GREEN);
+		a.drawText(to_string(framecounter), {0,0}, _COL_RED);
+		a.render();
+
+		framecounter++;
+		//cin.get();
+		//usleep(100*1000);
+	}
+
+	/*cObjectHandler b(&a);
 	cObject x(1,1);
 
 	int i = b.createObject(&x);
@@ -48,8 +86,6 @@ int main()
 		framecounter++;
 		//cin.get();
 		usleep(100*1000);
-		//for(unsigned int i = 0; i < 6000; i++)
-			//for(unsigned int o = 0; o < 3000; o++);
-	}
+	}*/
 	return 0;
 }

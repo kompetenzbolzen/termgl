@@ -1,9 +1,11 @@
 #pragma once
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string>
 #include <math.h>
 #include <iostream>
+#include <termios.h>
 
 #ifdef __linux__
 	#include <unistd.h>
@@ -137,6 +139,7 @@ private:
 
 	void forceReRender();
 
+	void setConsoleEcho(bool _enable);
 #ifdef __linux__
 	sPos getConsoleWindowSize();
 #endif

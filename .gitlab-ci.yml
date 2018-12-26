@@ -1,0 +1,4 @@
+engine:
+  script:
+    - make clean
+    - make

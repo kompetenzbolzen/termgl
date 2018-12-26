@@ -14,13 +14,13 @@ cInput::cInput()
   write (STDOUT_FILENO, "\e[?47h", 6);
 
   // Enable mouse tracking
-  write (STDOUT_FILENO, "\e[?9h", 5);
+  write (STDOUT_FILENO, "\e[?1000h", 8);
 }
 
 cInput::~cInput()
 {
   //revert changes to console
-  write (STDOUT_FILENO, "\e[?9l", 5);
+  write (STDOUT_FILENO, "\e[?1000l", 8);
   write (STDOUT_FILENO, "\e[?47l", 6);
   tcsetattr (STDIN_FILENO, TCSANOW, &original);
 }

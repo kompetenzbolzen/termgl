@@ -42,10 +42,16 @@ int main()
 				pos.x = ie.x;
 				pos.y = ie.y;
 			}
+			else if (ie.type == _EVENT_TERM)
+			{
+				return 0;
+			}
 
 			a.clear();
 			a.drawPoint('X', pos, true, _COL_GREEN);
 			a.render();
+
+			usleep(10*1000);
 		}
 	}
 

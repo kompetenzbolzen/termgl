@@ -23,6 +23,7 @@
 #define _EVENT_CHAR   1
 #define _EVENT_KEY    2
 #define _EVENT_MOUSE  3
+#define _EVENT_TERM   4
 
 struct sInputEvent
 {

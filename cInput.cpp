@@ -45,8 +45,11 @@ sInputEvent cInput::poll()
     return ret;
 
   read (STDIN_FILENO, &buff, 1);
-
-  if (buff[0] == '\x1B') //Escape sequence
+  if (buff[0] == 3) {
+      // User pressd Ctr+C
+      ret.type = _EVENT_TERM;
+  }
+  else if (buff[0] == '\x1B') //Escape sequence
   {
     read (STDIN_FILENO, &buff, 5);
     if(buff[0] == '[')

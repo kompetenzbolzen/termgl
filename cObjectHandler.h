@@ -31,7 +31,25 @@ public:
 	int write();
 	//writes all objects in objects[] to render buffer
 
+	int clickEvent(sPos _pos, unsigned int _button);
+	//Calls onClick of cObject at _pos, focuses Object
+	//returns 0 if successfull, 1 if Object is empty
+
+	int charEvent(unsigned char _c);
+	//Calls onChar of active cObject, default 0
+	//returns 0 if successfull, 1 if focused Object is empty
+
+	void focusNext();
+	//Focuses next Object
+
+	void focus(unsigned int _id);
+	//Focuses specific Object
+
 private:
+	void buildHitmap();
+
 	vector<cObject*> objects;
+	vector<vector<unsigned int>> iHitMap;
 	cRender *render;
+	unsigned long int iActiveObject;
 };

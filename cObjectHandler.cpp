@@ -3,11 +3,18 @@
 cObjectHandler::cObjectHandler(cRender *_render)
 {
 	render = _render;
+	iActiveObject = 0;
+
+	objects.push_back(NULL); //Create first Object as Catcher for Events
+
+	buildHitmap();
 }
 
 int cObjectHandler::createObject(cObject *_object)
 {
 	objects.push_back(_object);
+
+	buildHitmap();
 	return objects.size() - 1;
 }
 
@@ -26,6 +33,7 @@ int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 	else if (_mode == _MOVE_ABSOULUTE)
 		objects[_object]->setPosition(_pos);
 
+	buildHitmap();
 	return 0;
 }
 
@@ -34,6 +42,7 @@ int cObjectHandler::destroyObject(int _object)
 	delete objects[_object];
 	objects[_object] = NULL;
 
+	buildHitmap();
 	return 0;
 }
 
@@ -60,4 +69,87 @@ int cObjectHandler::write()
 	}
 
 	return 0;
+}
+
+int cObjectHandler::clickEvent(sPos _pos, unsigned int _button)
+{
+	if(objects[ iHitMap[_pos.x][_pos.y] ])
+		objects[ iHitMap[_pos.x][_pos.y] ]->onClick(_pos, _button);
+	else
+		return 1;
+
+	return 0;
+}
+
+int cObjectHandler::charEvent(unsigned char _c)
+{
+	if(objects.size() > iActiveObject)
+	{
+		if(objects[iActiveObject])
+		{
+			objects[iActiveObject]->onChar(_c);
+		}
+		else
+			return 1;
+	}
+
+	return 0;
+}
+
+void cObjectHandler::buildHitmap()
+{
+	//Rebuild 2D vector
+	sPos size = render->getSize();
+
+	vector<unsigned int> cp;
+
+	while(size.y > cp.size())
+	{
+		cp.push_back(0);
+	}
+
+	while (size.x > iHitMap.size())
+	{
+		iHitMap.push_back(cp);
+	}
+
+	while (size.x <= iHitMap.size())
+	{
+		iHitMap.pop_back();
+	}
+
+	//Write object IDs to iHitMap
+	for(unsigned int i = 0; i < objects.size(); i++)
+	{
+		if(objects[i])
+		{
+			sPos oPos = objects[i]->getPosition();
+			sPos oSize = objects[i]->getSize();
+
+			for(unsigned int x = oPos.x; x < oPos.x + oSize.x; x++)
+			{
+				for(unsigned int y = oPos.y; y < oPos.y + oSize.y; y++)
+				{
+					if(x < size.x && y < size.y) //Objects can be outside the screen.
+						iHitMap[x][y] = i;
+				}//for
+			}//for
+		}//if
+	}//for
+}//buildHitmap
+
+void cObjectHandler::focusNext()
+{
+	iActiveObject++;
+
+	if(iActiveObject >= objects.size())
+		iActiveObject = 0;
+}
+
+void cObjectHandler::focus(unsigned int _id)
+{
+	if(_id >= objects.size())
+		iActiveObject = objects.size();
+	else
+		iActiveObject = _id;
 }

@@ -20,7 +20,7 @@ public:
 	//_sx : SizeX
 	//_sy : SizeY
 
-	~cObject();
+	virtual ~cObject();
 
 	sPos getPosition();
 
@@ -30,7 +30,19 @@ public:
 
 	sObject getObject();
 
+	virtual void onClick(sPos _pos, unsigned int _button){};
+
+	virtual void onChar(unsigned char _c){};
+
+protected: //For child classes
+	cObject();
+
+	void setSize(int _sx, int _sy);
+
+	void destruct();
+
 private:
 	//wColor, cScreen, sizeX and sizeY are inherited from cRender
 	sPos pos;
+	bool bSizeSet;
 };

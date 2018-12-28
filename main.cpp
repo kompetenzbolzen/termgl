@@ -5,9 +5,65 @@
 #include "cObjectHandler.h"
 #include "cInput.h"
 
+#include "testobject.h"
+
 int main()
 {
-	cRender a(' ', _COL_DEFAULT, 20,20);
+	cRender render(' ', _COL_DEFAULT, 30,30);
+	cObjectHandler handler(&render);
+	testobject obj;
+	cInput input;
+
+	render.render();
+
+	int iobj = handler.createObject((cObject*)&obj);
+	handler.moveObject(iobj, {10,10}, _MOVE_ABSOLUTE);
+
+	while(1)
+	{
+		sInputEvent ie = input.poll();
+		if(ie.type != _EVENT_NULL)
+		{
+			if(ie.type == _EVENT_KEY)
+			{
+				switch (ie.c)
+				{
+					case 'A'://up
+						handler.moveObject(iobj, {0,-1}, _MOVE_RELATIVE);
+						break;
+					case 'B'://down
+						handler.moveObject(iobj, {0,1}, _MOVE_RELATIVE);
+						break;
+					case 'C'://right
+						handler.moveObject(iobj, {1,0}, _MOVE_RELATIVE);
+						break;
+					case 'D'://left
+						handler.moveObject(iobj, {-1,0}, _MOVE_RELATIVE);
+						break;
+				};
+			}
+			else if (ie.type == _EVENT_MOUSE)
+			{
+				if(ie.b == 0)
+					handler.clickEvent({ie.x, ie.y}, 0);
+			}
+			else if (ie.type == _EVENT_CHAR)
+			{
+				handler.charEvent(ie.c);
+			}
+			else if (ie.type == _EVENT_TERM)
+			{
+				return 0;
+			}
+
+			handler.write();
+			render.render();
+
+			usleep(10*1000);
+		}
+	}
+
+	/*cRender a(' ', _COL_DEFAULT, 20,20);
 	cInput in;
 	a.render();
 
@@ -53,7 +109,7 @@ int main()
 
 			usleep(10*1000);
 		}
-	}
+	}*/
 
 	/*unsigned long int framecounter = 0;
 	cRender a(' ', _COL_DEFAULT, 10,10);

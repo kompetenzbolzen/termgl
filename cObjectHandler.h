@@ -6,7 +6,7 @@
 
 //movemodes
 #define _MOVE_RELATIVE	0
-#define _MOVE_ABSOULUTE	1
+#define _MOVE_ABSOLUTE	1
 
 using namespace std;
 

@@ -30,7 +30,7 @@ int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 
 	if (_mode == _MOVE_RELATIVE)
 		objects[_object]->setPosition(sPos{ objPosition.x + _pos.x, objPosition.y + _pos.y });
-	else if (_mode == _MOVE_ABSOULUTE)
+	else if (_mode == _MOVE_ABSOLUTE)
 		objects[_object]->setPosition(_pos);
 
 	buildHitmap();
@@ -117,7 +117,13 @@ void cObjectHandler::buildHitmap()
 	{
 		iHitMap.pop_back();
 	}
-
+	for(unsigned int x = 0; x < iHitMap.size(); x++)
+	{
+		for(unsigned int y = 0; y < iHitMap[x].size(); y++)
+		{
+			iHitMap[x][y] = 0;
+		}
+	}
 	//Write object IDs to iHitMap
 	for(unsigned int i = 0; i < objects.size(); i++)
 	{
@@ -126,9 +132,9 @@ void cObjectHandler::buildHitmap()
 			sPos oPos = objects[i]->getPosition();
 			sPos oSize = objects[i]->getSize();
 
-			for(unsigned int x = oPos.x; x < oPos.x + oSize.x; x++)
+			for(unsigned int x = oPos.x; x <= oPos.x + oSize.x; x++)
 			{
-				for(unsigned int y = oPos.y; y < oPos.y + oSize.y; y++)
+				for(unsigned int y = oPos.y; y <= oPos.y + oSize.y; y++)
 				{
 					if(x < size.x && y < size.y) //Objects can be outside the screen.
 						iHitMap[x][y] = i;

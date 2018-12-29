@@ -73,6 +73,13 @@ int cObjectHandler::write()
 
 int cObjectHandler::clickEvent(sPos _pos, unsigned int _button)
 {
+	if(_pos.x >= iHitMap.size())
+		return 1;
+	if(_pos.y >= iHitMap[_pos.x].size())
+		return 1;
+	
+	iActiveObject = iHitMap[_pos.x][_pos.y]; //Set active object
+
 	if(objects[ iHitMap[_pos.x][_pos.y] ])
 		objects[ iHitMap[_pos.x][_pos.y] ]->onClick(_pos, _button);
 	else

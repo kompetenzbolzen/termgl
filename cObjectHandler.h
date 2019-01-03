@@ -10,7 +10,7 @@
 
 using namespace std;
 
-class cObject; //Circular dependency break (Bad practice. I Know.)
+//class cObject; //Circular dependency break (Bad practice. I Know.)
 
 class cObjectHandler
 {
@@ -49,7 +49,7 @@ private:
 	void buildHitmap();
 
 	vector<cObject*> objects;
-	vector<vector<unsigned int>> iHitMap;
+	vector< vector<unsigned int> > iHitMap;
 	cRender *render;
 	unsigned long int iActiveObject;
 };

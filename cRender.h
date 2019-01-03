@@ -73,7 +73,7 @@ public:
 	//Resizes console window for Windows
 	//Sets Size to Console Window Size for Linux. Writes Error for _sx or _sy smaller than Screen. Get by getLastError()
 
-	~cRender();
+	virtual ~cRender();
 	//frees allocated memory
 
 	int drawPoint(char _c, sPos _pos, bool _overrideCollision, WORD _color);

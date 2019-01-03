@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cObject.h"
+#include <string>
 
 class testobject : cObject
 {
@@ -22,7 +23,7 @@ public:
   virtual void onClick(sPos _pos, unsigned int _button)
   {
     cc++;
-    drawText(to_string(cc), {2,2}, _COL_RED);
+    drawText(std::to_string(cc), {2,2}, _COL_RED);
   }
 
 	virtual void onChar(unsigned char _c)

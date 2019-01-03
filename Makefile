@@ -1,5 +1,5 @@
 CC      = /usr/bin/g++
-CFLAGS  = -Wall -g
+CFLAGS  = -Wall -g -std=c++11
 LDFLAGS = -lm -lcurses
 OUTPUT = bin/Engine
 

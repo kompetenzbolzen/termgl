@@ -30,9 +30,9 @@ public:
 
 	sObject getObject();
 
-	virtual void onClick(sPos _pos, unsigned int _button){};
+	virtual void onClick(sPos _pos, unsigned int _button){}
 
-	virtual void onChar(unsigned char _c){};
+	virtual void onChar(unsigned char _c){}
 
 protected: //For child classes
 	cObject();

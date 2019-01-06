@@ -11,6 +11,10 @@ prog: $(OBJ)
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $<
 
+all:
+	make clean
+	make
+
 .PHONY: clean
 
 clean:

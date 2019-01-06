@@ -47,6 +47,9 @@ cRender::cRender() {}
 cRender::~cRender()
 {
 	//Free allocated memory
+	if(bBlockRender)
+		return;
+
 	for (int i = 0; i < sizeX; i++) {
 		free(cScreen[i]);
 		free(wColor[i]);
@@ -58,7 +61,7 @@ cRender::~cRender()
 	free(bChanged);
 
 	setConsoleEcho(true);
-	
+
 	#ifdef __linux__
 	setConsoleCursor(true);
 	#endif

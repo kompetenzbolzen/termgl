@@ -3,7 +3,6 @@
 cObject::cObject(int _sx, int _sy)
 {
 	bSizeSet = false;
-	bBlockRender = true; //Block inherited render capabilities of parent
 
 	setSize(_sx, _sy);
 }
@@ -46,6 +45,8 @@ void cObject::setSize(int _sx, int _sy)
 {
 	if(bSizeSet)
 		return;
+
+	bBlockRender = true; //Block inherited render capabilities of parent
 
 	sizeX = _sx;
 	sizeY = _sy;

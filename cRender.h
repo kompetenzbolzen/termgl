@@ -134,8 +134,9 @@ private:
 #ifdef _WIN32
 	int SetConsoleWindowSize(int x, int y);
 	//Slightly adapted from: http://www.cplusplus.com/forum/windows/121444/
-#endif
+
 	void gotoxy( int x, int y );
+#endif
 
 	void forceReRender();
 

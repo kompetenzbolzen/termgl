@@ -1,6 +1,6 @@
 CC      = /usr/bin/g++
 CFLAGS  = -Wall -g -std=c++11
-LDFLAGS = -lm -lcurses
+LDFLAGS = -lm
 OUTPUT = Engine
 BUILDDIR = build
 
@@ -18,5 +18,4 @@ all: clean debug
 .PHONY: clean
 
 clean:
-	rm -f $(BUILDDIR)/$(OUTPUT) *.o
-	rmdir --ignore-fail $(BUILDDIR)
+	rm -df $(BUILDDIR)/$(OUTPUT) *.o

@@ -1,6 +1,6 @@
 CC      = /usr/bin/g++
-CFLAGS  = -Wall -g -std=c++11
-LDFLAGS = -lm
+CFLAGS  = -Wall -g -std=c++11 -Werror=missing-prototypes
+LDFLAGS =
 OUTPUT = Engine
 BUILDDIR = build
 

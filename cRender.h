@@ -3,13 +3,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
-#include <math.h>
-#include <iostream>
+//#include <math.h>
+//#include <iostream>
 #include <termios.h>
 
 #ifdef __linux__
 	#include <unistd.h>
-	#include <term.h>
+	//#include <term.h>
 	#include <sys/ioctl.h>
 
 	typedef int WORD;
@@ -56,6 +56,7 @@
 	#define _COL_INVERSE 7
 	#define _COL_INVERSE_OFF 27
 #endif
+
 using namespace std;
 
 struct sPos

@@ -1,11 +1,12 @@
 CC      = /usr/bin/g++
 CFLAGS  = -Wall -g -std=c++11
 LDFLAGS = -lm -lcurses
-OUTPUT = bin/Engine
+OUTPUT = build/Engine
 
 OBJ = main.o cObject.o cObjectHandler.o cRender.o cInput.o
 
 prog: $(OBJ)
+	mkdir build
 	$(CC) $(CFLAGS) -o $(OUTPUT) $(OBJ) $(LDFLAGS)
 
 %.o: %.cpp
@@ -19,3 +20,4 @@ all:
 
 clean:
 	rm -f $(OUTPUT) *.o
+	rmdir build

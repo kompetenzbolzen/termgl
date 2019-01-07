@@ -153,25 +153,23 @@ int cRender::render(void)
 
 	for (int i = 0; i < sizeY; i++) {
 		for (int o = 0; o < sizeX; o++) {
-			gotoxy(o,i); //Moving this out of if fixed Render problem... Not optimal, though better for performance
 			if(bChanged[o][i])
 			{
 				#ifdef _WIN32
-
+				#error "Implement gotoxy!!"
 				SetConsoleTextAttribute(hstdout, wColor[o][i] | _COL_INTENSITY);
 				//cout << cScreen[o][i];
 				printf("%c", cScreen[o][i]);
 
 				#elif __linux__
-				//cout << "\033["<< wColor[o][i] <<"m"<< cScreen[o][i];
-				printf("\033[%im%c", wColor[o][i], cScreen[o][i]);
+				//gotoxy(x,y) now included!!
+				printf("\e[%i;%iH\033[%im%c\n", i + 1, o + 1, wColor[o][i], cScreen[o][i]);
+				//      Position  Color
 				#endif
 			}
 		bChanged[o][i] = false;
 		}
-
 	}
-
 	return 0;
 }
 
@@ -252,23 +250,14 @@ void cRender::gotoxy( int x, int y )
 
 #elif __linux__
 
-void cRender::gotoxy( int x, int y )
-{
-  int err;
-  if (!cur_term)
-    setupterm( NULL, STDOUT_FILENO, &err );
-  putp( tparm( tigetstr( "cup" ), y, x, 0, 0, 0, 0, 0, 0, 0 ) );
-}
-
 sPos cRender::getConsoleWindowSize()
 {
 	struct winsize w;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
-	return {w.ws_col, w.ws_row};
+	return {w.ws_col, w.ws_row - 1};
 }
 #endif
-
 void cRender::setBufferSize(sPos _size)
 {
 	if(_size.x == sizeX && _size.y == sizeY)

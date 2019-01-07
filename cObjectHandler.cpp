@@ -145,7 +145,7 @@ void cObjectHandler::buildHitmap()
 			{
 				for(int y = oPos.y; y <= oPos.y + oSize.y; y++)
 				{
-					if(x < size.x && y < size.y) //Objects can be outside the screen.
+					if((x < size.x && y < size.y) && (x >= 0 && y >= 0)) //Objects can be outside the screen.
 						iHitMap[x][y] = i;
 				}//for
 			}//for

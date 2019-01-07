@@ -171,9 +171,7 @@ int cRender::render(void)
 		}
 
 	}
-
-	gotoxy(sizeX - 1, sizeY - 1);
-
+	
 	return 0;
 }
 
@@ -267,7 +265,7 @@ sPos cRender::getConsoleWindowSize()
 	struct winsize w;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
-	return {w.ws_col, w.ws_row - 1};
+	return {w.ws_col, w.ws_row};
 }
 #endif
 

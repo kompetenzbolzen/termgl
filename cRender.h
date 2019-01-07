@@ -64,70 +64,94 @@ struct sPos
 	int x;
 	int y;
 };
-
+/** cRender manages a framebuffer the size of the console (window) it is run in.
+*/
 class cRender
 {
 public:
+	/** Constructor
+	* sets cBackround[][] to _backround & wColor[][] to _color
+	* Resizes console window for Windows
+	* Sets Size to Console Window Size for Linux. Writes Error for _sx or _sy smaller than Screen. Get by getLastError()
+	*/
 	cRender(char _backound, WORD _color, int _sx, int _sy);
-	//Constructor
-	//sets cBackround[][] to _backround & wColor[][] to _color
-	//Resizes console window for Windows
-	//Sets Size to Console Window Size for Linux. Writes Error for _sx or _sy smaller than Screen. Get by getLastError()
 
 	virtual ~cRender();
-	//frees allocated memory
 
+	/** Draws _c @ _pos in screenbuffer
+	* Returns _COLLOSION_ if _pos is already set to !cBackround && _overrideCollision isnt set
+	*/
 	int drawPoint(char _c, sPos _pos, bool _overrideCollision, WORD _color);
-	//Draws _c @ _pos
-	//Returns _COLLOSION_ if _pos is already set to !cBackround && _overrideCollision isnt set
 
+	/** draws Line from _pos1 to _pos2 in screenbuffer
+	* x Value of pos1 MUSTNT exceed the x value of pos2!
+	*/
 	int drawLine(char _c, sPos _pos1, sPos _pos2, bool _overrideCollision, WORD _color);
-	//x Value of pos1 MUSTNT exceed the x value of pos2!
 
+	/** Draws Text _s @ _pos in screenbuffer
+	* First char is @ _pos
+	*/
 	int drawText(string _s, sPos _pos, WORD _color);
-	//Draws Text _s @ _pos
-	//First char is @ _pos
 
+	/** writes rectangle to screenbuffer
+	* x Value of pos1 MUSTNT exceed the x value of pos2!
+	*/
 	int drawRectangle(char _border, char _fill, sPos _pos1, sPos _pos2, WORD _borderColor, WORD _fillColor);
-	//x Value of pos1 MUSTNT exceed the x value of pos2!
 
+	/** Dumps screenbuffer to stdout
+	* prints changed pixels
+	*/
 	int render(void);
-	//Prints cScreen
 
+	/** clears cScreen + wColor
+	* for _forceReRender == true, the bChanged[][] is set to true to force Re-Render of whole Screen
+	* clear(void) calls clear(_forceReRender = false)
+	*/
 	int clear();
 	int clear(bool _forceReRender);
-	//clears cScreen + wColor
-	// for _forceReRender == true, the bChanged[][] is set to true to force Re-Render of whole Screen
-	// clear(void) calls clear(_forceReRender = false)
 
+	/** Returns last Error that was not returnable
+	*/
 	int getLastError();
-	//Returns last Error that was not returnable
 
+	/** Returns size of screenbuffer
+	*/
 	sPos getSize();
-	//Returns actual Size of screen
 
 
 protected:
-	cRender(); //Empty Constructor for being inheritable
+	/** Empty Constructor for being inheritable
+	*/
+	cRender();
 
+	/** Sets screenbuffer size
+	*/
 	void setBufferSize(sPos _size);
 
-	bool bBlockRender; //Used by children to block render function
+	bool bBlockRender;
+	//* Used by children to block render function
 
-	char **cScreen; //Pixel Map
-	WORD **wColor;  //Color Map
-	bool **bChanged; //Pixel Change Map
+	char **cScreen;
+	//* Pixel Map
+	WORD **wColor;
+	//* Color Map
+	bool **bChanged;
+	//* Pixel Change Map
 
-	char cBackound; //Default backround
+	char cBackound;
+	//* Default backround
 	WORD wBackColor;
+	//* Default backround color
 	int sizeX, sizeY;
+	//* Size of screen array
 
 #ifdef _WIN32
 	HANDLE hstdout;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 #endif
 
-	WORD wDefColor; //Default Color
+	WORD wDefColor;
+	//* Default Color
 
 	int iLastError;
 

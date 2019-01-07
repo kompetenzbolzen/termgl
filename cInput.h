@@ -40,6 +40,10 @@ public:
 
   ~cInput();
 
+  /** Reads inputevents
+  * returns event struct
+  * event queu is empty, when sInputEvent.type == _EVENT_NULL
+  */
   sInputEvent poll();
 
 private:

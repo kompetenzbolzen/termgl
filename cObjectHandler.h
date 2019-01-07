@@ -10,40 +10,55 @@
 
 using namespace std;
 
-//class cObject; //Circular dependency break (Bad practice. I Know.)
 
+/** Manages cObjects and writes them to screenbuffer
+* forwards input events to cObjects
+*/
 class cObjectHandler
 {
 public:
+	/** *_render: pointer to instance of cRender all objects will be written to
+	*/
 	cObjectHandler(cRender *_render);
 
+	/** Adds _object to managed objects vector
+	* returns Identifier for newly created vector
+	*/
 	int createObject(cObject *_object);
-	//Adds _object to managed objects vector
-	//returns Identifier for newly created vector
 
+	/** Alters position of _object by _pos either relative to old position or Absolute
+	* Depending on selected _mode (_MOVE_RELATIVE / _MOVE_ABSOLUTE).
+	*/
 	int moveObject(int _object, sPos _pos, int _mode);
-	//Alters position of _object by _pos either relative to old position or Absolute
-	//Depending on selected _mode (_MOVE_RELATIVE / _MOVE_ABSOLUTE).
 
+ /** removes _object from vector after deleting it
+ */
 	int destroyObject(int _object);
-	//removes _object from vector after deleting it
 
+	/** writes all objects in objects[] to render buffer
+	*/
 	int write();
-	//writes all objects in objects[] to render buffer
 
+
+	/** Calls onClick of cObject at _pos, focuses Object
+	* returns 0 if successfull, 1 if no Object is at _pos
+	*/
 	int clickEvent(sPos _pos, unsigned int _button);
-	//Calls onClick of cObject at _pos, focuses Object
-	//returns 0 if successfull, 1 if Object is empty
 
+	/** Calls onChar of active cObject, default 0
+	* returns 0 if successfull, 1 if no Object or destroyed Object is empty
+	*/
 	int charEvent(unsigned char _c);
-	//Calls onChar of active cObject, default 0
-	//returns 0 if successfull, 1 if focused Object is empty
 
+	/** Focuses next Object
+	*/
 	void focusNext();
-	//Focuses next Object
 
+	/**Focuses Object by id.
+	* 0 is empty by default and can be used to unfocus
+	*/
 	void focus(unsigned int _id);
-	//Focuses specific Object
+
 
 private:
 	void buildHitmap();

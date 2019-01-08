@@ -164,8 +164,11 @@ int cRender::render(void)
 
 				#elif __linux__
 				//gotoxy(x,y) now included!!
-				printf("\e[%i;%iH\033[%im%c\n", i + 1, o + 1, wColor[o][i], cScreen[o][i]);
-				//      Position  Color
+				char buffer[20];
+				int cbuf = sprintf(buffer,"\e[%i;%iH\e[%im%c", i + 1, o + 1, wColor[o][i], cScreen[o][i]);
+				//      											Position  Color  Origin is at 1,1
+				write (STDOUT_FILENO, buffer, cbuf);
+
 				#endif //__linux__
 			}
 			bChanged[o][i] = false;
@@ -256,7 +259,7 @@ sPos cRender::getConsoleWindowSize()
 	struct winsize w;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
-	return {w.ws_col, w.ws_row - 1};
+	return {w.ws_col, w.ws_row};
 }
 
 void cRender::setAlternateBufferScreen(bool _enable)

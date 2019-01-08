@@ -11,7 +11,8 @@ cInput::cInput()
   tcsetattr (STDIN_FILENO, TCSANOW, &raw);
 
   // Switch to the alternate buffer screen
-  write (STDOUT_FILENO, "\e[?47h", 6);
+  //write (STDOUT_FILENO, "\e[?47h", 6);
+  ///MOVED TO cRender
 
   // Enable mouse tracking
   write (STDOUT_FILENO, "\e[?1000h", 8);
@@ -21,7 +22,7 @@ cInput::~cInput()
 {
   //revert changes to console
   write (STDOUT_FILENO, "\e[?1000l", 8);
-  write (STDOUT_FILENO, "\e[?47l", 6);
+  //write (STDOUT_FILENO, "\e[?47l", 6);
   tcsetattr (STDIN_FILENO, TCSANOW, &original);
 }
 

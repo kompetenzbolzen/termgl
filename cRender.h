@@ -125,6 +125,7 @@ protected:
 	cRender();
 
 	/** Sets screenbuffer size
+	* Uses sizeX, sizeY to determine previous screenbuffer size. Do NOT change sizeX, sizeY manually!!
 	*/
 	void setBufferSize(sPos _size);
 
@@ -170,5 +171,7 @@ private:
 	sPos getConsoleWindowSize();
 
 	void setConsoleCursor(bool _enable);
+
+	void setAlternateBufferScreen(bool _enable);
 #endif
 };

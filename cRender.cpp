@@ -13,17 +13,16 @@ cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
 
 #ifdef __linux__ //In Linux, setting Console size is not supported, so it gets Size of Console (Window) instead.
 
-	struct winsize w;
-  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-
 	wDefColor = _COL_DEFAULT;
+
+	//Set up console
+	setAlternateBufferScreen(true);
+	setConsoleCursor(false);
 
 	setBufferSize( getConsoleWindowSize() );
 
 	if(sizeX < _sx || sizeY < _sy) //Notify Program tha screen is too small for desired Size
 		iLastError = _ERR_SCREEN_TOO_SMALL_;
-
-	setConsoleCursor(false);
 
 #elif _WIN32 //Windows Specific Code
 	hstdout = GetStdHandle(STD_OUTPUT_HANDLE); //get handle
@@ -34,11 +33,11 @@ cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
 	SetConsoleWindowSize(_sx + 1, _sy + 1); //set the windows size to _sx * _sy (+1 so no scrolling accurs)
 
 	setBufferSize({_sx,_sy});
-#endif
+#endif //_WIN32
 
 	setConsoleEcho(false);
 	clear(true); //Init backround array
-	//forceReRender();
+
 }//render()
 
 
@@ -46,8 +45,7 @@ cRender::cRender() {}
 
 cRender::~cRender()
 {
-	//Free allocated memory
-	if(bBlockRender)
+	if(bBlockRender) //Don't run destructor if inherited
 		return;
 
 	for (int i = 0; i < sizeX; i++) {
@@ -64,7 +62,8 @@ cRender::~cRender()
 
 	#ifdef __linux__
 	setConsoleCursor(true);
-	#endif
+	setAlternateBufferScreen(false);
+	#endif //__linux__
 }
 
 int cRender::drawPoint(char _c, sPos _pos, bool _overrideCollision, WORD _color)
@@ -149,14 +148,16 @@ int cRender::render(void)
 	if (bBlockRender)
 		return _ERR_RENDER_BLOCKED_BY_CHILD_;
 
-	setBufferSize(getConsoleWindowSize());
+	//Resize screenbuffer if needed
+	setBufferSize( getConsoleWindowSize( ) );
 
 	for (int i = 0; i < sizeY; i++) {
 		for (int o = 0; o < sizeX; o++) {
 			if(bChanged[o][i])
 			{
 				#ifdef _WIN32
-				#error "Implement gotoxy!!"
+
+				gotoxy(o,i);
 				SetConsoleTextAttribute(hstdout, wColor[o][i] | _COL_INTENSITY);
 				//cout << cScreen[o][i];
 				printf("%c", cScreen[o][i]);
@@ -165,9 +166,9 @@ int cRender::render(void)
 				//gotoxy(x,y) now included!!
 				printf("\e[%i;%iH\033[%im%c\n", i + 1, o + 1, wColor[o][i], cScreen[o][i]);
 				//      Position  Color
-				#endif
+				#endif //__linux__
 			}
-		bChanged[o][i] = false;
+			bChanged[o][i] = false;
 		}
 	}
 	return 0;
@@ -234,7 +235,7 @@ int cRender::SetConsoleWindowSize(int x, int y)
 	if (!SetConsoleWindowInfo(h, TRUE, &info))
 		return 1;
 }
-#endif
+#endif //_WIN32
 
 int cRender::getLastError()
 {
@@ -257,7 +258,19 @@ sPos cRender::getConsoleWindowSize()
 
 	return {w.ws_col, w.ws_row - 1};
 }
-#endif
+
+void cRender::setAlternateBufferScreen(bool _enable)
+{
+	_enable ? write (STDOUT_FILENO, "\e[?47h", 6):write (STDOUT_FILENO, "\e[?47l", 6);
+}
+
+void cRender::setConsoleCursor(bool _enable)
+{
+	_enable ? write (STDOUT_FILENO, "\e[?25h", 6) : write (STDOUT_FILENO, "\e[?25l", 6);
+}
+
+#endif // __linux__
+
 void cRender::setBufferSize(sPos _size)
 {
 	if(_size.x == sizeX && _size.y == sizeY)
@@ -323,7 +336,7 @@ void cRender::setConsoleEcho(bool _enable)
 
     SetConsoleMode(hStdin, mode );
 
-#else
+#elif __linux__
     struct termios tty;
     tcgetattr(STDIN_FILENO, &tty);
     if( !_enable )
@@ -332,10 +345,5 @@ void cRender::setConsoleEcho(bool _enable)
         tty.c_lflag |= ECHO;
 
     (void) tcsetattr(STDIN_FILENO, TCSANOW, &tty);
-#endif
-}
-
-void cRender::setConsoleCursor(bool _enable)
-{
-	_enable ? write (STDOUT_FILENO, "\e[?25h", 6) : write (STDOUT_FILENO, "\e[?25l", 6);
+#endif //__linux__
 }

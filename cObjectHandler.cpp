@@ -81,8 +81,13 @@ int cObjectHandler::clickEvent(sPos _pos, unsigned int _button)
 
 	if(objects[ iHitMap[_pos.x][_pos.y] ])
 	{
+		sPos rel_pos;
+		sPos obj_pos = objects[ iHitMap[_pos.x][_pos.y] ]->getPosition();
+		rel_pos.x = _pos.x - obj_pos.x;
+		rel_pos.y = _pos.y - obj_pos.y;
+
 		iActiveObject = iHitMap[_pos.x][_pos.y]; //Set active object
-		objects[ iHitMap[_pos.x][_pos.y] ]->onClick(_pos, _button);
+		objects[ iHitMap[_pos.x][_pos.y] ]->onClick(rel_pos, _button);
 	}
 	else
 		return 1;
@@ -141,9 +146,9 @@ void cObjectHandler::buildHitmap()
 			sPos oPos = objects[i]->getPosition();
 			sPos oSize = objects[i]->getSize();
 
-			for(int x = oPos.x; x <= oPos.x + oSize.x; x++)
+			for(int x = oPos.x; x < oPos.x + oSize.x; x++)
 			{
-				for(int y = oPos.y; y <= oPos.y + oSize.y; y++)
+				for(int y = oPos.y; y < oPos.y + oSize.y; y++)
 				{
 					if((x < size.x && y < size.y) && (x >= 0 && y >= 0)) //Objects can be outside the screen.
 						iHitMap[x][y] = i;

@@ -10,10 +10,6 @@ cInput::cInput()
   cfmakeraw (&raw);
   tcsetattr (STDIN_FILENO, TCSANOW, &raw);
 
-  // Switch to the alternate buffer screen
-  //write (STDOUT_FILENO, "\e[?47h", 6);
-  ///MOVED TO cRender
-
   // Enable mouse tracking
   write (STDOUT_FILENO, "\e[?1000h", 8);
 }
@@ -22,7 +18,6 @@ cInput::~cInput()
 {
   //revert changes to console
   write (STDOUT_FILENO, "\e[?1000l", 8);
-  //write (STDOUT_FILENO, "\e[?47l", 6);
   tcsetattr (STDIN_FILENO, TCSANOW, &original);
 }
 
@@ -58,8 +53,8 @@ sInputEvent cInput::poll()
       if(buff[1] == 'M') //Mouse Event
       {
         ret.b = buff[2] - 32;
-        ret.x = buff[3] - 32;
-        ret.y = buff[4] - 32;
+        ret.x = buff[3] - 32 - 1; //Console sees origin at 1,1
+        ret.y = buff[4] - 32 - 1; //Program at 0,0
         ret.type = _EVENT_MOUSE;
       }
       else //e.g. Arrow Keys

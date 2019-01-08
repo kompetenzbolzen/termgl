@@ -24,6 +24,8 @@ public:
   {
     cc++;
     drawText(std::to_string(cc), {2,2}, _COL_RED);
+
+    drawPoint('Q', _pos, true, _COL_YELLOW);
   }
 
 	virtual void onChar(unsigned char _c)

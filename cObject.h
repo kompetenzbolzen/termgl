@@ -44,6 +44,7 @@ public:
 	*/
 	virtual void onClick(sPos _pos, unsigned int _button){}
 	/** Called by cObjecthandler if cObject is active on keyboard input
+	* _pos decribes the relative position of mousepointer to origin of object
 	*/
 	virtual void onChar(unsigned char _c){}
 

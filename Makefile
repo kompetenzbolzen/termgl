@@ -11,6 +11,10 @@ debug: $(OBJ)
 	$(CC) $(CFLAGS) -o $(BUILDDIR)/$(OUTPUT) $(OBJ) $(LDFLAGS)
 
 %.o: %.cpp
+	@echo
+	@echo Building $<
+	@echo ==============
+	@echo
 	$(CC) $(CFLAGS) -c $<
 
 all: clean debug
@@ -19,3 +23,6 @@ all: clean debug
 
 clean:
 	rm -df $(BUILDDIR)/$(OUTPUT) *.o
+
+run: debug
+	./$(BUILDDIR)/$(OUTPUT)

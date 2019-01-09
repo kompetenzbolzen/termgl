@@ -340,13 +340,15 @@ void cRender::setConsoleEcho(bool _enable)
     SetConsoleMode(hStdin, mode );
 
 #elif __linux__
-    struct termios tty;
+    /*struct termios tty;
     tcgetattr(STDIN_FILENO, &tty);
     if( !_enable )
         tty.c_lflag &= ~ECHO;
     else
         tty.c_lflag |= ECHO;
 
-    (void) tcsetattr(STDIN_FILENO, TCSANOW, &tty);
+    (void) tcsetattr(STDIN_FILENO, TCSANOW, &tty);*/
+
+		_enable ? write (STDOUT_FILENO, "\e[?8h", 5) : write (STDOUT_FILENO, "\e[?8l", 5);
 #endif //__linux__
 }

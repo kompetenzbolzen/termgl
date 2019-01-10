@@ -1,4 +1,7 @@
 #include <unistd.h>
+#include <string>
+
+#include "version.h"
 
 #include "cRender.h"
 #include "cObject.h"
@@ -11,13 +14,23 @@ int main()
 {
 	cRender render(' ', _COL_DEFAULT, 30,30);
 	cObjectHandler handler(&render);
+	cObject ver(30,1);
 	testobject obj;
+
 	cInput input;
 
 	render.render();
 
 	int iobj = handler.createObject((cObject*)&obj);
 	handler.moveObject(iobj, {10,10}, _MOVE_ABSOLUTE);
+
+	ver.drawPoint('v', {0,0}, true, _COL_WHITE);
+	ver.drawPoint(VERSION + 48, {1,0}, true, _COL_WHITE);
+	ver.drawPoint('.', {2,0}, true, _COL_WHITE);
+	ver.drawPoint(PATCHLEVEL + 48, {3,0}, true, _COL_WHITE);
+	ver.drawText(DATE, {5,0}, _COL_WHITE);
+	int iver = handler.createObject(&ver);
+	handler.moveObject(iver, {0,0}, _MOVE_ABSOLUTE);
 
 	while(1)
 	{

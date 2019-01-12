@@ -7,7 +7,7 @@ BUILDDIR = build
 VERSION = 0
 PATCHLEVEL = 1
 
-OBJ = main.o cObject.o cObjectHandler.o cRender.o cInput.o cObject3D.o
+OBJ = main.o cObject.o cObjectHandler.o cRender.o cInput.o cWiremesh.o
 
 debug: genversion $(OBJ)
 	mkdir -p $(BUILDDIR)

@@ -7,7 +7,7 @@
 #include "cObject.h"
 #include "cObjectHandler.h"
 #include "cInput.h"
-#include "cObject3D.h"
+#include "cWiremesh.h"
 
 #include "testobject.h"
 
@@ -16,14 +16,15 @@ int main()
 	cRender render(' ', _COL_DEFAULT, 30,30);
 	cObjectHandler handler(&render);
 	cObject ver(30,1);
-	cObject3D obj(20,20);
+	cWiremesh obj;
 
 	cInput input;
 
+	render.render();
 
 
-	int iobj = handler.createObject((cObject*)&obj);
-	handler.moveObject(iobj, {40,10}, _MOVE_ABSOLUTE);
+	/*int iobj = handler.createObject((cObject*)&obj);
+	handler.moveObject(iobj, {40,10}, _MOVE_ABSOLUTE);*/
 
 	ver.drawPoint('v', {0,0}, true, _COL_WHITE);
 	ver.drawPoint(VERSION + 48, {1,0}, true, _COL_WHITE);
@@ -33,30 +34,34 @@ int main()
 	int iver = handler.createObject(&ver);
 	handler.moveObject(iver, {0,0}, _MOVE_ABSOLUTE);
 
-	/*obj.addVector({0,0,0}, {5,0,0}, '#', _COL_RED);
-	obj.addVector({5,0,0}, {0,5,0}, '#', _COL_RED);
-	obj.addVector({0,0,0}, {0,5,0}, '#', _COL_RED);
-	obj.addVector({0,5,0}, {5,0,0}, '#', _COL_RED);*/
+	int x = 25;
 
-	obj.addVector({0,0,0}, {0,0,5}, '#', _COL_RED);
-	obj.addVector({5,0,0}, {0,0,5}, '#', _COL_RED);
-	obj.addVector({0,5,0}, {0,0,5}, '#', _COL_RED);
-	obj.addVector({5,5,0}, {0,0,5}, '#', _COL_RED);
+	obj.addVector({0,0,x}, {x,0,0}, '+', _COL_RED);
+	obj.addVector({x,0,x}, {0,x,0}, '+', _COL_RED);
+	obj.addVector({0,0,x}, {0,x,0}, '+', _COL_RED);
+	obj.addVector({0,x,x}, {x,0,0}, '+', _COL_RED);
 
-	/*obj.addVector({0,0,5}, {5,0,0}, '#', _COL_RED);
-	obj.addVector({5,0,5}, {0,5,0}, '#', _COL_RED);
-	obj.addVector({0,0,5}, {0,5,0}, '#', _COL_RED);
-	obj.addVector({0,5,5}, {5,0,0}, '#', _COL_RED);*/
+	obj.addVector({0,0,0}, {0,0,x}, '.', _COL_RED);
+	obj.addVector({x,0,0}, {0,0,x}, '.', _COL_RED);
+	obj.addVector({0,x,0}, {0,0,x}, '.', _COL_RED);
+	obj.addVector({x,x,0}, {0,0,x}, '.', _COL_RED);
 
-	obj.write();
+	obj.addVector({0,0,0}, {x,0,0}, '|', _COL_RED);
+	obj.addVector({x,0,0}, {0,x,0}, '|', _COL_RED);
+	obj.addVector({0,0,0}, {0,x,0}, '|', _COL_RED);
+	obj.addVector({0,x,0}, {x,0,0}, '|', _COL_RED);
 
 	handler.write();
-	render.render();
+	obj.setPosition(0,0,0);
+	obj.write(&render);
 
-	while(1);
-	/*while(1)
+
+	render.render();
+	sCoord3d position = {0,0,0};
+	while(1)
 	{
 		sInputEvent ie = input.poll();
+
 		if(ie.type != _EVENT_NULL)
 		{
 			if(ie.type == _EVENT_KEY)
@@ -64,16 +69,20 @@ int main()
 				switch (ie.c)
 				{
 					case 'A'://up
-						handler.moveObject(iobj, {0,-1}, _MOVE_RELATIVE);
+						position.y --;
+						obj.setPosition(position);
 						break;
 					case 'B'://down
-						handler.moveObject(iobj, {0,1}, _MOVE_RELATIVE);
+						position.y ++;
+						obj.setPosition(position);
 						break;
 					case 'C'://right
-						handler.moveObject(iobj, {1,0}, _MOVE_RELATIVE);
+						position.x ++;
+						obj.setPosition(position);
 						break;
 					case 'D'://left
-						handler.moveObject(iobj, {-1,0}, _MOVE_RELATIVE);
+						position.x --;
+						obj.setPosition(position);
 						break;
 				};
 			}
@@ -92,12 +101,13 @@ int main()
 			}
 
 			handler.write();
+			obj.write(&render);
 			render.render();
 
 			usleep(10*1000);
 		}
 	}
-	*/
+
 
 	/*cRender a(' ', _COL_DEFAULT, 20,20);
 	cInput in;

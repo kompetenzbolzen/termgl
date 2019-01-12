@@ -7,6 +7,7 @@
 #include "cObject.h"
 #include "cObjectHandler.h"
 #include "cInput.h"
+#include "cObject3D.h"
 
 #include "testobject.h"
 
@@ -15,14 +16,14 @@ int main()
 	cRender render(' ', _COL_DEFAULT, 30,30);
 	cObjectHandler handler(&render);
 	cObject ver(30,1);
-	testobject obj;
+	cObject3D obj(20,20);
 
 	cInput input;
 
-	render.render();
+
 
 	int iobj = handler.createObject((cObject*)&obj);
-	handler.moveObject(iobj, {10,10}, _MOVE_ABSOLUTE);
+	handler.moveObject(iobj, {40,10}, _MOVE_ABSOLUTE);
 
 	ver.drawPoint('v', {0,0}, true, _COL_WHITE);
 	ver.drawPoint(VERSION + 48, {1,0}, true, _COL_WHITE);
@@ -32,7 +33,28 @@ int main()
 	int iver = handler.createObject(&ver);
 	handler.moveObject(iver, {0,0}, _MOVE_ABSOLUTE);
 
-	while(1)
+	/*obj.addVector({0,0,0}, {5,0,0}, '#', _COL_RED);
+	obj.addVector({5,0,0}, {0,5,0}, '#', _COL_RED);
+	obj.addVector({0,0,0}, {0,5,0}, '#', _COL_RED);
+	obj.addVector({0,5,0}, {5,0,0}, '#', _COL_RED);*/
+
+	obj.addVector({0,0,0}, {0,0,5}, '#', _COL_RED);
+	obj.addVector({5,0,0}, {0,0,5}, '#', _COL_RED);
+	obj.addVector({0,5,0}, {0,0,5}, '#', _COL_RED);
+	obj.addVector({5,5,0}, {0,0,5}, '#', _COL_RED);
+
+	/*obj.addVector({0,0,5}, {5,0,0}, '#', _COL_RED);
+	obj.addVector({5,0,5}, {0,5,0}, '#', _COL_RED);
+	obj.addVector({0,0,5}, {0,5,0}, '#', _COL_RED);
+	obj.addVector({0,5,5}, {5,0,0}, '#', _COL_RED);*/
+
+	obj.write();
+
+	handler.write();
+	render.render();
+
+	while(1);
+	/*while(1)
 	{
 		sInputEvent ie = input.poll();
 		if(ie.type != _EVENT_NULL)
@@ -75,6 +97,7 @@ int main()
 			usleep(10*1000);
 		}
 	}
+	*/
 
 	/*cRender a(' ', _COL_DEFAULT, 20,20);
 	cInput in;

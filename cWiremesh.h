@@ -5,7 +5,7 @@
 
 #include "cRender.h"
 
-#define _DEPTH 100
+#define _DEPTH 99
 
 struct sCoord3d
 {
@@ -19,6 +19,15 @@ struct sCoord3d
     ret.x = x + p.x;
     ret.y = y + p.y;
     ret.z = z + p.z;
+    return ret;
+  }
+
+  sCoord3d operator-(sCoord3d p)
+  {
+    sCoord3d ret;
+    ret.x = x - p.x;
+    ret.y = y - p.y;
+    ret.z = z - p.z;
     return ret;
   }
 };
@@ -43,6 +52,8 @@ public:
   void addVector(sCoord3d _origin, sCoord3d _vector, char _char, WORD _color);
 
   void rotate(sCoord3d _val);
+
+  void scale(int _scalar);
 
   sCoord3d getPosition();
 

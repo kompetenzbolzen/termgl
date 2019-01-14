@@ -88,6 +88,12 @@ int cRender::drawPoint(char _c, sPos _pos, bool _overrideCollision, WORD _color)
 
 int cRender::drawLine(char _c, sPos _pos1, sPos _pos2, bool _overrideCollision, WORD _color)
 {
+	if(_pos1.x > _pos2.x)
+	{
+		//Shit WILL go wrong
+		return drawLine(_c, _pos2, _pos1, _overrideCollision, _color);
+	}
+
 	if (_pos1.x == _pos2.x)	{ //Horizontal line
 		for (int i = _pos1.y; i <= _pos2.y; i++)
 		{

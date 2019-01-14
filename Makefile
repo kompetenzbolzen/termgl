@@ -36,5 +36,6 @@ genversion:
 	@echo "#pragma once" >> version.h
 	@echo "#define VERSION $(VERSION)" >> version.h
 	@echo "#define PATCHLEVEL $(PATCHLEVEL)" >> version.h
+	@echo "#define BRANCH \"`git status -bs | grep '##'`\"" >> version.h
 	@echo "#define DATE \"`date +'%d.%m.20%y'`\"" >> version.h
 	@echo "#define TIME \"`date +'%H:%M:%S'`\"" >> version.h

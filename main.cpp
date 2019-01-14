@@ -9,13 +9,13 @@
 #include "cInput.h"
 #include "cWiremesh.h"
 
-#include "testobject.h"
+//#include "testobject.h"
 
 int main()
 {
 	cRender render(' ', _COL_DEFAULT, 30,30);
 	cObjectHandler handler(&render);
-	cObject ver(30,1);
+	cObject ver(40,1);
 	cWiremesh obj;
 
 	cInput input;
@@ -30,29 +30,32 @@ int main()
 	ver.drawPoint(VERSION + 48, {1,0}, true, _COL_WHITE);
 	ver.drawPoint('.', {2,0}, true, _COL_WHITE);
 	ver.drawPoint(PATCHLEVEL + 48, {3,0}, true, _COL_WHITE);
-	ver.drawText(DATE, {5,0}, _COL_WHITE);
+	ver.drawText(DATE, {30,0}, _COL_WHITE);
+	ver.drawText(BRANCH, {5,0}, _COL_WHITE);
 	int iver = handler.createObject(&ver);
 	handler.moveObject(iver, {0,0}, _MOVE_ABSOLUTE);
 
-	int x = 25;
+	int x = 30;
+	int y = 20;
+	int z = 20;
 
-	obj.addVector({0,0,x}, {x,0,0}, '+', _COL_RED);
-	obj.addVector({x,0,x}, {0,x,0}, '+', _COL_RED);
-	obj.addVector({0,0,x}, {0,x,0}, '+', _COL_RED);
-	obj.addVector({0,x,x}, {x,0,0}, '+', _COL_RED);
+	obj.addVector({0,0,z}, {x,0,0}, '+', _COL_RED);
+	obj.addVector({0,0,z}, {0,y,0}, '+', _COL_RED);
+	obj.addVector({0,y,z}, {x,0,0}, '+', _COL_RED);
+	obj.addVector({x,0,z}, {0,y,0}, '+', _COL_RED);
 
-	obj.addVector({0,0,0}, {0,0,x}, '.', _COL_RED);
-	obj.addVector({x,0,0}, {0,0,x}, '.', _COL_RED);
-	obj.addVector({0,x,0}, {0,0,x}, '.', _COL_RED);
-	obj.addVector({x,x,0}, {0,0,x}, '.', _COL_RED);
+	obj.addVector({0,0,0}, {0,0,z}, ':', _COL_RED);
+	obj.addVector({x,0,0}, {0,0,z}, ':', _COL_RED);
+	obj.addVector({0,y,0}, {0,0,z}, ':', _COL_RED);
+	obj.addVector({x,y,0}, {0,0,z}, ':', _COL_RED);
 
-	obj.addVector({0,0,0}, {x,0,0}, '|', _COL_RED);
-	obj.addVector({x,0,0}, {0,x,0}, '|', _COL_RED);
-	obj.addVector({0,0,0}, {0,x,0}, '|', _COL_RED);
-	obj.addVector({0,x,0}, {x,0,0}, '|', _COL_RED);
+	obj.addVector({0,0,0}, {x,0,0}, ',', _COL_RED);
+	obj.addVector({0,0,0}, {0,y,0}, ',', _COL_RED);
+	obj.addVector({0,y,0}, {x,0,0}, ',', _COL_RED);
+	obj.addVector({x,0,0}, {0,y,0}, ',', _COL_RED);
 
 	handler.write();
-	obj.setPosition(0,0,0);
+	obj.setPosition(2,2,0);
 	obj.write(&render);
 
 
@@ -102,10 +105,10 @@ int main()
 
 			handler.write();
 			obj.write(&render);
-			render.render();
 
-			usleep(10*1000);
 		}
+		render.render();
+		usleep(10*1000);
 	}
 
 

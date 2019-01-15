@@ -5,7 +5,7 @@ OUTPUT = Engine
 BUILDDIR = build
 #VERSION
 VERSION = 0
-PATCHLEVEL = 1
+PATCHLEVEL = 2
 
 OBJ = main.o cObject.o cObjectHandler.o cRender.o cInput.o cWiremesh.o
 

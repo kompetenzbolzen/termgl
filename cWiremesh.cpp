@@ -40,25 +40,14 @@ void cWiremesh::write(cRender *_render)
           translate(vectors[i].origin + vectors[i].direction + position, origin),
           true, vectors[i].color);
 
-    /*_render->drawPoint(vectors[i].c, translate(vectors[i].origin + position, origin), true, vectors[i].color);
-    _render->drawPoint(vectors[i].c, translate(vectors[i].origin + vectors[i].direction + position, origin), true, vectors[i].color);*/
-  }
 }
 
 sPos cWiremesh::translate(sCoord3d _coord, sCoord3d _origin)
 {
   sPos ret;
 
-  sCoord3d coord;
-  coord.x = _coord.x - _origin.x;
-  coord.y = _coord.y - _origin.y;
-  coord.z = _coord.z - _origin.z;
-
-  ret.x = (int)((float)coord.x - ((float)coord.z / (float)_DEPTH * (float)(coord.x)));
-  ret.y = (int)((float)coord.y - ((float)coord.z / (float)_DEPTH * (float)(coord.y)));
-
-  ret.x += _origin.x;
-  ret.y += _origin.y;
+  ret.x = (int)((float)_coord.x - ((float)_coord.z / (float)_DEPTH * (float)(_coord.x - _origin.x)));
+  ret.y = (int)((float)_coord.y - ((float)_coord.z / (float)_DEPTH * (float)(_coord.y - _origin.y)));
 
   return ret;
 }
@@ -78,7 +67,16 @@ void cWiremesh::setPosition(sCoord3d _pos)
   position = _pos;
 }
 
-void cWiremesh::scale(int _scalar)
+void cWiremesh::scale(float _scalar)
 {
-  //Implement Scale
+  for(unsigned long int i = 0; i < vectors.size(); i++)
+  {
+    vectors[i].origin.x = (int)((float)vectors[i].origin.x * _scalar);
+    vectors[i].origin.y = (int)((float)vectors[i].origin.y * _scalar);
+    vectors[i].origin.z = (int)((float)vectors[i].origin.z * _scalar);
+
+    vectors[i].direction.x = (int)((float)vectors[i].direction.x * _scalar);
+    vectors[i].direction.y = (int)((float)vectors[i].direction.y * _scalar);
+    vectors[i].direction.z = (int)((float)vectors[i].direction.z * _scalar);
+  }
 }

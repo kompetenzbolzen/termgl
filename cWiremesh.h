@@ -53,7 +53,7 @@ public:
 
   void rotate(sCoord3d _val);
 
-  void scale(int _scalar);
+  void scale(float _scalar);
 
   sCoord3d getPosition();
 

@@ -39,7 +39,7 @@ void cWiremesh::write(cRender *_render)
           translate(vectors[i].origin + position, origin),
           translate(vectors[i].origin + vectors[i].direction + position, origin),
           true, vectors[i].color);
-
+  }
 }
 
 sPos cWiremesh::translate(sCoord3d _coord, sCoord3d _origin)

@@ -22,7 +22,6 @@ int main()
 
 	render.render();
 
-
 	/*int iobj = handler.createObject((cObject*)&obj);
 	handler.moveObject(iobj, {40,10}, _MOVE_ABSOLUTE);*/
 
@@ -54,12 +53,7 @@ int main()
 	obj.addVector({0,y,0}, {x,0,0}, ',', _COL_RED);
 	obj.addVector({x,0,0}, {0,y,0}, ',', _COL_RED);
 
-	handler.write();
-	obj.setPosition(2,2,0);
-	obj.write(&render);
 
-
-	render.render();
 	sCoord3d position = {0,0,0};
 	while(1)
 	{
@@ -73,21 +67,18 @@ int main()
 				{
 					case 'A'://up
 						position.y --;
-						obj.setPosition(position);
 						break;
 					case 'B'://down
 						position.y ++;
-						obj.setPosition(position);
 						break;
 					case 'C'://right
 						position.x ++;
-						obj.setPosition(position);
 						break;
 					case 'D'://left
 						position.x --;
-						obj.setPosition(position);
 						break;
 				};
+				obj.setPosition(position);
 			}
 			else if (ie.type == _EVENT_MOUSE)
 			{
@@ -96,17 +87,26 @@ int main()
 			}
 			else if (ie.type == _EVENT_CHAR)
 			{
-				handler.charEvent(ie.c);
+				//handler.charEvent(ie.c);
+				switch(ie.c)
+				{
+					case 'w':
+						position.z++;
+						break;
+					case 's':
+						position.z--;
+						break;
+				};
+				obj.setPosition(position);
 			}
 			else if (ie.type == _EVENT_TERM)
 			{
 				return 0;
 			}
 
-			handler.write();
-			obj.write(&render);
-
 		}
+		handler.write();
+		obj.write(&render);
 		render.render();
 		usleep(10*1000);
 	}

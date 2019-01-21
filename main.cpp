@@ -91,16 +91,22 @@ int main()
 				switch(ie.c)
 				{
 					case 'w':
-						position.z++;
+						obj.rotate({-10,0,0});
 						break;
 					case 's':
-						position.z--;
+						obj.rotate({10,0,0});
 						break;
 					case 'a':
-						obj.scale(1.2);
+						obj.rotate({0,-10,0});
 						break;
 					case 'd':
-						obj.scale(0.8);
+						obj.rotate({0,10,0});
+						break;
+					case 'q':
+						obj.rotate({0,0,-10});
+						break;
+					case 'e':
+						obj.rotate({0,0,10});
 						break;
 				};
 				obj.setPosition(position);

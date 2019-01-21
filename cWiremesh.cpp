@@ -3,6 +3,7 @@
 cWiremesh::cWiremesh()
 {
   position = {0,0,0};
+  angle    = {0,0,0};
 }
 
 cWiremesh::~cWiremesh()
@@ -35,9 +36,12 @@ void cWiremesh::write(cRender *_render)
 
   for(long unsigned int i = 0; i < vectors.size(); i++)
   {
+    sCoord3d vorigin    = applyRotation(vectors[i].origin,    angle);
+    sCoord3d vdirection = applyRotation(vectors[i].direction, angle);
+
     _render->drawLine(vectors[i].c,
-          translate(vectors[i].origin + position, origin),
-          translate(vectors[i].origin + vectors[i].direction + position, origin),
+          translate(vorigin + position, origin),
+          translate(vorigin + vdirection + position, origin),
           true, vectors[i].color);
   }
 }
@@ -81,21 +85,54 @@ void cWiremesh::scale(float _scalar)
   }
 }
 
-sCoord3d applyRotation(sCoord3d _vector, sCoord3d _angle)
+sCoord3d cWiremesh::applyRotation(sCoord3d _vector, sCoord3d _angle)
 {
   sCoord3d ret = _vector;
 
+  //Perform some algebra-magic
+  //couldn't be bothered to implement or use a matrix class
+
   if(_angle.x)
   {
+    float rads = (float)_angle.x * PI / 180.0;
 
+    ret.y = (int)(
+      (float)_vector.y * cos(rads) -
+      (float)_vector.z * sin(rads)
+    );
+    ret.z = (int)(
+      (float)_vector.y * sin(rads) +
+      (float)_vector.z * cos(rads)
+    );
   }
   if(_angle.y)
   {
+    float rads = (float)_angle.y * PI / 180.0;
+    sCoord3d tmp = ret;
 
+    ret.x = (int)(
+      (float)tmp.x * cos(rads) +
+      (float)tmp.z * sin(rads)
+    );
+
+    ret.z = (int)(
+      - (float)tmp.x * sin(rads)
+      + (float)tmp.z * cos(rads)
+    );
   }
   if(_angle.z)
   {
+    float rads = (float)_angle.z * PI / 180.0;
+    sCoord3d tmp = ret;
 
+    ret.x = (int) (
+      (float)tmp.x * cos(rads) -
+      (float)tmp.y * sin(rads)
+    );
+    ret.y = (int) (
+      (float)tmp.x * sin(rads) +
+      (float)tmp.y * cos(rads)
+    );
   }
 
   return ret;

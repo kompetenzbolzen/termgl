@@ -114,6 +114,18 @@ int cRender::drawLine(char _c, sPos _pos1, sPos _pos2, bool _overrideCollision, 
 		for (int i = 0; i <= abs(dX); i++)
 		{
 			drawPoint(_c, sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5)}, _overrideCollision, _color); //+0.5 for rounding error
+
+			if(abs(fGradient) > 1)
+			{
+				int dy = (int)(((i + 1) * fGradient + _pos1.y + 0.5) - (i * fGradient + _pos1.y + 0.5));
+				if(abs(dy) > 0)
+				{
+					drawLine(_c,
+						sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5)},
+						sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5) + dy},
+						_overrideCollision, _color);
+				}
+			}
 		}
 	}
 

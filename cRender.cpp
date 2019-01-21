@@ -124,13 +124,14 @@ int cRender::drawLine(char _c, sPos _pos1, sPos _pos2, bool _overrideCollision, 
 						sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5)},
 						sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5) + dy},
 						_overrideCollision, _color);
-				}
-			}
-		}
-	}
+				}//if
+			}//if
+
+		}//for
+	}//else
 
 	return 0;
-}
+}//drawLine
 
 int cRender::drawText(string _s, sPos _pos, WORD _color)
 {

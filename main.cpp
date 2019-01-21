@@ -35,8 +35,8 @@ int main()
 	handler.moveObject(iver, {0,0}, _MOVE_ABSOLUTE);
 
 	int x = 30;
-	int y = 20;
-	int z = 20;
+	int y = 30;
+	int z = 30;
 
 	obj.addVector({0,0,z}, {x,0,0}, '+', _COL_RED);
 	obj.addVector({0,0,z}, {0,y,0}, '+', _COL_RED);
@@ -96,6 +96,12 @@ int main()
 					case 's':
 						position.z--;
 						break;
+					case 'a':
+						obj.scale(1.2);
+						break;
+					case 'd':
+						obj.scale(0.8);
+						break;
 				};
 				obj.setPosition(position);
 			}
@@ -108,6 +114,7 @@ int main()
 		handler.write();
 		obj.write(&render);
 		render.render();
+
 		usleep(10*1000);
 	}
 

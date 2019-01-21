@@ -17,7 +17,7 @@ void cWiremesh::addVector(sCoord3d _origin, sCoord3d _vector, char _char, WORD _
 
 void cWiremesh::rotate(sCoord3d _val)
 {
-  //Implement rotate
+  angle = angle + _val;
 }
 
 void cWiremesh::reset()
@@ -79,4 +79,24 @@ void cWiremesh::scale(float _scalar)
     vectors[i].direction.y = (int)((float)vectors[i].direction.y * _scalar);
     vectors[i].direction.z = (int)((float)vectors[i].direction.z * _scalar);
   }
+}
+
+sCoord3d applyRotation(sCoord3d _vector, sCoord3d _angle)
+{
+  sCoord3d ret = _vector;
+
+  if(_angle.x)
+  {
+
+  }
+  if(_angle.y)
+  {
+
+  }
+  if(_angle.z)
+  {
+
+  }
+
+  return ret;
 }

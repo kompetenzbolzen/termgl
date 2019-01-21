@@ -7,6 +7,8 @@
 
 #define _DEPTH 99
 
+#define PI 3.14159265
+
 struct sCoord3d
 {
   int x;
@@ -71,7 +73,11 @@ private:
 
   sPos translate(sCoord3d _coord, sCoord3d _origin);
 
+  sCoord3d applyRotation(sCoord3d _vector, sCoord3d _angle);
+
   sCoord3d position;
+
+  sCoord3d angle;
 
   std::vector<sVector> vectors;
 };

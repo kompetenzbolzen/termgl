@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "cObject.h"
+#include "cWiremesh.h"
 
 //movemodes
 #define _MOVE_RELATIVE	0
@@ -35,6 +36,18 @@ public:
  */
 	int destroyObject(int _object);
 
+	/**
+	* Analog to createObject()
+	*/
+	int createWiremesh(cWiremesh *_mesh);
+
+	int moveWiremesh(int _mesh, sCoord3d _pos, int _mode);
+
+	int rotateWiremesh(int _mesh, sCoord3d _angle);
+
+	int destroyWiremesh(int _mesh);
+
+
 	/** writes all objects in objects[] to render buffer
 	*/
 	int write();
@@ -64,6 +77,7 @@ private:
 	void buildHitmap();
 
 	vector<cObject*> objects;
+	vector<cWiremesh*> meshes;
 	vector< vector<unsigned int> > iHitMap;
 	cRender *render;
 	unsigned long int iActiveObject;

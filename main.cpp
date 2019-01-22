@@ -15,7 +15,7 @@ int main()
 {
 	cRender render(' ', _COL_DEFAULT, 30,30);
 	cObjectHandler handler(&render);
-	cObject ver(40,1);
+	cObject ver(45,1);
 	cWiremesh obj;
 
 	cInput input;
@@ -29,7 +29,7 @@ int main()
 	ver.drawPoint(VERSION + 48, {1,0}, true, _COL_WHITE);
 	ver.drawPoint('.', {2,0}, true, _COL_WHITE);
 	ver.drawPoint(PATCHLEVEL + 48, {3,0}, true, _COL_WHITE);
-	ver.drawText(DATE, {30,0}, _COL_WHITE);
+	ver.drawText(DATE, {32,0}, _COL_WHITE);
 	ver.drawText(BRANCH, {5,0}, _COL_WHITE);
 	int iver = handler.createObject(&ver);
 	handler.moveObject(iver, {0,0}, _MOVE_ABSOLUTE);
@@ -52,9 +52,8 @@ int main()
 	obj.addVector({0,0,0}, {0,y,0}, ',', _COL_RED);
 	obj.addVector({0,y,0}, {x,0,0}, ',', _COL_RED);
 	obj.addVector({x,0,0}, {0,y,0}, ',', _COL_RED);
+	int imesh = handler.createWiremesh(&obj);
 
-
-	sCoord3d position = {0,0,0};
 	while(1)
 	{
 		sInputEvent ie = input.poll();
@@ -66,19 +65,18 @@ int main()
 				switch (ie.c)
 				{
 					case 'A'://up
-						position.y --;
+						handler.moveWiremesh(imesh,{0,-1,0}, _MOVE_RELATIVE);
 						break;
 					case 'B'://down
-						position.y ++;
+						handler.moveWiremesh(imesh,{0,1,0}, _MOVE_RELATIVE);
 						break;
 					case 'C'://right
-						position.x ++;
+						handler.moveWiremesh(imesh,{1,0,0}, _MOVE_RELATIVE);
 						break;
 					case 'D'://left
-						position.x --;
+						handler.moveWiremesh(imesh,{-1,0,0}, _MOVE_RELATIVE);
 						break;
 				};
-				obj.setPosition(position);
 			}
 			else if (ie.type == _EVENT_MOUSE)
 			{
@@ -91,25 +89,24 @@ int main()
 				switch(ie.c)
 				{
 					case 'w':
-						obj.rotate({-10,0,0});
+						handler.rotateWiremesh(imesh,{-10,0,0});
 						break;
 					case 's':
-						obj.rotate({10,0,0});
+						handler.rotateWiremesh(imesh,{10,0,0});
 						break;
 					case 'a':
-						obj.rotate({0,-10,0});
+						handler.rotateWiremesh(imesh,{0,-10,0});
 						break;
 					case 'd':
-						obj.rotate({0,10,0});
+						handler.rotateWiremesh(imesh,{0,10,0});
 						break;
 					case 'q':
-						obj.rotate({0,0,-10});
+						handler.rotateWiremesh(imesh,{0,0,-10});
 						break;
 					case 'e':
-						obj.rotate({0,0,10});
+						handler.rotateWiremesh(imesh,{0,0,10});
 						break;
 				};
-				obj.setPosition(position);
 			}
 			else if (ie.type == _EVENT_TERM)
 			{
@@ -118,7 +115,6 @@ int main()
 
 		}
 		handler.write();
-		obj.write(&render);
 		render.render();
 
 		usleep(10*1000);

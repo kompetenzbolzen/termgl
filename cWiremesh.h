@@ -6,7 +6,6 @@
 #include "cRender.h"
 
 #define _DEPTH 99
-
 #define PI 3.14159265
 
 struct sCoord3d

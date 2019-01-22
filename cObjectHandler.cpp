@@ -39,6 +39,9 @@ int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 
 int cObjectHandler::destroyObject(int _object)
 {
+	if(!objects[_object])
+		return 1;
+
 	delete objects[_object];
 	objects[_object] = NULL;
 
@@ -49,6 +52,12 @@ int cObjectHandler::destroyObject(int _object)
 int cObjectHandler::write()
 {
 	render->clear();
+
+	for (unsigned long int i = 0; i < meshes.size(); i++)
+	{
+		if(meshes[i])
+			meshes[i]->write(render);
+	}
 
 	for (unsigned long int i = 0; i < objects.size(); i++)
 	{
@@ -172,4 +181,51 @@ void cObjectHandler::focus(unsigned int _id)
 		iActiveObject = objects.size();
 	else
 		iActiveObject = _id;
+}
+
+int cObjectHandler::createWiremesh(cWiremesh *_mesh)
+{
+	meshes.push_back(_mesh);
+
+	return meshes.size() - 1;
+}
+
+int cObjectHandler::moveWiremesh(int _mesh, sCoord3d _pos, int _mode)
+{
+	if (_mesh >= meshes.size()) //prevent segmentation faults
+		return 1;
+
+	if (!meshes[_mesh])
+		return 1;
+
+	sCoord3d meshPosition = meshes[_mesh]->getPosition();
+
+	if (_mode == _MOVE_RELATIVE)
+		meshes[_mesh]->setPosition(meshPosition + _pos);
+	else if (_mode == _MOVE_ABSOLUTE)
+		meshes[_mesh]->setPosition(_pos);
+
+	return 0;
+}
+
+int cObjectHandler::destroyWiremesh(int _mesh)
+{
+	if(!meshes[_mesh])
+		return 1;
+
+	delete meshes[_mesh];
+	meshes[_mesh] = NULL;
+
+	return 0;
+}
+
+int cObjectHandler::rotateWiremesh(int _mesh, sCoord3d _angle)
+{
+	if (_mesh >= meshes.size()) //prevent segmentation faults
+		return 1;
+
+	if (!meshes[_mesh])
+		return 1;
+
+	meshes[_mesh]->rotate(_angle);
 }

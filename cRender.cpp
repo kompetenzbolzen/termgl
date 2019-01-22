@@ -118,15 +118,22 @@ int cRender::drawLine(char _c, sPos _pos1, sPos _pos2, bool _overrideCollision, 
 			if(abs(fGradient) > 1)
 			{
 				int dy = (int)(((i + 1) * fGradient + _pos1.y + 0.5) - (i * fGradient + _pos1.y + 0.5));
-				if(abs(dy) > 0)
+
+				if(dy > 0 && ((int)(i * fGradient + _pos1.y + 0.5) + dy) <= _pos2.y)
 				{
 					drawLine(_c,
 						sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5)},
-						sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5) + dy},
+						sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5) + dy },
 						_overrideCollision, _color);
 				}//if
+				else if(dy < 0 && ((int)(i * fGradient + _pos1.y + 0.5) + dy) >= (_pos2.y) )
+				{
+					drawLine(_c,
+						sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5) + dy },
+						sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5)},
+						_overrideCollision, _color);
+				}//else if
 			}//if
-
 		}//for
 	}//else
 

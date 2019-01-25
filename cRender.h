@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
+#include <cmath>
 //#include <math.h>
 //#include <iostream>
 #include <termios.h>

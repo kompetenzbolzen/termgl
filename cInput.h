@@ -30,7 +30,7 @@ struct sInputEvent
   unsigned int type;
   unsigned char c;
   unsigned int b;
-  unsigned int x, y;
+  int x, y;
 };
 
 class cInput

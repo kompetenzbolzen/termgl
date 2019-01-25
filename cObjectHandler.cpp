@@ -228,4 +228,6 @@ int cObjectHandler::rotateWiremesh(int _mesh, sCoord3d _angle)
 		return 1;
 
 	meshes[_mesh]->rotate(_angle);
+
+	return 0;
 }

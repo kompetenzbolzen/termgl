@@ -1,17 +1,25 @@
 CC      = /usr/bin/g++
-CFLAGS  = -Wall -g -std=c++11
+CFLAGS  = -Wall -std=c++11 -shared -fPIC
+DEBUGFLAGS = -Wall -g -std=c++11
 LDFLAGS =
-OUTPUT = Engine
+SONAME = engine
 BUILDDIR = build
 #VERSION
 VERSION = 0
 PATCHLEVEL = 3
+OUTPUT = lib$(SONAME).so.$(VERSION).$(PATCHLEVEL)
 
-OBJ = main.o cObject.o cObjectHandler.o cRender.o cInput.o cWiremesh.o
+OBJ = cObject.o cObjectHandler.o cRender.o cInput.o cWiremesh.o
 
-debug: genversion $(OBJ)
+build: genversion $(OBJ)
 	mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) -o $(BUILDDIR)/$(OUTPUT) $(OBJ) $(LDFLAGS)
+	mkdir -p $(BUILDDIR)/lib
+	mkdir -p $(BUILDDIR)/inc
+	$(CC) $(CFLAGS) -o $(BUILDDIR)/lib/$(OUTPUT) $(OBJ) $(LDFLAGS) -Wl,-soname=lib$(SONAME).so.$(VERSION)
+	ln -sf $(OUTPUT) $(BUILDDIR)/lib/lib$(SONAME).so.$(VERSION)
+	ln -sf $(OUTPUT) $(BUILDDIR)/lib/lib$(SONAME).so
+	cp c*.h $(BUILDDIR)/inc
+	cp version.h $(BUILDDIR)/inc
 
 %.o: %.cpp
 	@echo
@@ -20,15 +28,17 @@ debug: genversion $(OBJ)
 	@echo
 	$(CC) $(CFLAGS) -c $<
 
-all: clean debug
+
+
+all: clean build
 
 .PHONY: clean
 
 clean:
-	rm -df $(BUILDDIR)/$(OUTPUT) $(OBJ) version.h
+	rm -df  $(OBJ) test.o version.h
+	rm -R $(BUILDDIR)
 
-run: debug
-	./$(BUILDDIR)/$(OUTPUT)
+run: test
 
 genversion:
 	@echo Building Version
@@ -39,3 +49,8 @@ genversion:
 	@echo "#define BRANCH \"`git status -bs | grep '##'`\"" >> version.h
 	@echo "#define DATE \"`date +'%d.%m.20%y'`\"" >> version.h
 	@echo "#define TIME \"`date +'%H:%M:%S'`\"" >> version.h
+
+test: genversion test.o $(OBJ)
+	mkdir -p $(BUILDDIR)/test
+	$(CC) $(DEBUGFLAGS) -o $(BUILDDIR)/test/test test.o $(OBJ) $(LDFLAGS)
+	./$(BUILDDIR)/test/test test

@@ -1,5 +1,5 @@
 CC      = /usr/bin/g++
-CFLAGS  = -Wall -g -std=c++11 -Werror=missing-prototypes
+CFLAGS  = -Wall -g -std=c++11
 LDFLAGS =
 OUTPUT = Engine
 BUILDDIR = build
@@ -25,7 +25,7 @@ all: clean debug
 .PHONY: clean
 
 clean:
-	rm -df $(BUILDDIR)/$(OUTPUT) *.o version.h
+	rm -df $(BUILDDIR)/$(OUTPUT) $(OBJ) version.h
 
 run: debug
 	./$(BUILDDIR)/$(OUTPUT)

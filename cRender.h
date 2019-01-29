@@ -4,13 +4,10 @@
 #include <stdio.h>
 #include <string>
 #include <cmath>
-//#include <math.h>
-//#include <iostream>
 #include <termios.h>
 
 #ifdef __linux__
 	#include <unistd.h>
-	//#include <term.h>
 	#include <sys/ioctl.h>
 
 	typedef int WORD;

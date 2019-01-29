@@ -10,7 +10,7 @@ Required Packages:
 
 this creates two folders in ./build/: lib and inc, wich hold the library and the headers respectively. these can then be copied into your projects directory.
 
-#Using
+# Using
 
 Compile your program with linkerflags:
 

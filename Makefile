@@ -39,6 +39,7 @@ clean:
 	rm -R $(BUILDDIR)
 
 run: test
+	./$(BUILDDIR)/test/test
 
 genversion:
 	@echo Building Version

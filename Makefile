@@ -29,14 +29,13 @@ build: genversion $(OBJ)
 	$(CC) $(CFLAGS) -c $<
 
 
-
 all: clean build
 
 .PHONY: clean
 
 clean:
 	rm -df  $(OBJ) test.o version.h
-	rm -R $(BUILDDIR)
+	rm -Rdf $(BUILDDIR)/lib $(BUILDDIR)/inc $(BUILDDIR)/test
 
 run: test
 	./$(BUILDDIR)/test/test

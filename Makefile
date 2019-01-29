@@ -6,7 +6,7 @@ SONAME = engine
 BUILDDIR = build
 #VERSION
 VERSION = 0
-PATCHLEVEL = 3
+PATCHLEVEL = 4
 OUTPUT = lib$(SONAME).so.$(VERSION).$(PATCHLEVEL)
 
 OBJ = cObject.o cObjectHandler.o cRender.o cInput.o cWiremesh.o

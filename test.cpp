@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 
 	handler.moveWiremesh(imesh,{middle.x,middle.y,0}, _MOVE_ABSOLUTE);
 
-	while( loop || framecounter < 1000)
+	while( loop )
 	{
 		sInputEvent ie = input.poll();
 

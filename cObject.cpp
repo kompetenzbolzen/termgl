@@ -4,6 +4,7 @@ cObject::cObject(int _sx, int _sy)
 {
 	bSizeSet = false;
 
+	pos = {0,0};
 	setSize(_sx, _sy);
 }
 

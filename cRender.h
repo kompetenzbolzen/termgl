@@ -63,6 +63,8 @@ struct sPos
 	int y;
 };
 /** cRender manages a framebuffer the size of the console (window) it is run in.
+*
+* puts console in alternate screen mode
 */
 class cRender
 {

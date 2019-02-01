@@ -42,6 +42,9 @@ struct sVector
   WORD color;
 };
 
+/**
+* cWiremesh stores 3D objects as multiple vectors. it can write itself on a cRender framebuffer.
+*/
 class cWiremesh
 {
 public:
@@ -50,10 +53,22 @@ public:
 
   virtual ~cWiremesh();
 
+  /**
+  * Add a line from _origin to (_origin + _vector) in 3D space.
+  */
   void addVector(sCoord3d _origin, sCoord3d _vector, char _char, WORD _color);
 
+  /**
+  * Rotates by (x,y,z) degrees around the corresponding axis.
+  * Rotation is stored seperatately from original vectors while they stay untouched to prevent growing rounding errors by repeated rotation.
+  *
+  * Rotation is applied relative to the origin of this wiremsh.
+  */
   void rotate(sCoord3d _val);
 
+  /**
+  * Scales by _scalar. The scalar is directly applied to all vectors. Be wary of growing rounding errors!
+  */
   void scale(float _scalar);
 
   sCoord3d getPosition();
@@ -62,8 +77,15 @@ public:
 
   void setPosition(sCoord3d _pos);
 
+  /**
+  * clear this wiremesh
+  */
   void reset();
 
+  /**
+  * Translates wiremesh into 2D space after applying rotation to each vector.
+  * The vanishing point is set to the center of _render with depth _DEPTH. Alter _DEPTH to achieve optimal resultst.
+  */
   void write(cRender *_render);
 
 protected:

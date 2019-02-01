@@ -12,14 +12,26 @@ struct sObject
 	int sizeX;
 	int sizeY;
 };
-/* cObject can be used standalone as well as inherited
+
+/** cObject can be used standalone as well as inherited
 * every cObject has its own framebuffer as well as position viariables to be moveable.
-* cObject is used by cObjectHandler to manage all objects to be displayed
+* cObject is used by cObjectHandler to manage all objects to be displayed.
+*
+* Minimal example for inheriting class
+*
+*
+*			class example : cObject
+*			{
+*			public:
+*				example() { setSize(10,5); }
+*				~example() { destruct(); }
+*			};
+*
 */
 class cObject : public cRender
 {
 public:
-	/* Sets the size to _sx x _sy
+	/** Sets the size to _sx x _sy
 	*/
 	cObject(int _sx, int _sy);
 

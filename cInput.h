@@ -1,9 +1,3 @@
-/*
-* cInput is responsible for Handling everything related to setting up and managing the console window
-* as well as decoding keyboard and mouse events.
-* Compatible with xterm compatible terminal emulators
-*/
-
 #ifndef CINPUT_H_
 #define CINPUT_H_
 
@@ -37,6 +31,7 @@ struct sInputEvent
 * * puts STDIN in raw mode
 * * activates mouse tracking
 * * reverts console back to normal operation on destruction.
+* Compatible with xterm compatible terminal emulators
 */
 class cInput
 {

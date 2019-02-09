@@ -20,7 +20,7 @@ class cObjectHandler
 public:
 	/** *_render: pointer to instance of cRender all objects will be written to
 	*/
-	cObjectHandler(cRender *_render);
+	explicit cObjectHandler(cRender *_render);
 
 	/** Adds _object to managed objects vector
 	* returns Identifier for newly created vector

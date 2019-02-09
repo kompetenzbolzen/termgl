@@ -35,7 +35,7 @@ all: clean build
 
 clean:
 	rm -df  $(OBJ) test.o version.h
-	rm -Rdf $(BUILDDIR)/lib $(BUILDDIR)/inc $(BUILDDIR)/test
+	rm -Rdf $(BUILDDIR)/lib $(BUILDDIR)/inc $(BUILDDIR)/test doc/
 
 run: test
 	./$(BUILDDIR)/test/test
@@ -54,3 +54,7 @@ test: genversion test.o $(OBJ)
 	mkdir -p $(BUILDDIR)/test
 	$(CC) $(DEBUGFLAGS) -o $(BUILDDIR)/test/test test.o $(OBJ) $(LDFLAGS)
 	./$(BUILDDIR)/test/test test
+
+doc:
+	mkdir -p doc
+	doxygen .doxygen

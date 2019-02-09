@@ -15,4 +15,4 @@ this creates two folders in ./build/: lib and inc, wich hold the library and the
 
 Compile your program with linkerflags:
 
-    -L./lib -lengine -lstdc++
+    -L/path/to/lib -lengine -lstdc++

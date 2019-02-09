@@ -1,9 +1,3 @@
-/*
-* cInput is responsible for Handling everything related to setting up and managing the console window
-* as well as decoding keyboard and mouse events.
-* Compatible with xterm compatible terminal emulators
-*/
-
 #ifndef CINPUT_H_
 #define CINPUT_H_
 
@@ -32,7 +26,13 @@ struct sInputEvent
   unsigned int b;
   int x, y;
 };
-
+/**
+* ##cInput
+* * puts STDIN in raw mode
+* * activates mouse tracking
+* * reverts console back to normal operation on destruction.
+* Compatible with xterm compatible terminal emulators
+*/
 class cInput
 {
 public:
@@ -42,7 +42,12 @@ public:
 
   /** Reads inputevents
   * returns event struct
-  * event queu is empty, when sInputEvent.type == _EVENT_NULL
+  * ### sInputEvent.type
+  * * _EVENT_NULL: No input recorded
+  * * _EVENT_CHAR: A Key was pressed, stored in .c
+  * * _EVENT_KEY: Escape sequence recorded, stored in .c without escape char
+  * * _EVENT_MOUSE: Console registered click at (.x, .y) with origin at (0,0) (top left). Mouse button stored in b.
+  * * _EVENT_TERM: Console registered Ctrl+C
   */
   sInputEvent poll();
 

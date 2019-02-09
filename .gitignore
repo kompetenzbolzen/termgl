@@ -2,4 +2,5 @@
 *.so*
 build/*
 bin/*
+doc/*
 version.h

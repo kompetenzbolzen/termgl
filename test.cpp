@@ -11,12 +11,39 @@
 
 //#include "testobject.h"
 
+class testobject : cObject
+{
+public:
+  testobject()
+  {
+    setSize(10,5);
+    cc = 0;
+
+    drawRectangle('#', NULL, {0,0}, {9,4}, _COL_GREEN, _COL_DEFAULT);
+  }
+
+  ~testobject() { destruct(); }
+
+  virtual void onClick(sPos _pos, unsigned int _button)
+  {
+    cc++;
+    drawText(std::to_string(cc), {2,2}, _COL_RED);
+
+    drawPoint('Q', _pos, true, _COL_YELLOW);
+  }
+
+	virtual void onChar(unsigned char _c) { drawPoint(_c, {1,1},true, _COL_BLUE); }
+private:
+  int cc;
+};
+
 int main(int argc, char* argv[])
 {
 	cRender render(' ', _COL_DEFAULT, 30,30);
 	cObjectHandler handler(&render);
 	cObject ver(45,1);
 	cWiremesh obj;
+	testobject obj2;
 
 	cInput input;
 
@@ -59,6 +86,9 @@ int main(int argc, char* argv[])
 	obj.addVector({x,-x,0}, {0,2*y,0}, ',', _COL_RED);
 	int imesh = handler.createWiremesh(&obj);
 
+	int iobj2 = handler.createObject((cObject*)&obj2);
+	handler.moveObject(iobj2, {3,3}, _MOVE_ABSOLUTE);
+
 	sPos middle = render.getSize();
 	middle.x /= 2;
 	middle.y /= 2;
@@ -76,16 +106,16 @@ int main(int argc, char* argv[])
 				switch (ie.c)
 				{
 					case 'A'://up
-						handler.moveWiremesh(imesh,{0,-1,0}, _MOVE_RELATIVE);
+						handler.setCameraPosition({0,-1}, _MOVE_RELATIVE);
 						break;
 					case 'B'://down
-						handler.moveWiremesh(imesh,{0,1,0}, _MOVE_RELATIVE);
+						handler.setCameraPosition({0,1}, _MOVE_RELATIVE);
 						break;
 					case 'C'://right
-						handler.moveWiremesh(imesh,{1,0,0}, _MOVE_RELATIVE);
+						handler.setCameraPosition({1,0}, _MOVE_RELATIVE);
 						break;
 					case 'D'://left
-						handler.moveWiremesh(imesh,{-1,0,0}, _MOVE_RELATIVE);
+						handler.setCameraPosition({-1,0}, _MOVE_RELATIVE);
 						break;
 				};
 			}

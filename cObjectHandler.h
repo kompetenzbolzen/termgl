@@ -53,6 +53,11 @@ public:
 	int destroyWiremesh(int _mesh);
 
 
+	void setCameraPosition(sPos _pos, int _mode);
+
+	sPos getCameraPosition();
+
+
 	/**
 	* writes all objects in objects[] to render buffer
 	*/
@@ -91,4 +96,5 @@ private:
 	vector< vector<unsigned int> > iHitMap;
 	cRender *render;
 	unsigned long int iActiveObject;
+	sPos cameraPosition;
 };

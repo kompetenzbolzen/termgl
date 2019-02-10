@@ -3,6 +3,9 @@
 cObjectHandler::cObjectHandler(cRender *_render)
 {
 	render = _render;
+
+	cameraPosition = {0,0};
+
 	iActiveObject = 0;
 
 	objects.push_back(NULL); //Create first Object as Catcher for Events
@@ -56,7 +59,11 @@ int cObjectHandler::write()
 	for (unsigned long int i = 0; i < meshes.size(); i++)
 	{
 		if(meshes[i])
+		{
+			moveWiremesh(i,{-cameraPosition.x, -cameraPosition.y, 0} ,_MOVE_RELATIVE);
 			meshes[i]->write(render);
+			moveWiremesh(i,{cameraPosition.x, cameraPosition.y, 0},_MOVE_RELATIVE);
+		}
 	}
 
 	for (unsigned long int i = 0; i < objects.size(); i++)
@@ -69,7 +76,8 @@ int cObjectHandler::write()
 			for (int o = 0; o < obj.sizeY; o++) { //y axis
 				for (int p = 0; p < obj.sizeX; p++) { //x axis
 					if (obj.cScreen[p][o]) { //Dont overwrite empty pixels
-						sPos pos{ obj.pos.x + p, obj.pos.y + o };
+						sPos pos{ obj.pos.x + p - cameraPosition.x,
+							 				obj.pos.y + o - cameraPosition.y };
 						render->drawPoint(obj.cScreen[p][o], pos, true, obj.wColor[p][o]);
 					}
 				}
@@ -92,8 +100,8 @@ int cObjectHandler::clickEvent(sPos _pos, unsigned int _button)
 	{
 		sPos rel_pos;
 		sPos obj_pos = objects[ iHitMap[_pos.x][_pos.y] ]->getPosition();
-		rel_pos.x = _pos.x - obj_pos.x;
-		rel_pos.y = _pos.y - obj_pos.y;
+		rel_pos.x = _pos.x - obj_pos.x + cameraPosition.x;
+		rel_pos.y = _pos.y - obj_pos.y + cameraPosition.y;
 
 		iActiveObject = iHitMap[_pos.x][_pos.y]; //Set active object
 		objects[ iHitMap[_pos.x][_pos.y] ]->onClick(rel_pos, _button);
@@ -154,6 +162,9 @@ void cObjectHandler::buildHitmap()
 		{
 			sPos oPos = objects[i]->getPosition();
 			sPos oSize = objects[i]->getSize();
+
+			oPos.x -= cameraPosition.x;
+			oPos.y -= cameraPosition.y;
 
 			for(int x = oPos.x; x < oPos.x + oSize.x; x++)
 			{
@@ -230,4 +241,22 @@ int cObjectHandler::rotateWiremesh(int _mesh, sCoord3d _angle)
 	meshes[_mesh]->rotate(_angle);
 
 	return 0;
+}
+
+void cObjectHandler::setCameraPosition(sPos _pos, int _mode)
+{
+	if(_mode == _MOVE_ABSOLUTE)
+		cameraPosition = _pos;
+	else if(_mode == _MOVE_RELATIVE)
+	{
+		cameraPosition.x += _pos.x;
+		cameraPosition.y += _pos.y;
+	}
+
+	buildHitmap();
+}
+
+sPos cObjectHandler::getCameraPosition()
+{
+	return cameraPosition;
 }

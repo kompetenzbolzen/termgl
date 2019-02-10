@@ -1,12 +1,8 @@
 #include "cObjectHandler.h"
 
-cObjectHandler::cObjectHandler(cRender *_render)
+cObjectHandler::cObjectHandler(cRender *_render) : cameraPosition ({0,0}), iActiveObject(0)
 {
 	render = _render;
-
-	cameraPosition = {0,0};
-
-	iActiveObject = 0;
 
 	objects.push_back(NULL); //Create first Object as Catcher for Events
 

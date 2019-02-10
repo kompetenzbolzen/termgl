@@ -61,7 +61,7 @@ public:
 	virtual void onChar(unsigned char _c){}
 
 protected: //For child classes
-	cObject() : pos({0,0}) , bSizeSet(false){}
+	cObject();
 	/** For inheriting classes: sets size of framebuffer
 	*/
 	void setSize(int _sx, int _sy);

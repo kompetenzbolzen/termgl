@@ -34,6 +34,7 @@ sObject cObject::getObject()
 }
 
 //protected
+cObject::cObject() : pos({0,0}) , bSizeSet(false){}
 
 void cObject::setSize(int _sx, int _sy)
 {

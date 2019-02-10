@@ -1,15 +1,8 @@
 #include "cWiremesh.h"
 
-cWiremesh::cWiremesh()
-{
-  position = {0,0,0};
-  angle    = {0,0,0};
-}
+cWiremesh::cWiremesh() : position({0,0,0}), angle({0,0,0}) { }
 
-cWiremesh::~cWiremesh()
-{
-
-}
+cWiremesh::~cWiremesh() { }
 
 void cWiremesh::addVector(sCoord3d _origin, sCoord3d _vector, char _char, WORD _color)
 {

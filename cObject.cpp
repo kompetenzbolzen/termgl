@@ -1,10 +1,7 @@
 #include "cObject.h"
 
-cObject::cObject(int _sx, int _sy)
+cObject::cObject(int _sx, int _sy)  : pos({0,0}) , bSizeSet(false)
 {
-	bSizeSet = false;
-
-	pos = {0,0};
 	setSize(_sx, _sy);
 }
 
@@ -37,10 +34,6 @@ sObject cObject::getObject()
 }
 
 //protected
-cObject::cObject()
-{
-	bSizeSet = false;
-}
 
 void cObject::setSize(int _sx, int _sy)
 {

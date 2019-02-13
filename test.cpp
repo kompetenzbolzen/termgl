@@ -57,12 +57,8 @@ int main(int argc, char* argv[])
 
 	render.render();
 
-	ver.drawPoint('v', {0,0}, true, _COL_WHITE);
-	ver.drawPoint(VERSION + 48, {1,0}, true, _COL_WHITE);
-	ver.drawPoint('.', {2,0}, true, _COL_WHITE);
-	ver.drawPoint(PATCHLEVEL + 48, {3,0}, true, _COL_WHITE);
-	ver.drawText(DATE, {32,0}, _COL_WHITE);
-	ver.drawText(BRANCH, {5,0}, _COL_WHITE);
+	ver.drawText(DATE, {20,0}, _COL_WHITE);
+	ver.drawText(VERSTRING, {0,0}, _COL_WHITE);
 	int iver = handler.createObject(&ver);
 	handler.moveObject(iver, {0,0}, _MOVE_ABSOLUTE);
 

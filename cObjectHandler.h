@@ -8,9 +8,16 @@
 //movemodes
 #define _MOVE_RELATIVE	0
 #define _MOVE_ABSOLUTE	1
+#define _MOVE_FORCE_ABSOLUTE 2
 
 using namespace std;
 
+struct sCollision
+{
+	unsigned int *idv;
+	int *hitv;
+	unsigned int idc;
+};
 
 /**
 * Manages cObject and cWiremesh and writes them to a cRender framebuffer.
@@ -32,7 +39,8 @@ public:
 
 	/**
 	* Alters position of _object by _pos either relative to old position or Absolute
-	* Depending on selected _mode (_MOVE_RELATIVE / _MOVE_ABSOLUTE).
+	* Depending on selected _mode (_MOVE_RELATIVE / _MOVE_ABSOLUTE / _MOVE_ABSOLUTE).
+	* _MOVE_ABSOLUTE not recommended: Collision is only checked at destination. To ensure initialisation, use _MOVE_FORCE_ABSOLUTE!
 	*/
 	int moveObject(int _object, sPos _pos, int _mode);
 
@@ -89,6 +97,8 @@ public:
 
 
 private:
+	sCollision checkCollision(sPos _pos, sPos _size);
+
 	void buildHitmap();
 
 	vector<cObject*> objects;

@@ -32,11 +32,6 @@ public:
     drawPoint('Q', _pos, true, _COL_YELLOW);
   }
 
-  virtual bool onCollisionActive(unsigned int _hit, int _passiveObject){
-    drawPoint('K', {0,0}, true, _COL_RED);
-    return true;
-  }
-
 	virtual void onChar(unsigned char _c) { drawPoint(_c, {1,1},true, _COL_BLUE); }
 private:
   int cc;
@@ -47,6 +42,7 @@ int main(int argc, char* argv[])
 	cRender render(' ', _COL_DEFAULT, 30,30);
 	cObjectHandler handler(&render);
 	cObject ver(45,1);
+	cWiremesh obj;
 	testobject obj2;
 
 	cInput input;
@@ -64,14 +60,36 @@ int main(int argc, char* argv[])
 	ver.drawText(DATE, {20,0}, _COL_WHITE);
 	ver.drawText(VERSTRING, {0,0}, _COL_WHITE);
 	int iver = handler.createObject(&ver);
-	handler.moveObject(iver, {0,0}, _MOVE_FORCE_ABSOLUTE);
+	handler.moveObject(iver, {0,0}, _MOVE_ABSOLUTE);
+
+	int x = 15;
+	int y = 15;
+	int z = 30;
+
+	obj.addVector({-x,-y,z}, {2*x,0,0}, '+', _COL_RED);
+	obj.addVector({-x,-y,z}, {0,2*y,0}, '+', _COL_RED);
+	obj.addVector({-x,y,z}, {2*x,0,0}, '+', _COL_RED);
+	obj.addVector({x,-y,z}, {0,2*y,0}, '+', _COL_RED);
+
+	obj.addVector({-x,-y,0}, {0,0,z}, ':', _COL_RED);
+	obj.addVector({x,-y,0}, {0,0,z}, ':', _COL_RED);
+	obj.addVector({-x,y,0}, {0,0,z}, ':', _COL_RED);
+	obj.addVector({x,y,0}, {0,0,z}, ':', _COL_RED);
+
+	obj.addVector({-x,-y,0}, {2*x,0,0}, ',', _COL_RED);
+	obj.addVector({-x,-y,0}, {0,2*y,0}, ',', _COL_RED);
+	obj.addVector({-x,y,0}, {2*x,0,0}, ',', _COL_RED);
+	obj.addVector({x,-x,0}, {0,2*y,0}, ',', _COL_RED);
+	int imesh = handler.createWiremesh(&obj);
 
 	int iobj2 = handler.createObject((cObject*)&obj2);
-	handler.moveObject(iobj2, {3,3}, _MOVE_FORCE_ABSOLUTE);
+	handler.moveObject(iobj2, {3,3}, _MOVE_ABSOLUTE);
 
 	sPos middle = render.getSize();
 	middle.x /= 2;
 	middle.y /= 2;
+
+	handler.moveWiremesh(imesh,{middle.x,middle.y,0}, _MOVE_ABSOLUTE);
 
 	while( loop )
 	{
@@ -108,16 +126,22 @@ int main(int argc, char* argv[])
 				switch(ie.c)
 				{
 					case 'w':
-						handler.moveObject(iobj2, {0,-1}, _MOVE_RELATIVE);
+						handler.rotateWiremesh(imesh,{-10,0,0});
 						break;
 					case 's':
-						handler.moveObject(iobj2, {0,1}, _MOVE_RELATIVE);
+						handler.rotateWiremesh(imesh,{10,0,0});
 						break;
 					case 'a':
-						handler.moveObject(iobj2, {-1,0}, _MOVE_RELATIVE);
+						handler.rotateWiremesh(imesh,{0,-10,0});
 						break;
 					case 'd':
-						handler.moveObject(iobj2, {1,0}, _MOVE_RELATIVE);
+						handler.rotateWiremesh(imesh,{0,10,0});
+						break;
+					case 'q':
+						handler.rotateWiremesh(imesh,{0,0,-10});
+						break;
+					case 'e':
+						handler.rotateWiremesh(imesh,{0,0,10});
 						break;
 				};
 			}
@@ -126,6 +150,8 @@ int main(int argc, char* argv[])
 				return 0;
 			}
 		}
+
+		handler.rotateWiremesh(imesh,{1,1,1});
 
 		handler.write();
 		render.render();

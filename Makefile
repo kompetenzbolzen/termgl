@@ -37,8 +37,11 @@ clean:
 	rm -df  $(OBJ) test.o version.h
 	rm -Rdf $(BUILDDIR)/lib $(BUILDDIR)/inc $(BUILDDIR)/test doc/
 
-run: test
+run: gentest	
 	./$(BUILDDIR)/test/test
+
+memleak: gentest
+	valgrind ./$(BUILDDIR)/test/test
 
 genversion:
 	@echo Building Version
@@ -50,9 +53,11 @@ genversion:
 	@echo "#define DATE \"`date +'%d.%m.20%y'`\"" >> version.h
 	@echo "#define TIME \"`date +'%H:%M:%S'`\"" >> version.h
 
-test: genversion test.o $(OBJ)
+gentest: genversion test.o $(OBJ)
 	mkdir -p $(BUILDDIR)/test
 	$(CC) $(DEBUGFLAGS) -o $(BUILDDIR)/test/test test.o $(OBJ) $(LDFLAGS)
+
+test: gentest
 	./$(BUILDDIR)/test/test test
 
 doc:

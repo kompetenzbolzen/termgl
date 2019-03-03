@@ -26,11 +26,33 @@ int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 		return 1;
 
 	sPos objPosition = objects[_object]->getPosition();
+	sPos newPosition;
 
 	if (_mode == _MOVE_RELATIVE)
-		objects[_object]->setPosition(sPos{ objPosition.x + _pos.x, objPosition.y + _pos.y });
+		newPosition = { objPosition.x + _pos.x, objPosition.y + _pos.y };
 	else if (_mode == _MOVE_ABSOLUTE)
+		newPosition = _pos;
+	else if (_mode == _MOVE_FORCE_ABSOLUTE)
+	{
 		objects[_object]->setPosition(_pos);
+		return 0;
+	}
+
+	sCollision coll = checkCollision(newPosition, objects[_object]->getSize());
+
+	bool abort = false;
+
+	if(coll.idc)
+	{
+		for(int i = 0; i < coll.idc; i++)
+		{
+			if(coll.idv[i] != _object)
+				abort += objects[_object]->onCollisionActive(0, objects[coll.idv[0]]->onCollisionPassive(0));
+		}
+	}
+
+	if(!abort)
+		objects[_object]->setPosition(newPosition);
 
 	buildHitmap();
 	return 0;
@@ -255,4 +277,46 @@ void cObjectHandler::setCameraPosition(sPos _pos, int _mode)
 sPos cObjectHandler::getCameraPosition()
 {
 	return cameraPosition;
+}
+
+sCollision cObjectHandler::checkCollision(sPos _pos, sPos _size)
+{
+	sCollision ret;
+	vector<unsigned int> collisions;
+	vector<int> hitTypes;
+	ret.idc = 0;
+
+	int sizeX, sizeY;
+
+	sizeX = render->getSize().x;
+	sizeY = render->getSize().y;
+
+	//No collision for offscreen objects
+	if( (_pos.x < cameraPosition.x && _pos.x + _size.x + cameraPosition.x < 0) ||
+			(_pos.x - cameraPosition.x >= iHitMap.size() && _pos.x + _size.x - cameraPosition.x >= iHitMap.size()) ||
+			(_pos.y < cameraPosition.y && _pos.y + _size.y + cameraPosition.y < 0) ||
+			(_pos.y - cameraPosition.y >= iHitMap[0].size() && _pos.y + _size.y - cameraPosition.y >= iHitMap[0].size()) )
+		return ret;
+
+	for(int x = _pos.x - cameraPosition.x; x < _pos.x + _size.x - cameraPosition.x; x++)
+	{
+		for(int y = _pos.y - cameraPosition.y; y < _pos.y + _size.y - cameraPosition.y; y++)
+		{
+			if(!(x >= sizeX || x < 0 || y >= sizeY || y < 0))
+			{
+				if(iHitMap[x][y])
+					collisions.push_back(iHitMap[x][y]);
+			}
+		}
+	}
+
+	ret.idc = collisions.size();
+	ret.idv = (unsigned int*) malloc( sizeof(*ret.idv) * ret.idc );
+
+	for(int i = 0; i < ret.idc; i++)
+	{
+		ret.idv[i] = collisions[i];
+	}
+
+	return ret;
 }

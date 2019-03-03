@@ -3,8 +3,12 @@
 
 #include "cRender.h"
 
-struct sObject
+#define _HIT_TOP 1
+#define _HIT_BOTTOM 2
+#define _HIT_LEFT 3
+#define _HIT_RIGHT 4
 
+struct sObject
 {
 	sPos pos;
 	WORD **wColor;
@@ -59,6 +63,20 @@ public:
 	* _pos decribes the relative position of mousepointer to origin of object
 	*/
 	virtual void onChar(unsigned char _c){}
+
+
+	/** Called by cObjectHandler if Object hits another during move operation
+	*	return true to abort move, false to continue and allow overlap
+	*/
+	virtual bool onCollisionActive(unsigned int _hit, int _passiveObject) { return false; }
+
+	/** Called by cObjectHandler if Object is hit by another object
+	*	return any integer value to be identified by hitting object
+	*/
+	virtual int onCollisionPassive(unsigned int _hit) { return 0; }
+
+
+
 
 protected: //For child classes
 	cObject();

@@ -20,16 +20,19 @@ struct sCollision
 };
 
 /**
-* Manages cObject and cWiremesh and writes them to a cRender framebuffer.
+* Manages cObject and cWiremesh and writes them to a cRender framebuffer (Also works on cObject, since it inherits from cRender!).
 * forwards input events to corresponding cObject.
+* Runs collision checking for every move operation. This is very expensive, so deactivate if not needed (eg. for background animations etc)!
 */
 class cObjectHandler
 {
 public:
 	/**
 	* *_render: pointer to instance of cRender all objects will be written to
+	* _enableCollision: activate collision checking globally. CAUTION: Collision requires InputMapping. If InputMapping is disabled, Collision will NOT WORK!
+	* _enableInputMapping: activate Input mapping for mouse and keyboard events
 	*/
-	explicit cObjectHandler(cRender *_render);
+	explicit cObjectHandler(cRender *_render, bool _enableInputMapping = true, bool _enableCollision = true);
 
 	/**
 	* Adds _object to managed objects vector
@@ -97,6 +100,9 @@ public:
 
 
 private:
+	/**
+	* This function is very expensive! Only use when needed!
+	*/
 	sCollision checkCollision(sPos _pos, sPos _size);
 
 	void buildHitmap();
@@ -107,4 +113,6 @@ private:
 	cRender *render;
 	unsigned long int iActiveObject;
 	sPos cameraPosition;
+	bool enableCollision;
+	bool enableInputMapping;
 };

@@ -1,8 +1,11 @@
 #include "cObjectHandler.h"
 
-cObjectHandler::cObjectHandler(cRender *_render) : cameraPosition ({0,0}), iActiveObject(0)
+cObjectHandler::cObjectHandler(cRender *_render, bool _enableInputMapping, bool _enableCollision) : cameraPosition ({0,0}), iActiveObject(0)
 {
 	render = _render;
+
+	enableInputMapping = _enableInputMapping;
+	enableCollision = enableInputMapping ? _enableCollision : false; // Collision requires input mapping
 
 	objects.push_back(NULL); //Create first Object as Catcher for Events
 
@@ -38,7 +41,9 @@ int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 		return 0;
 	}
 
-	sCollision coll = checkCollision(newPosition, objects[_object]->getSize());
+	sCollision coll;
+
+	coll = checkCollision(newPosition, objects[_object]->getSize());
 
 	bool abort = false;
 
@@ -152,6 +157,9 @@ int cObjectHandler::charEvent(unsigned char _c)
 
 void cObjectHandler::buildHitmap()
 {
+	if(!enableInputMapping)
+		return;
+
 	//Rebuild 2D vector
 	sPos size = render->getSize();
 
@@ -293,11 +301,15 @@ sCollision cObjectHandler::checkCollision(sPos _pos, sPos _size)
 	ret.idv = NULL;
 	ret.hitv = NULL;
 
+	if(!enableCollision)
+		return ret;
+
 	int sizeX, sizeY;
 
 	sizeX = render->getSize().x;
 	sizeY = render->getSize().y;
 
+	//The mother of if-statements
 	//No collision for offscreen objects
 	if( (_pos.x < cameraPosition.x && _pos.x + _size.x + cameraPosition.x < 0) ||
 			(_pos.x - cameraPosition.x >= iHitMap.size() && _pos.x + _size.x - cameraPosition.x >= iHitMap.size()) ||
@@ -311,17 +323,43 @@ sCollision cObjectHandler::checkCollision(sPos _pos, sPos _size)
 		{
 			if(!(x >= sizeX || x < 0 || y >= sizeY || y < 0))
 			{
-				//Triggers multiple times for one Object. Fix!
 				if(iHitMap[x][y])
 					collisions.push_back(iHitMap[x][y]);
 			}
 		}
 	}
 
+	//Since Object can hit on multiple Pixels, duplications can occur.
+	//Sort and set duplicates to zero
+	//-> zeros are at front of vector
+	for(unsigned int swaps = 1; swaps > 0;)
+	{
+		swaps = 0;
+
+		for(unsigned int i = 0; i  < collisions.size() - 1; i++)
+		{
+			if(collisions[i] > collisions[i + 1])
+			{
+				swaps ++;
+				unsigned int tmp = 0;
+
+				tmp = collisions[i];
+				collisions[i] = collisions[i + 1];
+				collisions[i + 1] = tmp;
+			}
+			if(collisions[i] == collisions[i + 1])
+				collisions[i] = 0;
+		}
+	}
+
+	//Since every empty entry is in front, pop them
+	while(!collisions.front())
+		collisions.erase(collisions.begin());
+
 	ret.idc = collisions.size();
 	ret.idv = (unsigned int*) malloc( sizeof(*ret.idv) * ret.idc );
 
-	for(int i = 0; i < ret.idc; i++)
+	for(unsigned int i = 0; i < ret.idc; i++)
 	{
 		ret.idv[i] = collisions[i];
 	}

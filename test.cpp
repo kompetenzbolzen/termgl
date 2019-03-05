@@ -18,6 +18,7 @@ public:
   {
     setSize(10,5);
     cc = 0;
+    kc = 0;
 
     drawRectangle('#', NULL, {0,0}, {9,4}, _COL_GREEN, _COL_DEFAULT);
   }
@@ -33,13 +34,15 @@ public:
   }
 
   virtual bool onCollisionActive(unsigned int _hit, int _passiveObject){
-    drawPoint('K', {0,0}, true, _COL_RED);
+    kc++;
+    drawText(std::to_string(kc), {0,0},  _COL_RED);
     return true;
   }
 
 	virtual void onChar(unsigned char _c) { drawPoint(_c, {1,1},true, _COL_BLUE); }
 private:
   int cc;
+  int kc;
 };
 
 int main(int argc, char* argv[])

@@ -54,6 +54,11 @@ int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 	if(!abort)
 		objects[_object]->setPosition(newPosition);
 
+	if(coll.idv)
+		free (coll.idv);
+	if(coll.hitv)
+		free (coll.hitv);
+
 	buildHitmap();
 	return 0;
 }
@@ -285,6 +290,8 @@ sCollision cObjectHandler::checkCollision(sPos _pos, sPos _size)
 	vector<unsigned int> collisions;
 	vector<int> hitTypes;
 	ret.idc = 0;
+	ret.idv = NULL;
+	ret.hitv = NULL;
 
 	int sizeX, sizeY;
 
@@ -304,6 +311,7 @@ sCollision cObjectHandler::checkCollision(sPos _pos, sPos _size)
 		{
 			if(!(x >= sizeX || x < 0 || y >= sizeY || y < 0))
 			{
+				//Triggers multiple times for one Object. Fix!
 				if(iHitMap[x][y])
 					collisions.push_back(iHitMap[x][y]);
 			}

@@ -32,6 +32,7 @@ sObject cObject::getObject()
 {
 	return sObject{pos, wColor, cScreen, sizeX, sizeY};
 }
+
 void cObject::write(cRender *_render, sPos _cameraPosition)
 {
 	if(!bSizeSet)
@@ -51,7 +52,7 @@ void cObject::write(cRender *_render, sPos _cameraPosition)
 //protected
 cObject::cObject() : pos({0,0}) , bSizeSet(false){}
 
-void cObject::setSize(int _sx, int _sy)
+void cObject::setSize(unsigned int _sx, unsigned int _sy)
 {
 	if(bSizeSet)
 		return;
@@ -63,16 +64,16 @@ void cObject::setSize(int _sx, int _sy)
 
 	//Initialize 2D array
 	cScreen = (char**) malloc(sizeof *cScreen * _sx);
-	for (int i = 0; i < _sx; i++)
+	for (unsigned int i = 0; i < _sx; i++)
 		cScreen[i] = (char*)malloc(sizeof *cScreen[i] * _sy);
 
 	wColor = (WORD**)malloc(sizeof *wColor * _sx);
-	for (int i = 0; i < _sx; i++)
+	for (unsigned int i = 0; i < _sx; i++)
 		wColor[i] = (WORD*)malloc(sizeof *wColor[i] * _sy);
 
 	for (int i = 0; i < sizeY; i++) {
 		for (int o = 0; o < sizeX; o++) {
-			cScreen[o][i] = NULL;
+			cScreen[o][i] = 0;
 			wColor[o][i] = _COL_DEFAULT;
 		}
 	}

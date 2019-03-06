@@ -305,6 +305,9 @@ void cRender::setBufferSize(sPos _size)
 	if(_size.x == sizeX && _size.y == sizeY)
 		return;
 
+	if(_size.x < 0 || _size.y < 0)
+		return;
+
 	if(sizeX!=0 && sizeY!=0) //resize. delete first
 	{
 		for (int i = 0; i < sizeX; i++) {
@@ -323,15 +326,15 @@ void cRender::setBufferSize(sPos _size)
 
 	//Initialize 2D array
 	cScreen = (char**)malloc(sizeof *cScreen * sizeX);
-	for (int i = 0; i < sizeX; i++)
+	for (unsigned int i = 0; i < sizeX; i++)
 		cScreen[i] = (char*)malloc(sizeof *cScreen[i] * sizeY);
 
 	wColor = (WORD**)malloc(sizeof *wColor * sizeX);
-	for (int i = 0; i < sizeX; i++)
+	for (unsigned int i = 0; i < sizeX; i++)
 		wColor[i] = (WORD*)malloc(sizeof *wColor[i] * sizeY);
 
 	bChanged = (bool**)malloc(sizeof *bChanged * sizeX);
-	for (int i = 0; i < sizeX; i++)
+	for (unsigned int i = 0; i < sizeX; i++)
 		bChanged[i] = (bool*)malloc(sizeof *bChanged[i] * sizeY);
 
 	clear(true);

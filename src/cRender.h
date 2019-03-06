@@ -143,7 +143,7 @@ protected:
 	//* Default backround
 	WORD wBackColor;
 	//* Default backround color
-	int sizeX, sizeY;
+	unsigned int sizeX, sizeY;
 	//* Size of screen array
 
 #ifdef _WIN32

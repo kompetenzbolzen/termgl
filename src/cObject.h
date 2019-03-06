@@ -89,7 +89,7 @@ protected: //For child classes
 	cObject();
 	/** For inheriting classes: sets size of framebuffer
 	*/
-	void setSize(int _sx, int _sy);
+	void setSize(unsigned int _sx, unsigned int _sy);
 
 	/** For inheriting classes: frees the framebuffer
 	*/

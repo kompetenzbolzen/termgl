@@ -3,7 +3,7 @@
 
 # engine (the most creative name I could come up with)
 
-engine is a library for displaying ASCII-graphics in a text console. For more information on how to use, consult the documentation (`make doc`) and look at the example program in `test.cpp`.
+engine is a library for displaying ASCII-graphics in a text console. For more information on how to use, consult the documentation (`make doc`) and look at the example programs in `example/`.
 
 ## Compiling the library
 

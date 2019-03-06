@@ -18,7 +18,7 @@ build: dir genversion $(OBJ)
 	ln -sf $(OUTPUT) $(BUILDDIR)/lib/lib$(SONAME).so
 	cp src/c*.h $(BUILDDIR)/inc
 	cp src/version.h $(BUILDDIR)/inc
-	
+
 dir:
 	mkdir -p $(BUILDDIR)
 	mkdir -p $(BUILDDIR)/lib
@@ -31,9 +31,9 @@ dir:
 	@echo ==============
 	@echo
 	$(CC) $(CFLAGS) -c $<
-	
+
 %.o: example/%.cpp
-	$(CC) $(CFLAGS) -I$(SOURCEDIR) -c $< 
+	$(CC) $(CFLAGS) -I$(SOURCEDIR) -c $<
 
 
 all: clean build
@@ -44,11 +44,11 @@ clean:
 	rm -df  $(OBJ) test.o src/version.h
 	rm -Rdf $(BUILDDIR)/lib $(BUILDDIR)/inc $(BUILDDIR)/test doc/
 
-run: gentest	
+run: gentest
 	./$(BUILDDIR)/test/test
 
 memleak: gentest
-	valgrind ./$(BUILDDIR)/test/test
+	valgrind "./$(BUILDDIR)/test/test"
 
 genversion:
 	@echo Building Version
@@ -59,6 +59,8 @@ genversion:
 	@echo "#define VERSTRING \"`git describe`\"" >> $(SOURCEDIR)/version.h
 	@echo "#define DATE \"`date +'%d.%m.20%y'`\"" >> $(SOURCEDIR)/version.h
 	@echo "#define TIME \"`date +'%H:%M:%S'`\"" >> $(SOURCEDIR)/version.h
+	@echo "#define BUILDER \"`git config user.name`\"" >> $(SOURCEDIR)/version.h
+	@echo "#define BUILDERMAIL \"`git config user.email`\"" >> $(SOURCEDIR)/version.h
 
 gentest: build test.o
 	mkdir -p $(BUILDDIR)/test

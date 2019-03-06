@@ -3,11 +3,6 @@
 
 #include "cRender.h"
 
-#define _HIT_TOP 1
-#define _HIT_BOTTOM 2
-#define _HIT_LEFT 3
-#define _HIT_RIGHT 4
-
 struct sObject
 {
 	sPos pos;
@@ -20,6 +15,7 @@ struct sObject
 /** cObject can be used standalone as well as inherited
 * every cObject has its own framebuffer as well as position viariables to be moveable.
 * cObject is used by cObjectHandler to manage all objects to be displayed.
+* It inherits all drawing functions from cRender.
 *
 * Minimal example for inheriting class
 *
@@ -67,13 +63,19 @@ public:
 
 	/** Called by cObjectHandler if Object hits another during move operation
 	*	return true to abort move, false to continue and allow overlap
+	*
+	* _hit: position delta of moved object
+	*
+	* _passiveObject: return from onCollisionPassive to identify what was hit
 	*/
-	virtual bool onCollisionActive(unsigned int _hit, int _passiveObject) { return false; }
+	virtual bool onCollisionActive(sPos _hit, int _passiveObject) { return false; }
 
 	/** Called by cObjectHandler if Object is hit by another object
 	*	return any integer value to be identified by hitting object
+	*
+	* _hit: position delta of moved object
 	*/
-	virtual int onCollisionPassive(unsigned int _hit) { return 0; }
+	virtual int onCollisionPassive(sPos _hit) { return 0; }
 
 
 

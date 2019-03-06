@@ -52,7 +52,7 @@ int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 		for(int i = 0; i < coll.idc; i++)
 		{
 			if(coll.idv[i] != _object)
-				abort += objects[_object]->onCollisionActive(0, objects[coll.idv[0]]->onCollisionPassive(0));
+				abort += objects[_object]->onCollisionActive(_pos, objects[coll.idv[0]]->onCollisionPassive(_pos));
 		}
 	}
 

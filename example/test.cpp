@@ -33,7 +33,7 @@ public:
     drawPoint('Q', _pos, true, _COL_YELLOW);
   }
 
-  virtual bool onCollisionActive(unsigned int _hit, int _passiveObject){
+  virtual bool onCollisionActive(sPos _hit, int _passiveObject){
     kc++;
     drawText(std::to_string(kc), {0,0},  _COL_RED);
     return true;

@@ -49,8 +49,13 @@ public:
 	void setPosition(int _x, int _y);
 
 	/** Returns sObject with framebuffer and current position
+	* DEPRECATED
 	*/
 	sObject getObject();
+
+	/** Writes object to framebuffer with offset _cameraPosition
+	*/
+	void write(cRender *_render, sPos _cameraPosition);
 
 	/** Called by cObjecthandler if cObject is clicked
 	*/

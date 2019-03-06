@@ -95,20 +95,9 @@ int cObjectHandler::write()
 
 	for (unsigned long int i = 0; i < objects.size(); i++)
 	{
-		if (objects[i]) // Check if objects[i] is existent
+		if (objects[i])
 		{
-			//Draw every Object
-			sObject obj = objects[i]->getObject(); //get Object #i
-
-			for (int o = 0; o < obj.sizeY; o++) { //y axis
-				for (int p = 0; p < obj.sizeX; p++) { //x axis
-					if (obj.cScreen[p][o]) { //Dont overwrite empty pixels
-						sPos pos{ obj.pos.x + p - cameraPosition.x,
-							 				obj.pos.y + o - cameraPosition.y };
-						render->drawPoint(obj.cScreen[p][o], pos, true, obj.wColor[p][o]);
-					}
-				}
-			}
+			objects[i]->write(render, cameraPosition);
 		}
 	}
 

@@ -32,6 +32,21 @@ sObject cObject::getObject()
 {
 	return sObject{pos, wColor, cScreen, sizeX, sizeY};
 }
+void cObject::write(cRender *_render, sPos _cameraPosition)
+{
+	if(!bSizeSet)
+		return;
+
+	for (int o = 0; o < sizeY; o++) { //y axis
+		for (int p = 0; p < sizeX; p++) { //x axis
+			if (cScreen[p][o]) { //Dont overwrite empty pixels
+				sPos npos{ pos.x + p - _cameraPosition.x,
+									pos.y + o - _cameraPosition.y };
+				_render->drawPoint(cScreen[p][o], npos, true, wColor[p][o]);
+			}
+		}
+	}
+}
 
 //protected
 cObject::cObject() : pos({0,0}) , bSizeSet(false){}

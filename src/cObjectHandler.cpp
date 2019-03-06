@@ -29,7 +29,7 @@ int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 		return 1;
 
 	sPos objPosition = objects[_object]->getPosition();
-	sPos newPosition;
+	sPos newPosition = {0,0};
 
 	if (_mode == _MOVE_RELATIVE)
 		newPosition = { objPosition.x + _pos.x, objPosition.y + _pos.y };
@@ -41,9 +41,8 @@ int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 		return 0;
 	}
 
-	sCollision coll;
+	sCollision coll = checkCollision(newPosition, objects[_object]->getSize());
 
-	coll = checkCollision(newPosition, objects[_object]->getSize());
 
 	bool abort = false;
 
@@ -52,7 +51,7 @@ int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 		for(int i = 0; i < coll.idc; i++)
 		{
 			if(coll.idv[i] != _object)
-				abort += objects[_object]->onCollisionActive(_pos, objects[coll.idv[0]]->onCollisionPassive(_pos));
+				abort += objects[_object]->onCollisionActive(_pos, objects[coll.idv[i]]->onCollisionPassive(_pos));
 		}
 	}
 
@@ -65,7 +64,7 @@ int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 		free (coll.hitv);
 
 	buildHitmap();
-	return 0;
+	return abort;
 }
 
 int cObjectHandler::destroyObject(int _object)
@@ -301,7 +300,10 @@ sCollision cObjectHandler::checkCollision(sPos _pos, sPos _size)
 	ret.idv = NULL;
 	ret.hitv = NULL;
 
-	if(!enableCollision)
+	if(!render)
+		return ret;
+
+	if(!enableCollision || !enableInputMapping)
 		return ret;
 
 	int sizeX, sizeY;
@@ -336,7 +338,7 @@ sCollision cObjectHandler::checkCollision(sPos _pos, sPos _size)
 	{
 		swaps = 0;
 
-		for(unsigned int i = 0; i  < collisions.size() - 1; i++)
+		for(long int i = 0; i  < (long int)collisions.size() - 1; i++)
 		{
 			if(collisions[i] > collisions[i + 1])
 			{
@@ -352,8 +354,9 @@ sCollision cObjectHandler::checkCollision(sPos _pos, sPos _size)
 		}
 	}
 
+
 	//Since every empty entry is in front, pop them
-	while(!collisions.front())
+	while( collisions.size() && !collisions.front())
 		collisions.erase(collisions.begin());
 
 	ret.idc = collisions.size();

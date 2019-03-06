@@ -5,6 +5,7 @@ LDFLAGS =
 SONAME = engine
 BUILDDIR = build
 SOURCEDIR = src
+TESTSOURCE = test
 #VERSION
 VERSION = 0
 PATCHLEVEL = 4
@@ -41,14 +42,14 @@ all: clean build
 .PHONY: clean
 
 clean:
-	rm -df  $(OBJ) test.o src/version.h
+	rm -df  $(OBJ) $(TESTSOURCE).o src/version.h
 	rm -Rdf $(BUILDDIR)/lib $(BUILDDIR)/inc $(BUILDDIR)/test doc/
 
 run: gentest
 	./$(BUILDDIR)/test/test
 
 memleak: gentest
-	valgrind "./$(BUILDDIR)/test/test"
+	valgrind -v --track-origins=yes "./$(BUILDDIR)/test/test"
 
 genversion:
 	@echo Building Version
@@ -62,9 +63,9 @@ genversion:
 	@echo "#define BUILDER \"`git config user.name`\"" >> $(SOURCEDIR)/version.h
 	@echo "#define BUILDERMAIL \"`git config user.email`\"" >> $(SOURCEDIR)/version.h
 
-gentest: build test.o
+gentest: build $(TESTSOURCE).o
 	mkdir -p $(BUILDDIR)/test
-	$(CC) $(DEBUGFLAGS) -o $(BUILDDIR)/test/test test.o $(OBJ) $(LDFLAGS)
+	$(CC) $(DEBUGFLAGS) -o $(BUILDDIR)/test/test $(TESTSOURCE).o $(OBJ) $(LDFLAGS)
 
 test: gentest
 	./$(BUILDDIR)/test/test test

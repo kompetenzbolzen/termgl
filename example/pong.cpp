@@ -37,7 +37,7 @@ public:
 class edge : public cObject
 {
 public:
-  edge(unsigned int x, unsigned int y) { setSize(x,y); drawLine('#', {0,0},{x-1,y-1}, true, _COL_DEFAULT);}
+  edge(unsigned int x, unsigned int y) { setSize(x,y); drawLine('#', {0,0},{(int)x-1,(int)y-1}, true, _COL_DEFAULT);}
   ~edge() { destruct(); }
   virtual int onCollisionPassive(sPos _hit)
   {

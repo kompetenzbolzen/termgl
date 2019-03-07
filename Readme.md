@@ -7,13 +7,15 @@ engine is a library for displaying ASCII-graphics in a text console. For more in
 
 ## Compiling the library
 
-engine should compile just fine with just the c++ standard librarys.
+engine should compile just fine with just the c++ standard librarys. The Makefile is set up for clang, but gcc should also work.
 Required Packages:
 
-    g++
+    clang
     make
 
-`make` creates two folders in ./build/: lib and inc, wich hold the library and the headers respectively. these can then be copied into your projects directory. Run `make run` to build and run the example program.
+`make` creates two folders in `build/`: lib and inc, wich hold the library and the headers respectively. these can then be copied into your projects directory.
+
+Run `make run` to build and run the example program specified by `$TESTSOURCE` in the Makefile. It is not compiled against the library, but just statically linked with the .o-files for easier debugging. The same example-programs can also be linked with the dynamic library by using the Makefile in `example/`.
 
 To build the documentation, install `doxygen` and run `make doc`.
 

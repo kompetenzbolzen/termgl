@@ -1,4 +1,4 @@
-CC      = /usr/bin/clang
+CC      = clang
 CFLAGS  = -Wall -g -std=c++11 -shared -fPIC
 DEBUGFLAGS = -Wall -g -std=c++11
 LDFLAGS =

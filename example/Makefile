@@ -1,5 +1,5 @@
-CC     = /usr/bin/g++
-CFLAGS  = -Wall -g -std=c++11
+CC     = /usr/bin/clang
+CFLAGS  = -Wall -g -std=c++11 -lstdc++
 LIBDIR = ../build/lib
 INCDIR = ../build/inc
 

@@ -1,7 +1,7 @@
 CC      = clang
-CFLAGS  = -Wall -g -std=c++11 -shared -fPIC
+CFLAGS  = -Wall -g -std=c++11  -fPIC
 DEBUGFLAGS = -Wall -g -std=c++11
-LDFLAGS =
+LDFLAGS = -shared
 SONAME = engine
 BUILDDIR = build
 SOURCEDIR = src
@@ -17,8 +17,8 @@ build: dir genversion $(OBJ)
 	$(CC) $(CFLAGS) -o $(BUILDDIR)/lib/$(OUTPUT) $(OBJ) $(LDFLAGS) -Wl,-soname=lib$(SONAME).so.$(VERSION)
 	ln -sf $(OUTPUT) $(BUILDDIR)/lib/lib$(SONAME).so.$(VERSION)
 	ln -sf $(OUTPUT) $(BUILDDIR)/lib/lib$(SONAME).so
-	cp src/c*.h $(BUILDDIR)/inc
-	cp src/version.h $(BUILDDIR)/inc
+	cp $(SOURCEDIR)/c*.h $(BUILDDIR)/inc
+	cp $(SOURCEDIR)/version.h $(BUILDDIR)/inc
 
 dir:
 	mkdir -p $(BUILDDIR)
@@ -39,17 +39,11 @@ dir:
 
 all: clean build
 
-.PHONY: clean
+.PHONY: clean doc
 
 clean:
 	rm -df  $(OBJ) $(TESTSOURCE).o src/version.h
 	rm -Rdf $(BUILDDIR)/lib $(BUILDDIR)/inc $(BUILDDIR)/test doc/
-
-run: gentest
-	./$(BUILDDIR)/test/test
-
-memleak: gentest
-	valgrind -v --track-origins=yes "./$(BUILDDIR)/test/test"
 
 genversion:
 	@echo Building Version
@@ -65,7 +59,13 @@ genversion:
 
 gentest: build $(TESTSOURCE).o
 	mkdir -p $(BUILDDIR)/test
-	$(CC) $(DEBUGFLAGS) -o $(BUILDDIR)/test/test $(TESTSOURCE).o $(OBJ) $(LDFLAGS)
+	$(CC) $(DEBUGFLAGS) -o $(BUILDDIR)/test/test $(TESTSOURCE).o $(OBJ) -lstdc++ -lm
+
+run: gentest
+	./$(BUILDDIR)/test/test
+
+memleak: gentest
+	valgrind -v --track-origins=yes "./$(BUILDDIR)/test/test"
 
 doc:
 	mkdir -p doc

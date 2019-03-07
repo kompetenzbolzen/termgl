@@ -163,7 +163,7 @@ void cObjectHandler::buildHitmap()
 		iHitMap.push_back(cp);
 	}
 
-	while (size.x <= (int)iHitMap.size())
+	while (size.x < (int)iHitMap.size())
 	{
 		iHitMap.pop_back();
 	}

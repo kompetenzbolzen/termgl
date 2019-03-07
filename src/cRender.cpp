@@ -41,7 +41,15 @@ cRender::cRender(char _backound, WORD _color, unsigned int _sx, unsigned int _sy
 }//render()
 
 
-cRender::cRender() {}
+cRender::cRender()
+{
+	cScreen = NULL;
+	wColor = NULL;
+	bBlockRender = false;
+	cBackound = 0;
+	wBackColor = 0;
+	sizeX = sizeY = 0;
+}
 
 cRender::~cRender()
 {
@@ -191,8 +199,9 @@ int cRender::render(void)
 				#elif __linux__
 				//gotoxy(x,y) now included!!
 				char buffer[20];
-				int cbuf = sprintf(buffer,"\e[%u;%uH\e[%im%c", i + 1, o + 1, wColor[o][i], cScreen[o][i]);
+				//int cbuf = sprintf(buffer,"\e[%u;%uH\e[%im%c", i + 1, o + 1, wColor[o][i], cScreen[o][i]);
 				//      											Position  Color  Origin is at 1,1
+				int cbuf = sprintf(buffer,"\e[%u;%uH%c", i + 1, o + 1, cScreen[o][i]);
 				write (STDOUT_FILENO, buffer, cbuf);
 
 				#endif //__linux__

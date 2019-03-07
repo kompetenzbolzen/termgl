@@ -1,5 +1,5 @@
 CC      = /usr/bin/g++
-CFLAGS  = -Wall -std=c++11 -shared -fPIC
+CFLAGS  = -Wall -g -std=c++11 -shared -fPIC
 DEBUGFLAGS = -Wall -g -std=c++11
 LDFLAGS =
 SONAME = engine

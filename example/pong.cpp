@@ -75,16 +75,16 @@ int main()
   edget edgeBottom;
 
   int iEdgeTop = screen.createObject(&edgeTop);
-  screen.moveObject(iEdgeTop, {2,0}, _MOVE_FORCE_ABSOLUTE);
+  screen.moveObject(iEdgeTop, {0,0}, _MOVE_FORCE_ABSOLUTE);
 
   int iEdgeBottom = screen.createObject(&edgeBottom);
-  screen.moveObject(iEdgeBottom, {0,21}, _MOVE_FORCE_ABSOLUTE);
+  screen.moveObject(iEdgeBottom, {0,20}, _MOVE_FORCE_ABSOLUTE);
 
   int iEdgeLeft = screen.createObject(&edgeLeft);
   screen.moveObject(iEdgeLeft, {0,0}, _MOVE_FORCE_ABSOLUTE);
 
   int iEdgeRight = screen.createObject(&edgeRight);
-  screen.moveObject(iEdgeRight, {43,0}, _MOVE_FORCE_ABSOLUTE);
+  screen.moveObject(iEdgeRight, {40,0}, _MOVE_FORCE_ABSOLUTE);
 
 
   int iAball= screen.createObject(&aball);
@@ -138,7 +138,7 @@ int main()
 			}
     }
 
-    //screen.moveObject(iAball, aball.getV(), _MOVE_RELATIVE);
+    screen.moveObject(iAball, aball.getV(), _MOVE_RELATIVE);
 
     screen.write();
     render.render();

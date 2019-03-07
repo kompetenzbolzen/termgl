@@ -1,142 +1,90 @@
-#include <unistd.h>
-#include <string>
+#include <cRender.h>
+#include <cObject.h>
+#include <cObjectHandler.h>
+#include <cInput.h>
 
-#include "version.h"
-
-#include "cRender.h"
-#include "cObject.h"
-#include "cObjectHandler.h"
-#include "cInput.h"
-#include "cWiremesh.h"
-
-//#include "testobject.h"
-
-class testobject : cObject
+class ball : public cObject
 {
 public:
-  testobject()
+  ball() : v({1,1}) { setSize(1,1); drawPoint('O', {0,0}, true, _COL_RED); }
+  ~ball() { destruct(); }
+  virtual bool onCollisionActive(sPos _hit, int _passiveObject)
   {
-    setSize(10,5);
-    cc = 0;
-    kc = 0;
+    if(_passiveObject == 1)
+      v.y = v.y * (-1);
+    else if (_passiveObject == 2)
+      v.x = v.x * (-1);
 
-    drawRectangle('#', NULL, {0,0}, {9,4}, _COL_GREEN, _COL_DEFAULT);
-  }
-
-  ~testobject() { destruct(); }
-
-  virtual void onClick(sPos _pos, unsigned int _button)
-  {
-    cc++;
-    drawText(std::to_string(cc), {2,2}, _COL_RED);
-
-    drawPoint('Q', _pos, true, _COL_YELLOW);
-  }
-
-  virtual bool onCollisionActive(sPos _hit, int _passiveObject){
-    kc++;
-    drawText(std::to_string(kc), {0,0},  _COL_RED);
+    drawText(std::to_string(_passiveObject), {0,0}, _COL_GREEN);
     return true;
   }
-
-	virtual void onChar(unsigned char _c) { drawPoint(_c, {1,1},true, _COL_BLUE); }
+  sPos getV() { return v; }
 private:
-  int cc;
-  int kc;
+  sPos v;
 };
 
-int main(int argc, char* argv[])
+class edge : public cObject
 {
-	cRender render(' ', _COL_DEFAULT, 30,30);
-	cObjectHandler handler(&render);
-	cObject ver(45,1);
-	testobject obj2;
+public:
+  edge(unsigned int x, unsigned int y) { setSize(x,y); drawLine('#', {0,0},{x-1,y-1}, true, _COL_DEFAULT);}
+  ~edge() { destruct(); }
+  virtual int onCollisionPassive(sPos _hit)
+  {
+    if(getSize().x > getSize().y)
+      return 1;
+    else
+      return 2;
+  }
+};
 
-	cInput input;
+int main()
+{
+  cRender render(' ', _COL_DEFAULT, 10,10);
+  cObjectHandler screen(&render);
+  cInput input;
 
-	unsigned int framecounter = 0;
-	bool loop = true;
+  ball aball;
+  edge edgeLeft(1,10);
+  edge edgeRight(1,10);
+  edge edgeTop(10,1);
+  edge edgeBottom(10,1);
 
-	if(argc > 1)
-	{
-			loop = false;
-	}
+  int iEdgeTop = screen.createObject(&edgeTop);
+  screen.moveObject(iEdgeTop, {0,0}, _MOVE_FORCE_ABSOLUTE);
 
-	render.render();
+  int iEdgeBottom = screen.createObject(&edgeBottom);
+  screen.moveObject(iEdgeBottom, {0,10}, _MOVE_FORCE_ABSOLUTE);
 
-	ver.drawText(DATE, {20,0}, _COL_WHITE);
-	ver.drawText(VERSTRING, {0,0}, _COL_WHITE);
-	int iver = handler.createObject(&ver);
-	handler.moveObject(iver, {0,0}, _MOVE_FORCE_ABSOLUTE);
+  int iEdgeLeft = screen.createObject(&edgeLeft);
+  screen.moveObject(iEdgeLeft, {0,0}, _MOVE_FORCE_ABSOLUTE);
 
-	int iobj2 = handler.createObject((cObject*)&obj2);
-	handler.moveObject(iobj2, {3,3}, _MOVE_FORCE_ABSOLUTE);
+  int iEdgeRight = screen.createObject(&edgeRight);
+  screen.moveObject(iEdgeRight, {9,0}, _MOVE_FORCE_ABSOLUTE);
 
-	sPos middle = render.getSize();
-	middle.x /= 2;
-	middle.y /= 2;
+  int iAball= screen.createObject(&aball);
+  screen.moveObject(iAball, {2,2}, _MOVE_FORCE_ABSOLUTE);
 
-	while( loop )
-	{
-		sInputEvent ie = input.poll();
+  render.render();
+
+  for(unsigned int cc = 0; cc < 9999; cc++)
+  {
+
+    sInputEvent ie = input.poll();
 
 		if(ie.type != _EVENT_NULL)
 		{
-			if(ie.type == _EVENT_KEY)
-			{
-				switch (ie.c)
-				{
-					case 'A'://up
-						handler.setCameraPosition({0,-1}, _MOVE_RELATIVE);
-						break;
-					case 'B'://down
-						handler.setCameraPosition({0,1}, _MOVE_RELATIVE);
-						break;
-					case 'C'://right
-						handler.setCameraPosition({1,0}, _MOVE_RELATIVE);
-						break;
-					case 'D'://left
-						handler.setCameraPosition({-1,0}, _MOVE_RELATIVE);
-						break;
-				};
-			}
-			else if (ie.type == _EVENT_MOUSE)
-			{
-				if(ie.b == 0)
-					handler.clickEvent({ie.x, ie.y}, 0);
-			}
-			else if (ie.type == _EVENT_CHAR)
-			{
-				//handler.charEvent(ie.c);
-				switch(ie.c)
-				{
-					case 'w':
-						handler.moveObject(iobj2, {0,-1}, _MOVE_RELATIVE);
-						break;
-					case 's':
-						handler.moveObject(iobj2, {0,1}, _MOVE_RELATIVE);
-						break;
-					case 'a':
-						handler.moveObject(iobj2, {-1,0}, _MOVE_RELATIVE);
-						break;
-					case 'd':
-						handler.moveObject(iobj2, {1,0}, _MOVE_RELATIVE);
-						break;
-				};
-			}
-			else if (ie.type == _EVENT_TERM)
+      if (ie.type == _EVENT_TERM)
 			{
 				return 0;
 			}
-		}
+    }
 
-		handler.write();
-		render.render();
-		framecounter++;
+    if(!(++cc % 3))
+      screen.moveObject(iAball, aball.getV(), _MOVE_RELATIVE);
 
-		if(loop)
-			usleep(10*1000);
-	}
+    screen.write();
+    render.render();
+  }
 
-	return 0;
+  return 0;
 }

@@ -67,9 +67,6 @@ gentest: build $(TESTSOURCE).o
 	mkdir -p $(BUILDDIR)/test
 	$(CC) $(DEBUGFLAGS) -o $(BUILDDIR)/test/test $(TESTSOURCE).o $(OBJ) $(LDFLAGS)
 
-test: gentest
-	./$(BUILDDIR)/test/test test
-
 doc:
 	mkdir -p doc
 	doxygen .doxygen

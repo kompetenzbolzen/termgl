@@ -74,7 +74,7 @@ public:
 	* Resizes console window for Windows
 	* Sets Size to Console Window Size for Linux. Writes Error for _sx or _sy smaller than Screen. Get by getLastError()
 	*/
-	cRender(char _backound, WORD _color, int _sx, int _sy);
+	cRender(char _backound, WORD _color, unsigned int _sx, unsigned int _sy);
 
 	virtual ~cRender();
 

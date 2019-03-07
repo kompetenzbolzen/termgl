@@ -27,22 +27,16 @@ void cObject::setPosition(int _x, int _y)
 	pos.y = _y;
 }
 
-
-sObject cObject::getObject()
-{
-	return sObject{pos, wColor, cScreen, sizeX, sizeY};
-}
-
 void cObject::write(cRender *_render, sPos _cameraPosition)
 {
 	if(!bSizeSet)
 		return;
 
-	for (int o = 0; o < sizeY; o++) { //y axis
-		for (int p = 0; p < sizeX; p++) { //x axis
+	for (unsigned int o = 0; o < sizeY; o++) { //y axis
+		for (unsigned int p = 0; p < sizeX; p++) { //x axis
 			if (cScreen[p][o]) { //Dont overwrite empty pixels
-				sPos npos{ pos.x + p - _cameraPosition.x,
-									pos.y + o - _cameraPosition.y };
+				sPos npos{ pos.x + (int)p - _cameraPosition.x,
+									pos.y + (int)o - _cameraPosition.y };
 				_render->drawPoint(cScreen[p][o], npos, true, wColor[p][o]);
 			}
 		}
@@ -71,8 +65,8 @@ void cObject::setSize(unsigned int _sx, unsigned int _sy)
 	for (unsigned int i = 0; i < _sx; i++)
 		wColor[i] = (WORD*)malloc(sizeof *wColor[i] * _sy);
 
-	for (int i = 0; i < sizeY; i++) {
-		for (int o = 0; o < sizeX; o++) {
+	for (unsigned int i = 0; i < sizeY; i++) {
+		for (unsigned int o = 0; o < sizeX; o++) {
 			cScreen[o][i] = 0;
 			wColor[o][i] = _COL_DEFAULT;
 		}
@@ -86,7 +80,7 @@ void cObject::destruct()
 	if(!bSizeSet)
 		return;
 
-	for (int i = 0; i < sizeX; i++) {
+	for (unsigned int i = 0; i < sizeX; i++) {
 		free(cScreen[i]);
 		free(wColor[i]);
 	}

@@ -1,6 +1,6 @@
 #include "cObjectHandler.h"
 
-cObjectHandler::cObjectHandler(cRender *_render, bool _enableInputMapping, bool _enableCollision) : cameraPosition ({0,0}), iActiveObject(0)
+cObjectHandler::cObjectHandler(cRender *_render, bool _enableInputMapping, bool _enableCollision) :  iActiveObject(0), cameraPosition ({0,0})
 {
 	render = _render;
 
@@ -12,7 +12,7 @@ cObjectHandler::cObjectHandler(cRender *_render, bool _enableInputMapping, bool 
 	buildHitmap();
 }
 
-int cObjectHandler::createObject(cObject *_object)
+unsigned int cObjectHandler::createObject(cObject *_object)
 {
 	objects.push_back(_object);
 
@@ -20,7 +20,7 @@ int cObjectHandler::createObject(cObject *_object)
 	return objects.size() - 1;
 }
 
-int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
+int cObjectHandler::moveObject(unsigned int _object, sPos _pos, int _mode)
 {
 	if (_object >= objects.size()) //prevent segmentation faults
 		return 1;
@@ -48,7 +48,7 @@ int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 
 	if(coll.idc)
 	{
-		for(int i = 0; i < coll.idc; i++)
+		for(unsigned int i = 0; i < coll.idc; i++)
 		{
 			if(coll.idv[i] != _object)
 				abort += objects[_object]->onCollisionActive(_pos, objects[coll.idv[i]]->onCollisionPassive(_pos));
@@ -67,7 +67,7 @@ int cObjectHandler::moveObject(int _object, sPos _pos, int _mode)
 	return abort;
 }
 
-int cObjectHandler::destroyObject(int _object)
+int cObjectHandler::destroyObject(unsigned int _object)
 {
 	if(!objects[_object])
 		return 1;
@@ -106,9 +106,9 @@ int cObjectHandler::write()
 
 int cObjectHandler::clickEvent(sPos _pos, unsigned int _button)
 {
-	if(_pos.x >= iHitMap.size())
+	if(_pos.x >= (int)iHitMap.size())
 		return 1;
-	if(_pos.y >= iHitMap[_pos.x].size())
+	if(_pos.y >= (int)iHitMap[_pos.x].size())
 		return 1;
 
 
@@ -153,17 +153,17 @@ void cObjectHandler::buildHitmap()
 
 	vector<unsigned int> cp;
 
-	while(size.y > cp.size())
+	while(size.y > (int)cp.size())
 	{
 		cp.push_back(0);
 	}
 
-	while (size.x > iHitMap.size())
+	while (size.x > (int)iHitMap.size())
 	{
 		iHitMap.push_back(cp);
 	}
 
-	while (size.x <= iHitMap.size())
+	while (size.x <= (int)iHitMap.size())
 	{
 		iHitMap.pop_back();
 	}
@@ -213,14 +213,14 @@ void cObjectHandler::focus(unsigned int _id)
 		iActiveObject = _id;
 }
 
-int cObjectHandler::createWiremesh(cWiremesh *_mesh)
+unsigned int cObjectHandler::createWiremesh(cWiremesh *_mesh)
 {
 	meshes.push_back(_mesh);
 
 	return meshes.size() - 1;
 }
 
-int cObjectHandler::moveWiremesh(int _mesh, sCoord3d _pos, int _mode)
+int cObjectHandler::moveWiremesh(unsigned int _mesh, sCoord3d _pos, int _mode)
 {
 	if (_mesh >= meshes.size()) //prevent segmentation faults
 		return 1;
@@ -238,7 +238,7 @@ int cObjectHandler::moveWiremesh(int _mesh, sCoord3d _pos, int _mode)
 	return 0;
 }
 
-int cObjectHandler::destroyWiremesh(int _mesh)
+int cObjectHandler::destroyWiremesh(unsigned int _mesh)
 {
 	if(!meshes[_mesh])
 		return 1;
@@ -249,7 +249,7 @@ int cObjectHandler::destroyWiremesh(int _mesh)
 	return 0;
 }
 
-int cObjectHandler::rotateWiremesh(int _mesh, sCoord3d _angle)
+int cObjectHandler::rotateWiremesh(unsigned int _mesh, sCoord3d _angle)
 {
 	if (_mesh >= meshes.size()) //prevent segmentation faults
 		return 1;
@@ -303,9 +303,9 @@ sCollision cObjectHandler::checkCollision(sPos _pos, sPos _size)
 	//The mother of if-statements
 	//No collision for offscreen objects
 	if( (_pos.x < cameraPosition.x && _pos.x + _size.x + cameraPosition.x < 0) ||
-			(_pos.x - cameraPosition.x >= iHitMap.size() && _pos.x + _size.x - cameraPosition.x >= iHitMap.size()) ||
+			(_pos.x - cameraPosition.x >= (int)iHitMap.size() && _pos.x + _size.x - cameraPosition.x >= (int)iHitMap.size()) ||
 			(_pos.y < cameraPosition.y && _pos.y + _size.y + cameraPosition.y < 0) ||
-			(_pos.y - cameraPosition.y >= iHitMap[0].size() && _pos.y + _size.y - cameraPosition.y >= iHitMap[0].size()) )
+			(_pos.y - cameraPosition.y >= (int)iHitMap[0].size() && _pos.y + _size.y - cameraPosition.y >= (int)iHitMap[0].size()) )
 		return ret;
 
 	for(int x = _pos.x - cameraPosition.x; x < _pos.x + _size.x - cameraPosition.x; x++)
@@ -327,7 +327,7 @@ sCollision cObjectHandler::checkCollision(sPos _pos, sPos _size)
 	{
 		swaps = 0;
 
-		for(long int i = 0; i  < (long int)collisions.size() - 1; i++)
+		for(long int i = 0; i  < (long int)collisions.size() - 1; i++) //Do not change to unsigned! can cause underflow!!
 		{
 			if(collisions[i] > collisions[i + 1])
 			{

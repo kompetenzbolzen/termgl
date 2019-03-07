@@ -1,7 +1,7 @@
 #include "cRender.h"
 
 
-cRender::cRender(char _backound, WORD _color, int _sx, int _sy)
+cRender::cRender(char _backound, WORD _color, unsigned int _sx, unsigned int _sy)
 {
 	bBlockRender = false; //If this Constructor is used, this instance is not inherited, thus render() doesn't need to be blocked
 	iLastError = _OK_;
@@ -48,7 +48,7 @@ cRender::~cRender()
 	if(bBlockRender) //Don't run destructor if inherited
 		return;
 
-	for (int i = 0; i < sizeX; i++) {
+	for (unsigned int i = 0; i < sizeX; i++) {
 		free(cScreen[i]);
 		free(wColor[i]);
 		free(bChanged[i]);
@@ -68,10 +68,10 @@ cRender::~cRender()
 
 int cRender::drawPoint(char _c, sPos _pos, bool _overrideCollision, WORD _color)
 {
-	if (_pos.x >= sizeX || _pos.y >= sizeY || _pos.x < 0 || _pos.y < 0)
+	if (_pos.x >= (int)sizeX || _pos.y >= (int)sizeY || _pos.x < 0 || _pos.y < 0)
 		return _ERR_COORDINATES_INVALID_;
 
-	if (cScreen[_pos.x][_pos.y] != cBackound && _overrideCollision != true) //detect Collsision
+	if (_overrideCollision != true && cScreen[_pos.x][_pos.y] != cBackound) //detect Collsision
 		return _COLLISION_;
 
 	cScreen[_pos.x][_pos.y] = _c;
@@ -142,9 +142,9 @@ int cRender::drawLine(char _c, sPos _pos1, sPos _pos2, bool _overrideCollision, 
 
 int cRender::drawText(string _s, sPos _pos, WORD _color)
 {
-	for (int i = 0; i < _s.length(); i++)
+	for (unsigned int i = 0; i < _s.length(); i++)
 	{
-		drawPoint(_s[i], sPos{ i + _pos.x,_pos.y }, true,  _color);
+		drawPoint(_s[i], sPos{ (int)i + _pos.x,_pos.y }, true,  _color);
 	}
 	return 0;
 }
@@ -177,8 +177,8 @@ int cRender::render(void)
 	//Resize screenbuffer if needed
 	setBufferSize( getConsoleWindowSize( ) );
 
-	for (int i = 0; i < sizeY; i++) {
-		for (int o = 0; o < sizeX; o++) {
+	for (unsigned int i = 0; i < sizeY; i++) {
+		for (unsigned int o = 0; o < sizeX; o++) {
 			if(bChanged[o][i])
 			{
 				#ifdef _WIN32
@@ -191,7 +191,7 @@ int cRender::render(void)
 				#elif __linux__
 				//gotoxy(x,y) now included!!
 				char buffer[20];
-				int cbuf = sprintf(buffer,"\e[%i;%iH\e[%im%c", i + 1, o + 1, wColor[o][i], cScreen[o][i]);
+				int cbuf = sprintf(buffer,"\e[%u;%uH\e[%im%c", i + 1, o + 1, wColor[o][i], cScreen[o][i]);
 				//      											Position  Color  Origin is at 1,1
 				write (STDOUT_FILENO, buffer, cbuf);
 
@@ -205,8 +205,8 @@ int cRender::render(void)
 
 int cRender::clear(bool _forceReRender)
 {
-	for (int i = 0; i < sizeY; i++) {
-		for (int o = 0; o < sizeX; o++) {
+	for (unsigned int i = 0; i < sizeY; i++) {
+		for (unsigned int o = 0; o < sizeX; o++) {
 			if(((cScreen[o][i] == cBackound) && (wColor[o][i] == wBackColor)) && !_forceReRender)
 				bChanged[o][i] 	= false;
 			else
@@ -302,7 +302,7 @@ void cRender::setConsoleCursor(bool _enable)
 
 void cRender::setBufferSize(sPos _size)
 {
-	if(_size.x == sizeX && _size.y == sizeY)
+	if(_size.x == (int)sizeX && _size.y == (int)sizeY)
 		return;
 
 	if(_size.x < 0 || _size.y < 0)
@@ -310,7 +310,7 @@ void cRender::setBufferSize(sPos _size)
 
 	if(sizeX!=0 && sizeY!=0) //resize. delete first
 	{
-		for (int i = 0; i < sizeX; i++) {
+		for (unsigned int i = 0; i < sizeX; i++) {
 			free(cScreen[i]);
 			free(wColor[i]);
 			free(bChanged[i]);
@@ -342,13 +342,13 @@ void cRender::setBufferSize(sPos _size)
 
 sPos cRender::getSize()
 {
-	return {sizeX, sizeY};
+	return {(int)sizeX, (int)sizeY};
 }
 
 void cRender::forceReRender()
 {
-	for (int i = 0; i < sizeY; i++) {
-		for (int o = 0; o < sizeX; o++) {
+	for (unsigned int i = 0; i < sizeY; i++) {
+		for (unsigned int o = 0; o < sizeX; o++) {
 				bChanged[o][i] 	= true;
 		}
 	}

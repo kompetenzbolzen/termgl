@@ -3,14 +3,6 @@
 
 #include "cRender.h"
 
-struct sObject
-{
-	sPos pos;
-	WORD **wColor;
-	char **cScreen;
-	int sizeX;
-	int sizeY;
-};
 
 /** cObject can be used standalone as well as inherited
 * every cObject has its own framebuffer as well as position viariables to be moveable.
@@ -47,11 +39,6 @@ public:
 	/** Sets position by coordinates
 	*/
 	void setPosition(int _x, int _y);
-
-	/** Returns sObject with framebuffer and current position
-	* DEPRECATED
-	*/
-	sObject getObject();
 
 	/** Writes object to framebuffer with offset _cameraPosition
 	*/

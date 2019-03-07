@@ -38,30 +38,30 @@ public:
 	* Adds _object to managed objects vector
 	* returns Identifier for newly created vector
 	*/
-	int createObject(cObject *_object);
+	unsigned int createObject(cObject *_object);
 
 	/**
 	* Alters position of _object by _pos either relative to old position or Absolute
 	* Depending on selected _mode (_MOVE_RELATIVE / _MOVE_ABSOLUTE / _MOVE_ABSOLUTE).
 	* _MOVE_ABSOLUTE not recommended: Collision is only checked at destination. To ensure initialisation, use _MOVE_FORCE_ABSOLUTE!
 	*/
-	int moveObject(int _object, sPos _pos, int _mode);
+	int moveObject(unsigned int _object, sPos _pos, int _mode);
 
  /**
  * removes _object from vector after deleting it
  */
-	int destroyObject(int _object);
+	int destroyObject(unsigned int _object);
 
 	/**
 	* Analog to createObject()
 	*/
-	int createWiremesh(cWiremesh *_mesh);
+	unsigned int createWiremesh(cWiremesh *_mesh);
 
-	int moveWiremesh(int _mesh, sCoord3d _pos, int _mode);
+	int moveWiremesh(unsigned int _mesh, sCoord3d _pos, int _mode);
 
-	int rotateWiremesh(int _mesh, sCoord3d _angle);
+	int rotateWiremesh(unsigned int _mesh, sCoord3d _angle);
 
-	int destroyWiremesh(int _mesh);
+	int destroyWiremesh(unsigned int _mesh);
 
 
 	void setCameraPosition(sPos _pos, int _mode);

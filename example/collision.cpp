@@ -20,7 +20,7 @@ public:
     cc = 0;
     kc = 0;
 
-    drawRectangle('#', NULL, {0,0}, {9,4}, _COL_GREEN, _COL_DEFAULT);
+    drawRectangle('#', 0, {0,0}, {9,4}, _COL_GREEN, _COL_DEFAULT);
   }
 
   ~testobject() { destruct(); }

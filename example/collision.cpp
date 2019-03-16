@@ -30,7 +30,7 @@ public:
     cc++;
     drawText(std::to_string(cc), {2,2}, _COL_RED);
 
-    drawPoint('Q', _pos, true, _COL_YELLOW);
+    drawPoint('Q', _pos, _COL_YELLOW);
   }
 
   virtual bool onCollisionActive(sPos _hit, int _passiveObject){
@@ -39,7 +39,7 @@ public:
     return true;
   }
 
-	virtual void onChar(unsigned char _c) { drawPoint(_c, {1,1},true, _COL_BLUE); }
+	virtual void onChar(unsigned char _c) { drawPoint(_c, {1,1}, _COL_BLUE); }
 private:
   int cc;
   int kc;

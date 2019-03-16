@@ -7,7 +7,7 @@
 class ball : public cObject
 {
 public:
-  ball() : v({1,1}) { setSize(1,1); drawPoint('O', {0,0}, true, _COL_RED); }
+  ball() : v({1,1}) { setSize(1,1); drawPoint('O', {0,0}, _COL_RED); }
   ~ball() { destruct(); }
   virtual bool onCollisionActive(sPos _hit, int _passiveObject)
   {
@@ -28,7 +28,7 @@ private:
 class bar : public cObject
 {
 public:
-  bar() { setSize(1,5); drawLine('|', {0,0},{0,4}, true, _COL_BLUE);}
+  bar() { setSize(1,5); drawLine('|', {0,0},{0,4}, _COL_BLUE);}
   ~bar() { destruct(); }
   virtual int onCollisionPassive(sPos _hit){ return 2; }
   virtual bool onCollisionActive(sPos _hit, int _passiveObject){ return true; }
@@ -37,7 +37,7 @@ public:
 class edge : public cObject
 {
 public:
-  edge(unsigned int x, unsigned int y) { setSize(x,y); drawLine('#', {0,0},{(int)x-1,(int)y-1}, true, _COL_DEFAULT);}
+  edge(unsigned int x, unsigned int y) { setSize(x,y); drawLine('#', {0,0},{(int)x-1,(int)y-1}, _COL_DEFAULT);}
   ~edge() { destruct(); }
   virtual int onCollisionPassive(sPos _hit)
   {

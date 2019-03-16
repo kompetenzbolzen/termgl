@@ -14,27 +14,26 @@ OUTPUT = lib$(SONAME).so.$(VERSION).$(PATCHLEVEL)
 OBJ = cObject.o cObjectHandler.o cRender.o cInput.o cWiremesh.o
 
 build: dir genversion $(OBJ)
-	$(CC) $(CFLAGS) -o $(BUILDDIR)/lib/$(OUTPUT) $(OBJ) $(LDFLAGS) -Wl,-soname=lib$(SONAME).so.$(VERSION)
-	ln -sf $(OUTPUT) $(BUILDDIR)/lib/lib$(SONAME).so.$(VERSION)
-	ln -sf $(OUTPUT) $(BUILDDIR)/lib/lib$(SONAME).so
-	cp $(SOURCEDIR)/c*.h $(BUILDDIR)/inc
-	cp $(SOURCEDIR)/version.h $(BUILDDIR)/inc
+	@echo [LD] $(OBJ)
+	@$(CC) $(CFLAGS) -o $(BUILDDIR)/lib/$(OUTPUT) $(OBJ) $(LDFLAGS) -Wl,-soname=lib$(SONAME).so.$(VERSION)
+	@ln -sf $(OUTPUT) $(BUILDDIR)/lib/lib$(SONAME).so.$(VERSION)
+	@ln -sf $(OUTPUT) $(BUILDDIR)/lib/lib$(SONAME).so
+	@cp $(SOURCEDIR)/c*.h $(BUILDDIR)/inc
+	@cp $(SOURCEDIR)/version.h $(BUILDDIR)/inc
 
 dir:
-	mkdir -p $(BUILDDIR)
-	mkdir -p $(BUILDDIR)/lib
-	mkdir -p $(BUILDDIR)/inc
+	@mkdir -p $(BUILDDIR)
+	@mkdir -p $(BUILDDIR)/lib
+	@mkdir -p $(BUILDDIR)/inc
 
 
 %.o: $(SOURCEDIR)/%.cpp
-	@echo
-	@echo Building $<
-	@echo ==============
-	@echo
-	$(CC) $(CFLAGS) -c $<
+	@echo [CC] $<
+	@$(CC) $(CFLAGS) -c $<
 
 %.o: example/%.cpp
-	$(CC) $(CFLAGS) -I$(SOURCEDIR) -c $<
+	@echo [CC] $<
+	@$(CC) $(CFLAGS) -I$(SOURCEDIR) -c $<
 
 
 all: clean build
@@ -42,11 +41,15 @@ all: clean build
 .PHONY: clean doc
 
 clean:
-	rm -df  $(OBJ) $(TESTSOURCE).o src/version.h
-	rm -Rdf $(BUILDDIR)/lib $(BUILDDIR)/inc $(BUILDDIR)/test doc/
+	@echo [RM] $(OBJ)
+	@echo [RM] $(TESTSOURCE).o
+	@echo [RM] src/version.h
+	@echo [RM] $(BUILDDIR)/lib $(BUILDDIR)/inc $(BUILDDIR)/test doc/
+	@rm -df  $(OBJ) $(TESTSOURCE).o src/version.h
+	@rm -Rdf $(BUILDDIR)/lib $(BUILDDIR)/inc $(BUILDDIR)/test doc/
 
 genversion:
-	@echo Building Version
+	@echo [GEN] version.h
 	@echo "#pragma once" > $(SOURCEDIR)/version.h
 	@echo "#define VERSION $(VERSION)" >> $(SOURCEDIR)/version.h
 	@echo "#define PATCHLEVEL $(PATCHLEVEL)" >> $(SOURCEDIR)/version.h
@@ -57,15 +60,16 @@ genversion:
 	@echo "#define BUILDERMAIL \"`git config user.email`\"" >> $(SOURCEDIR)/version.h
 
 gentest: build $(TESTSOURCE).o
-	mkdir -p $(BUILDDIR)/test
-	$(CC) $(DEBUGFLAGS) -o $(BUILDDIR)/test/test $(TESTSOURCE).o $(OBJ) -lstdc++ -lm
+	@echo [LD] $(TESTSOURCE).o
+	@mkdir -p $(BUILDDIR)/test
+	@$(CC) $(DEBUGFLAGS) -o $(BUILDDIR)/test/test $(TESTSOURCE).o $(OBJ) -lstdc++ -lm
 
 run: gentest
-	./$(BUILDDIR)/test/test
+	@./$(BUILDDIR)/test/test
 
 memleak: gentest
-	valgrind -v --track-origins=yes "./$(BUILDDIR)/test/test"
+	@valgrind -v --track-origins=yes "./$(BUILDDIR)/test/test"
 
 doc: genversion
-	mkdir -p doc
-	doxygen .doxygen
+	@mkdir -p doc
+	@doxygen .doxygen

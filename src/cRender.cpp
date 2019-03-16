@@ -80,10 +80,19 @@ int cRender::drawPoint(char _c, sPos _pos, WORD _color)
 		return _ERR_COORDINATES_INVALID_;
 
 	cScreen[_pos.x][_pos.y] = _c;
+
+	#ifdef _WIN32
+
 	if (_color == _COL_DEFAULT) //_COL_DEFAULT is NOT a proper colorcode!
 		wColor[_pos.x][_pos.y] = wDefColor;
 	else
 		wColor[_pos.x][_pos.y] = _color;
+
+	#elif __linux__
+
+		wColor[_pos.x][_pos.y] = _color;
+
+	#endif
 
 	if(!bBlockRender) //Changemap is not allocated in inherited Classes
 		bChanged[_pos.x][_pos.y] = true;
@@ -190,15 +199,36 @@ int cRender::render(void)
 
 				gotoxy(o,i);
 				SetConsoleTextAttribute(hstdout, wColor[o][i] | _COL_INTENSITY);
-				//cout << cScreen[o][i];
+
 				printf("%c", cScreen[o][i]);
 
 				#elif __linux__
-				//gotoxy(x,y) now included!!
+
 				char buffer[20];
-				//int cbuf = sprintf(buffer,"\e[%u;%uH\e[%im%c", i + 1, o + 1, wColor[o][i], cScreen[o][i]);
-				//      											Position  Color  Origin is at 1,1
-				int cbuf = sprintf(buffer,"\e[%u;%uH%c", i + 1, o + 1, cScreen[o][i]);
+				char colorstr[20];
+				uint8_t color[3] = {(uint8_t) (0x0000ff & wColor[o][i]),				//Color
+														(uint8_t)((0x00ff00 & wColor[o][i]) >> 8),	//Background
+														(uint8_t)((0xff0000 & wColor[o][i]) >> 16)};//Modifier
+
+				{////
+					int cc = 0;
+					cc = cc + sprintf(&colorstr[cc], "%u", color[0]);
+					if(color[1])
+					{
+						colorstr[cc] = ';';
+						colorstr[cc + 1] = color[1];
+						cc += 1 + sprintf(&colorstr[cc + 1], "%u", color[1]);
+					}
+					if(color[2])
+					{
+						colorstr[cc] = ';';
+						cc += 1 + sprintf(&colorstr[cc + 1], "%u", color[2]);
+					}
+				}////
+
+				int cbuf = sprintf(buffer,"\e[%u;%uH\e[%sm%c\e[0m", i + 1, o + 1, colorstr, cScreen[o][i]);
+				//      										Position  Color        Origin is at 1,1
+				//int cbuf = sprintf(buffer,"\e[%u;%uH%c", i + 1, o + 1, cScreen[o][i]);
 				write (STDOUT_FILENO, buffer, cbuf);
 
 				#endif //__linux__

@@ -37,7 +37,7 @@ void cObject::write(cRender *_render, sPos _cameraPosition)
 			if (cScreen[p][o]) { //Dont overwrite empty pixels
 				sPos npos{ pos.x + (int)p - _cameraPosition.x,
 									pos.y + (int)o - _cameraPosition.y };
-				_render->drawPoint(cScreen[p][o], npos, true, wColor[p][o]);
+				_render->drawPoint(cScreen[p][o], npos, wColor[p][o]);
 			}
 		}
 	}

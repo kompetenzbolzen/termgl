@@ -24,7 +24,6 @@
 #define _ERR_RENDER_BLOCKED_BY_CHILD_ 3
 #define _ERR_SCREEN_TOO_SMALL_ 4
 
-#define _COLLISION_ 255
 
 //Colors
 #ifdef _WIN32
@@ -79,14 +78,14 @@ public:
 	virtual ~cRender();
 
 	/** Draws _c @ _pos in screenbuffer
-	* Returns _COLLOSION_ if _pos is already set to !cBackround && _overrideCollision isnt set
+	* Returns _COLLOSION_ if _pos is already set to !cBackround
 	*/
-	int drawPoint(char _c, sPos _pos, bool _overrideCollision, WORD _color);
+	int drawPoint(char _c, sPos _pos,  WORD _color);
 
 	/** draws Line from _pos1 to _pos2 in screenbuffer
 	* x Value of pos1 MUSTNT exceed the x value of pos2!
 	*/
-	int drawLine(char _c, sPos _pos1, sPos _pos2, bool _overrideCollision, WORD _color);
+	int drawLine(char _c, sPos _pos1, sPos _pos2,  WORD _color);
 
 	/** Draws Text _s @ _pos in screenbuffer
 	* First char is @ _pos

@@ -35,7 +35,7 @@ void cWiremesh::write(cRender *_render)
     _render->drawLine(vectors[i].c,
           translate(vorigin + position, origin),
           translate(vorigin + vdirection + position, origin),
-          true, vectors[i].color);
+          vectors[i].color);
   }
 }
 

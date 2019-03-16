@@ -74,13 +74,10 @@ cRender::~cRender()
 	#endif //__linux__
 }
 
-int cRender::drawPoint(char _c, sPos _pos, bool _overrideCollision, WORD _color)
+int cRender::drawPoint(char _c, sPos _pos, WORD _color)
 {
 	if (_pos.x >= (int)sizeX || _pos.y >= (int)sizeY || _pos.x < 0 || _pos.y < 0)
 		return _ERR_COORDINATES_INVALID_;
-
-	if (_overrideCollision != true && cScreen[_pos.x][_pos.y] != cBackound) //detect Collsision
-		return _COLLISION_;
 
 	cScreen[_pos.x][_pos.y] = _c;
 	if (_color == _COL_DEFAULT) //_COL_DEFAULT is NOT a proper colorcode!
@@ -94,24 +91,24 @@ int cRender::drawPoint(char _c, sPos _pos, bool _overrideCollision, WORD _color)
 	return 0;
 }
 
-int cRender::drawLine(char _c, sPos _pos1, sPos _pos2, bool _overrideCollision, WORD _color)
+int cRender::drawLine(char _c, sPos _pos1, sPos _pos2,  WORD _color)
 {
 	if(_pos1.x > _pos2.x)
 	{
 		//Shit WILL go wrong
-		return drawLine(_c, _pos2, _pos1, _overrideCollision, _color);
+		return drawLine(_c, _pos2, _pos1, _color);
 	}
 
 	if (_pos1.x == _pos2.x)	{ //Horizontal line
 		for (int i = _pos1.y; i <= _pos2.y; i++)
 		{
-			drawPoint(_c, sPos{_pos1.x, i}, _overrideCollision, _color);
+			drawPoint(_c, sPos{_pos1.x, i}, _color);
 		}
 	}
 	else if (_pos1.y == _pos2.y) { //Vertical line
 		for (int i = _pos1.x; i <= _pos2.x; i++)
 		{
-			drawPoint(_c, sPos{ i, _pos1.y }, _overrideCollision, _color);
+			drawPoint(_c, sPos{ i, _pos1.y }, _color);
 		}
 	}
 	else { //Diagonal Line
@@ -121,7 +118,7 @@ int cRender::drawLine(char _c, sPos _pos1, sPos _pos2, bool _overrideCollision, 
 
 		for (int i = 0; i <= abs(dX); i++)
 		{
-			drawPoint(_c, sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5)}, _overrideCollision, _color); //+0.5 for rounding error
+			drawPoint(_c, sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5)}, _color); //+0.5 for rounding error
 
 			if(std::abs(fGradient) > 1.0)
 			{
@@ -132,14 +129,14 @@ int cRender::drawLine(char _c, sPos _pos1, sPos _pos2, bool _overrideCollision, 
 					drawLine(_c,
 						sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5)},
 						sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5) + dy },
-						_overrideCollision, _color);
+						_color);
 				}//if
 				else if(dy < 0 && ((int)(i * fGradient + _pos1.y + 0.5) + dy) >= (_pos2.y) )
 				{
 					drawLine(_c,
 						sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5) + dy },
 						sPos{i + _pos1.x, (int)(i * fGradient + _pos1.y + 0.5)},
-						_overrideCollision, _color);
+						_color);
 				}//else if
 			}//if
 		}//for
@@ -152,7 +149,7 @@ int cRender::drawText(string _s, sPos _pos, WORD _color)
 {
 	for (unsigned int i = 0; i < _s.length(); i++)
 	{
-		drawPoint(_s[i], sPos{ (int)i + _pos.x,_pos.y }, true,  _color);
+		drawPoint(_s[i], sPos{ (int)i + _pos.x,_pos.y },  _color);
 	}
 	return 0;
 }
@@ -160,16 +157,16 @@ int cRender::drawText(string _s, sPos _pos, WORD _color)
 int cRender::drawRectangle(char _border, char _fill, sPos _pos1, sPos _pos2, WORD _borderColor, WORD _fillColor)
 {
 	//Draw the four outside lines
-	drawLine(_border, _pos1, sPos{ _pos1.x, _pos2.y }, true, _borderColor);
-	drawLine(_border, _pos1, sPos{ _pos2.x, _pos1.y }, true, _borderColor);
-	drawLine(_border, sPos{ _pos1.x, _pos2.y }, _pos2, true, _borderColor);
-	drawLine(_border, sPos{ _pos2.x, _pos1.y }, _pos2, true, _borderColor);
+	drawLine(_border, _pos1, sPos{ _pos1.x, _pos2.y }, _borderColor);
+	drawLine(_border, _pos1, sPos{ _pos2.x, _pos1.y }, _borderColor);
+	drawLine(_border, sPos{ _pos1.x, _pos2.y }, _pos2, _borderColor);
+	drawLine(_border, sPos{ _pos2.x, _pos1.y }, _pos2, _borderColor);
 
 	//Fill rectangle if _fill isn't NULL
 	if (_fill) {
 		for (int i = _pos1.y + 1; i < _pos2.y; i++) {
 			for (int o = _pos1.x + 1; o < _pos2.x; o++) {
-				drawPoint(_fill, sPos{ o,i }, true, _fillColor);
+				drawPoint(_fill, sPos{ o,i }, _fillColor);
 			}
 		}
 	}

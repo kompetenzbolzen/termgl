@@ -5,6 +5,9 @@
 #include <string>
 #include <cmath>
 #include <termios.h>
+#include <time.h> //clock()
+#include <chrono>
+#include <thread>
 
 #ifdef __linux__
 	#include <unistd.h>
@@ -131,6 +134,14 @@ public:
 	*/
 	sPos getSize();
 
+	/** Time in (real) seconds between last and second to last renders
+	*/
+	double getFrametime();
+
+	/** Sets target Framerate. 0 for unlimited
+	*/
+	void setTargetFPS(unsigned int _fps);
+
 
 protected:
 	/** Empty Constructor for being inheritable
@@ -159,6 +170,12 @@ protected:
 	unsigned int sizeX, sizeY;
 	//* Size of screen array
 
+	//Timekeeping
+	unsigned int uTargetFPS;
+	clock_t lastRenderTime;
+	double lastFrameTime;
+	timespec lastRender;
+
 #ifdef _WIN32
 	HANDLE hstdout;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -170,17 +187,20 @@ protected:
 	int iLastError;
 
 private:
+	void forceReRender();
+
+	void setConsoleEcho(bool _enable);
+
+	void printDebugInfo();
+
+	void waitForFrametime();
 #ifdef _WIN32
 	int SetConsoleWindowSize(int x, int y);
 	//Slightly adapted from: http://www.cplusplus.com/forum/windows/121444/
 
 	void gotoxy( int x, int y );
-#endif
 
-	void forceReRender();
-
-	void setConsoleEcho(bool _enable);
-#ifdef __linux__
+#elif __linux__
 	sPos getConsoleWindowSize();
 
 	void setConsoleCursor(bool _enable);

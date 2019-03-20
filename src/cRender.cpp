@@ -11,6 +11,10 @@ cRender::cRender(char _backound, WORD _color, unsigned int _sx, unsigned int _sy
 	cBackound = _backound;
 	wBackColor = _color;
 
+	uTargetFPS = 0;
+	lastFrameTime = 0;
+	lastRenderTime = 0;
+
 #ifdef __linux__ //In Linux, setting Console size is not supported, so it gets Size of Console (Window) instead.
 
 	wDefColor = _COL_DEFAULT;
@@ -188,8 +192,15 @@ int cRender::render(void)
 	if (bBlockRender)
 		return _ERR_RENDER_BLOCKED_BY_CHILD_;
 
+	waitForFrametime();
+
 	//Resize screenbuffer if needed
 	setBufferSize( getConsoleWindowSize( ) );
+
+	printDebugInfo();
+
+	//For measuring render time
+	clock_t startTime = clock();
 
 	for (unsigned int i = 0; i < sizeY; i++) {
 		for (unsigned int o = 0; o < sizeX; o++) {
@@ -236,6 +247,18 @@ int cRender::render(void)
 			bChanged[o][i] = false;
 		}
 	}
+
+	//calc render time
+	lastRenderTime = clock() - startTime;
+
+	//calc time since last render
+	timespec now;
+	clock_gettime(CLOCK_MONOTONIC, &now);
+	lastFrameTime = (now.tv_sec - lastRender.tv_sec);
+	lastFrameTime += (now.tv_nsec - lastRender.tv_nsec) / 1000000000.0;
+	//save current time
+	clock_gettime(CLOCK_MONOTONIC, &lastRender);
+
 	return 0;
 }
 
@@ -416,4 +439,45 @@ void cRender::setConsoleEcho(bool _enable)
 
 		_enable ? write (STDOUT_FILENO, "\e[?8h", 5) : write (STDOUT_FILENO, "\e[?8l", 5);
 #endif //__linux__
+}
+
+double cRender::getFrametime()
+{
+	return lastFrameTime;
+}
+
+void cRender::setTargetFPS(unsigned int _fps)
+{
+	uTargetFPS = _fps;
+}
+
+void cRender::printDebugInfo()
+{
+	char dbgtxt[30];
+
+	sprintf(dbgtxt, "R: %f F: %f", ((float)lastRenderTime) / CLOCKS_PER_SEC, 1/getFrametime());
+
+	drawText(dbgtxt, {0,0}, _COL_BLACK | _COL_WHITE_BG);
+}
+
+void cRender::waitForFrametime()
+{
+	if(!uTargetFPS)
+		return;
+
+	timespec now;
+	double elapsed;
+	double left;
+	clock_gettime(CLOCK_MONOTONIC, &now);
+	elapsed = (now.tv_sec - lastRender.tv_sec);
+	elapsed += (now.tv_nsec - lastRender.tv_nsec) / 1000000000.0;
+
+	if(elapsed > (1/(double)uTargetFPS))
+		return;
+
+	left = (1/(double)uTargetFPS) - elapsed - (((double)lastRenderTime) / CLOCKS_PER_SEC);
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(int (left * 1000)));
+
+
 }

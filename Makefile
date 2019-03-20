@@ -5,13 +5,18 @@ LDFLAGS = -shared
 SONAME = engine
 BUILDDIR = build
 SOURCEDIR = src
+OBJECTDIR = obj
 TESTSOURCE = test
 #VERSION
 VERSION = 0
 PATCHLEVEL = 4
 OUTPUT = lib$(SONAME).so.$(VERSION).$(PATCHLEVEL)
 
-OBJ = cObject.o cObjectHandler.o cRender.o cInput.o cWiremesh.o
+SRCS=$(wildcard $(SOURCEDIR)/*.cpp)
+OBJS =$(SRCS:.cpp=.o)
+OBJ =$(OBJS:$(SOURCEDIR)/%=$(OBJECTDIR)/%)
+
+#OBJ = cObject.o cObjectHandler.o cRender.o cInput.o cWiremesh.o
 
 build: dir genversion $(OBJ)
 	@echo [LD] $(OBJ)
@@ -22,16 +27,17 @@ build: dir genversion $(OBJ)
 	@cp $(SOURCEDIR)/version.h $(BUILDDIR)/inc
 
 dir:
+	@mkdir -p $(OBJECTDIR)
 	@mkdir -p $(BUILDDIR)
 	@mkdir -p $(BUILDDIR)/lib
 	@mkdir -p $(BUILDDIR)/inc
 
 
-%.o: $(SOURCEDIR)/%.cpp
+$(OBJECTDIR)/%.o: $(SOURCEDIR)/%.cpp
 	@echo [CC] $<
-	@$(CC) $(CFLAGS) -c $<
+	@$(CC) $(CFLAGS) -c $< -o $@
 
-%.o: example/%.cpp
+$(OBJECTDIR)/%.o: example/%.cpp
 	@echo [CC] $<
 	@$(CC) $(CFLAGS) -I$(SOURCEDIR) -c $<
 
@@ -59,7 +65,7 @@ genversion:
 	@echo "#define BUILDER \"`git config user.name`\"" >> $(SOURCEDIR)/version.h
 	@echo "#define BUILDERMAIL \"`git config user.email`\"" >> $(SOURCEDIR)/version.h
 
-gentest: build $(TESTSOURCE).o
+gentest: build $(OBJECTDIR)/$(TESTSOURCE).o
 	@echo [LD] $(TESTSOURCE).o
 	@mkdir -p $(BUILDDIR)/test
 	@$(CC) $(DEBUGFLAGS) -o $(BUILDDIR)/test/test $(TESTSOURCE).o $(OBJ) -lstdc++ -lm

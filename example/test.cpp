@@ -43,6 +43,9 @@ int main()
   cObjectHandler screen(&render);
   cInput input;
 
+  render.forceScreenSize({20,20});
+  render.mute(true);
+
   ball aball;
   edge edgeLeft(1,10);
   edge edgeRight(1,10);

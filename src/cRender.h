@@ -142,6 +142,9 @@ public:
 	*/
 	void setTargetFPS(unsigned int _fps);
 
+	void forceScreenSize(sPos _size);
+
+	void mute(bool _mute);
 
 protected:
 	/** Empty Constructor for being inheritable
@@ -155,6 +158,9 @@ protected:
 
 	bool bBlockRender;
 	//* Used by children to block render function
+
+	bool bMute;
+	bool bLockScreenSize;
 
 	char **cScreen;
 	//* Pixel Map

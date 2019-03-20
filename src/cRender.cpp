@@ -15,6 +15,9 @@ cRender::cRender(char _backound, WORD _color, unsigned int _sx, unsigned int _sy
 	lastFrameTime = 0;
 	lastRenderTime = 0;
 
+	bMute = false;
+	bLockScreenSize = false;
+
 #ifdef __linux__ //In Linux, setting Console size is not supported, so it gets Size of Console (Window) instead.
 
 	wDefColor = _COL_DEFAULT;
@@ -23,7 +26,7 @@ cRender::cRender(char _backound, WORD _color, unsigned int _sx, unsigned int _sy
 	setAlternateBufferScreen(true);
 	setConsoleCursor(false);
 
-	setBufferSize( getConsoleWindowSize() );
+	//setBufferSize( getConsoleWindowSize() );
 
 	if(sizeX < _sx || sizeY < _sy) //Notify Program tha screen is too small for desired Size
 		iLastError = _ERR_SCREEN_TOO_SMALL_;
@@ -40,7 +43,7 @@ cRender::cRender(char _backound, WORD _color, unsigned int _sx, unsigned int _sy
 #endif //_WIN32
 
 	setConsoleEcho(false);
-	clear(true); //Init backround array
+	//clear(true); //Init backround array
 
 }//render()
 
@@ -240,7 +243,9 @@ int cRender::render(void)
 				int cbuf = sprintf(buffer,"\e[%u;%uH\e[%sm%c\e[0m", i + 1, o + 1, colorstr, cScreen[o][i]);
 				//      										Position  Color        Origin is at 1,1
 				//int cbuf = sprintf(buffer,"\e[%u;%uH%c", i + 1, o + 1, cScreen[o][i]);
-				write (STDOUT_FILENO, buffer, cbuf);
+
+				if(!bMute)
+					write (STDOUT_FILENO, buffer, cbuf);
 
 				#endif //__linux__
 			}
@@ -361,6 +366,9 @@ void cRender::setConsoleCursor(bool _enable)
 
 void cRender::setBufferSize(sPos _size)
 {
+	if(bLockScreenSize)
+		return;
+
 	if(_size.x == (int)sizeX && _size.y == (int)sizeY)
 		return;
 
@@ -480,4 +488,22 @@ void cRender::waitForFrametime()
 	std::this_thread::sleep_for(std::chrono::milliseconds(int (left * 1000)));
 
 
+}
+
+void cRender::forceScreenSize(sPos _size)
+{
+	if(_size.x || _size.y)
+	{
+		setBufferSize(_size);
+		bLockScreenSize = true;
+	}
+	else
+	{
+		bLockScreenSize = false;
+	}
+}
+
+void cRender::mute(bool _mute)
+{
+	bMute = _mute;
 }

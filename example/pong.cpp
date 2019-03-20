@@ -53,38 +53,41 @@ int main()
   cObjectHandler screen(&render);
   cInput input;
 
+  render.render();
+  render.setTargetFPS(20);
+
+  sPos size = render.getSize();
+
   bar barLeft;
   bar barRight;
   ball aball;
-  edge edgeLeft(1,30);
-  edge edgeRight(1,30);
-  edge edgeTop(100,1);
-  edge edgeBottom(100,1);
+  edge edgeLeft(1,size.y - 2);
+  edge edgeRight(1,size.y - 2);
+  edge edgeTop(size.x - 2,1);
+  edge edgeBottom(size.x - 2,1);
 
   int iEdgeTop = screen.createObject(&edgeTop);
   screen.moveObject(iEdgeTop, {0,0}, _MOVE_FORCE_ABSOLUTE);
 
   int iEdgeBottom = screen.createObject(&edgeBottom);
-  screen.moveObject(iEdgeBottom, {0,30}, _MOVE_FORCE_ABSOLUTE);
+  screen.moveObject(iEdgeBottom, {0,size.y - 3}, _MOVE_FORCE_ABSOLUTE);
 
   int iEdgeLeft = screen.createObject(&edgeLeft);
   screen.moveObject(iEdgeLeft, {0,0}, _MOVE_FORCE_ABSOLUTE);
 
   int iEdgeRight = screen.createObject(&edgeRight);
-  screen.moveObject(iEdgeRight, {99,0}, _MOVE_FORCE_ABSOLUTE);
+  screen.moveObject(iEdgeRight, {size.x - 2,0}, _MOVE_FORCE_ABSOLUTE);
 
   int iAball= screen.createObject(&aball);
-  screen.moveObject(iAball, {50,6}, _MOVE_FORCE_ABSOLUTE);
+  screen.moveObject(iAball, {size.x/2,size.y/2}, _MOVE_FORCE_ABSOLUTE);
 
   unsigned int iBarLeft = screen.createObject(&barLeft);
   screen.moveObject(iBarLeft, {10,4}, _MOVE_FORCE_ABSOLUTE);
 
   unsigned int iBarRight = screen.createObject(&barRight);
-  screen.moveObject(iBarRight, {90,4}, _MOVE_FORCE_ABSOLUTE);
+  screen.moveObject(iBarRight, {size.x - 10,4}, _MOVE_FORCE_ABSOLUTE);
 
-  render.render();
 
-  render.setTargetFPS(20);
 
   unsigned int cc = 0;
 

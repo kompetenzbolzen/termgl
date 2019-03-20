@@ -1,7 +1,7 @@
 #include "cRender.h"
 
 
-cRender::cRender(char _backound, WORD _color, unsigned int _sx, unsigned int _sy)
+cRender::cRender(char _backound, WORD _color)
 {
 	bBlockRender = false; //If this Constructor is used, this instance is not inherited, thus render() doesn't need to be blocked
 	iLastError = _OK_;
@@ -26,11 +26,6 @@ cRender::cRender(char _backound, WORD _color, unsigned int _sx, unsigned int _sy
 	setAlternateBufferScreen(true);
 	setConsoleCursor(false);
 
-	//setBufferSize( getConsoleWindowSize() );
-
-	if(sizeX < _sx || sizeY < _sy) //Notify Program tha screen is too small for desired Size
-		iLastError = _ERR_SCREEN_TOO_SMALL_;
-
 #elif _WIN32 //Windows Specific Code
 	hstdout = GetStdHandle(STD_OUTPUT_HANDLE); //get handle
 
@@ -43,8 +38,6 @@ cRender::cRender(char _backound, WORD _color, unsigned int _sx, unsigned int _sy
 #endif //_WIN32
 
 	setConsoleEcho(false);
-	//clear(true); //Init backround array
-
 }//render()
 
 
@@ -214,7 +207,8 @@ int cRender::render(void)
 				gotoxy(o,i);
 				SetConsoleTextAttribute(hstdout, wColor[o][i] | _COL_INTENSITY);
 
-				printf("%c", cScreen[o][i]);
+				if(!bMute)
+					printf("%c", cScreen[o][i]);
 
 				#elif __linux__
 
@@ -289,6 +283,10 @@ int cRender::clear()
 	return clear(false);
 }
 
+int cRender::getLastError()
+{
+	return iLastError;
+}
 
 #ifdef _WIN32
 //Source: http://www.cplusplus.com/forum/windows/121444/
@@ -328,14 +326,7 @@ int cRender::SetConsoleWindowSize(int x, int y)
 	if (!SetConsoleWindowInfo(h, TRUE, &info))
 		return 1;
 }
-#endif //_WIN32
 
-int cRender::getLastError()
-{
-	return iLastError;
-}
-
-#ifdef _WIN32
 void cRender::gotoxy( int x, int y )
 {
   COORD p = { x, y };
@@ -436,15 +427,6 @@ void cRender::setConsoleEcho(bool _enable)
     SetConsoleMode(hStdin, mode );
 
 #elif __linux__
-    /*struct termios tty;
-    tcgetattr(STDIN_FILENO, &tty);
-    if( !_enable )
-        tty.c_lflag &= ~ECHO;
-    else
-        tty.c_lflag |= ECHO;
-
-    (void) tcsetattr(STDIN_FILENO, TCSANOW, &tty);*/
-
 		_enable ? write (STDOUT_FILENO, "\e[?8h", 5) : write (STDOUT_FILENO, "\e[?8l", 5);
 #endif //__linux__
 }
@@ -486,13 +468,11 @@ void cRender::waitForFrametime()
 	left = (1/(double)uTargetFPS) - elapsed - (((double)lastRenderTime) / CLOCKS_PER_SEC);
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(int (left * 1000)));
-
-
 }
 
 void cRender::forceScreenSize(sPos _size)
 {
-	if(_size.x || _size.y)
+	if(!(_size.x < 1 || _size.y < 1))
 	{
 		setBufferSize(_size);
 		bLockScreenSize = true;

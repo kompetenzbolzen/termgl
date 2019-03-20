@@ -16,6 +16,7 @@
 
 	typedef uint32_t WORD;
 #elif _WIN32
+	#error "Not ported"
   #include <Windows.h>
 #else
 	#error "Platforn not supported"
@@ -92,7 +93,7 @@ public:
 	* Resizes console window for Windows
 	* Sets Size to Console Window Size for Linux. Writes Error for _sx or _sy smaller than Screen. Get by getLastError()
 	*/
-	cRender(char _backound, WORD _color, unsigned int _sx, unsigned int _sy);
+	cRender(char _backound, WORD _color);
 
 	virtual ~cRender();
 
@@ -142,8 +143,12 @@ public:
 	*/
 	void setTargetFPS(unsigned int _fps);
 
+	/** Deactivates automatic screen size detection and forces screen size to _size
+	*/
 	void forceScreenSize(sPos _size);
 
+	/** Disable Output
+	*/
 	void mute(bool _mute);
 
 protected:

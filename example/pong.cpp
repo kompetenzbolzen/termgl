@@ -22,7 +22,6 @@ public:
   sPos getV() { return v; }
 private:
   sPos v;
-
 };
 
 class bar : public cObject
@@ -50,7 +49,7 @@ public:
 
 int main()
 {
-  cRender render(' ', _COL_DEFAULT, 10,10);
+  cRender render(' ', _COL_DEFAULT);
   cObjectHandler screen(&render);
   cInput input;
 
@@ -91,7 +90,6 @@ int main()
 
   while(1)
   {
-
     sInputEvent ie = input.poll();
 
 		if(ie.type != _EVENT_NULL)

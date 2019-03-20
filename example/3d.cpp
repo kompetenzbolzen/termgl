@@ -39,7 +39,7 @@ private:
 
 int main(int argc, char* argv[])
 {
-	cRender render(' ', _COL_DEFAULT, 30,30);
+	cRender render(' ', _COL_DEFAULT);
 	cObjectHandler handler(&render);
 	cObject ver(45,1);
 	cWiremesh obj;

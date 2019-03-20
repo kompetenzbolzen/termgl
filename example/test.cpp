@@ -39,7 +39,7 @@ public:
 
 int main()
 {
-  cRender render(' ', _COL_DEFAULT, 10,10);
+  cRender render(' ', _COL_DEFAULT);
   cObjectHandler screen(&render);
   cInput input;
 

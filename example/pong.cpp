@@ -85,8 +85,7 @@ int main()
 
   render.render();
 
-  //printf ("%i %i %i %i %i", iEdgeTop, iEdgeBottom, iEdgeLeft, iEdgeRight, iAball);
-  /*return 0;*/
+  render.setTargetFPS(20);
 
   unsigned int cc = 0;
 
@@ -137,8 +136,6 @@ int main()
 
     screen.write();
     render.render();
-
-    usleep(50*1000);
   }
 
   return 0;

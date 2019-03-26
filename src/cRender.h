@@ -151,6 +151,10 @@ public:
 	*/
 	void mute(bool _mute);
 
+	/** Enables Debug info Printing to screen
+	*/
+	void enableDebugInfo(bool _enable);
+
 protected:
 	/** Empty Constructor for being inheritable
 	*/
@@ -166,6 +170,7 @@ protected:
 
 	bool bMute;
 	bool bLockScreenSize;
+	bool bPrintDebugInfo;
 
 	char **cScreen;
 	//* Pixel Map

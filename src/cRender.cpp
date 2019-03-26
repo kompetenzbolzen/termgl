@@ -17,6 +17,7 @@ cRender::cRender(char _backound, WORD _color)
 
 	bMute = false;
 	bLockScreenSize = false;
+	bPrintDebugInfo = false;
 
 #ifdef __linux__ //In Linux, setting Console size is not supported, so it gets Size of Console (Window) instead.
 
@@ -443,12 +444,15 @@ void cRender::setTargetFPS(unsigned int _fps)
 
 void cRender::printDebugInfo()
 {
+	if(!bPrintDebugInfo)
+		return;
+
 	char dbgtxt[30];
 
 	double lrt = (double)lastFrameTime / CLOCKS_PER_SEC;
-	double fps = getFrametime()? 1/getFrametime():0;
+	double fps = getFrametime() ? 1/getFrametime() : 0;
 
-	sprintf(dbgtxt, "R: %f F: %f", lrt, fps);
+	sprintf(dbgtxt, "R: %f F: %f ", lrt, fps);
 
 	drawText(dbgtxt, {0,0}, _COL_BLACK | _COL_WHITE_BG);
 }
@@ -489,4 +493,9 @@ void cRender::forceScreenSize(sPos _size)
 void cRender::mute(bool _mute)
 {
 	bMute = _mute;
+}
+
+void cRender::enableDebugInfo(bool _enable)
+{
+	bPrintDebugInfo = _enable;
 }

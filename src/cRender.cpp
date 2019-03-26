@@ -445,7 +445,10 @@ void cRender::printDebugInfo()
 {
 	char dbgtxt[30];
 
-	sprintf(dbgtxt, "R: %f F: %f", ((float)lastRenderTime) / CLOCKS_PER_SEC, 1/getFrametime());
+	double lrt = (double)lastFrameTime / CLOCKS_PER_SEC;
+	double fps = getFrametime()? 1/getFrametime():0;
+
+	sprintf(dbgtxt, "R: %f F: %f", lrt, fps);
 
 	drawText(dbgtxt, {0,0}, _COL_BLACK | _COL_WHITE_BG);
 }

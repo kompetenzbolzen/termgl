@@ -125,6 +125,8 @@ int main()
 					case 's':
 						screen.moveObject(iBarLeft, {0,1}, _MOVE_RELATIVE);
             break;
+          case 'g':
+            render.enableDebugInfo(true);
 				};
 			}
 			else if (ie.type == _EVENT_TERM)

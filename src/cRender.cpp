@@ -213,8 +213,8 @@ int cRender::render(void)
 
 				#elif __linux__
 
-				char buffer[20];
-				char colorstr[20];
+				char buffer[40];
+				char colorstr[30];
 				uint8_t color[3] = {(uint8_t) (0x0000ff & wColor[o][i]),				//Color
 														(uint8_t)((0x00ff00 & wColor[o][i]) >> 8),	//Background
 														(uint8_t)((0xff0000 & wColor[o][i]) >> 16)};//Modifier

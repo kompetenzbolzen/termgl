@@ -213,31 +213,34 @@ int cRender::render(void)
 
 				#elif __linux__
 
-				char buffer[40];
-				char colorstr[30];
+				const unsigned int buffer_len = 40;
+				const unsigned int colorstr_len = 30;
+
+				char buffer[ buffer_len ];
+				char colorstr[ colorstr_len ];
+
 				uint8_t color[3] = {(uint8_t) (0x0000ff & wColor[o][i]),				//Color
 														(uint8_t)((0x00ff00 & wColor[o][i]) >> 8),	//Background
 														(uint8_t)((0xff0000 & wColor[o][i]) >> 16)};//Modifier
 
 				{////
 					int cc = 0;
-					cc = cc + sprintf(&colorstr[cc], "%u", color[0]);
+					cc = cc + snprintf(&colorstr[cc], colorstr_len - cc - 1, "%u", color[0]);
 					if(color[1])
 					{
 						colorstr[cc] = ';';
 						colorstr[cc + 1] = color[1];
-						cc += 1 + sprintf(&colorstr[cc + 1], "%u", color[1]);
+						cc += 1 + snprintf(&colorstr[cc + 1],colorstr_len - cc - 1, "%u", color[1]);
 					}
 					if(color[2])
 					{
 						colorstr[cc] = ';';
-						cc += 1 + sprintf(&colorstr[cc + 1], "%u", color[2]);
+						cc += 1 + snprintf(&colorstr[cc + 1], colorstr_len - cc - 1, "%u", color[2]);
 					}
 				}////
 
-				int cbuf = sprintf(buffer,"\e[%u;%uH\e[%sm%c\e[0m", i + 1, o + 1, colorstr, cScreen[o][i]);
+				int cbuf = snprintf(buffer, buffer_len - 1,"\e[%u;%uH\e[%sm%c\e[0m", i + 1, o + 1, colorstr, cScreen[o][i]);
 				//      										Position  Color        Origin is at 1,1
-				//int cbuf = sprintf(buffer,"\e[%u;%uH%c", i + 1, o + 1, cScreen[o][i]);
 
 				if(!bMute)
 					write (STDOUT_FILENO, buffer, cbuf);
@@ -447,12 +450,13 @@ void cRender::printDebugInfo()
 	if(!bPrintDebugInfo)
 		return;
 
-	char dbgtxt[30];
+	const unsigned int dbgtxt_len = 30;
+	char dbgtxt[ dbgtxt_len ];
 
 	double lrt = (double)lastFrameTime / CLOCKS_PER_SEC;
 	double fps = getFrametime() ? 1/getFrametime() : 0;
 
-	sprintf(dbgtxt, "R: %f F: %f ", lrt, fps);
+	snprintf(dbgtxt, dbgtxt_len - 1, "R: %f F: %f ", lrt, fps);
 
 	drawText(dbgtxt, {0,0}, _COL_BLACK | _COL_WHITE_BG);
 }

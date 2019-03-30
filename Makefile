@@ -2,14 +2,14 @@ CC      = clang
 CFLAGS  = -Wall -g -std=c++11  -fPIC
 DEBUGFLAGS = -Wall -g -std=c++11
 LDFLAGS = -shared
-SONAME = engine
+SONAME = termgl
 BUILDDIR = build
 SOURCEDIR = src
 OBJECTDIR = obj
 TESTSOURCE = test
 #VERSION
-VERSION = 0
-PATCHLEVEL = 4
+VERSION = 1
+PATCHLEVEL = 0
 OUTPUT = lib$(SONAME).so.$(VERSION).$(PATCHLEVEL)
 
 SRCS=$(wildcard $(SOURCEDIR)/*.cpp)

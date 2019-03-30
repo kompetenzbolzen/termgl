@@ -4,7 +4,7 @@ LIBDIR = ../build/lib
 INCDIR = ../build/inc
 
 %: %.cpp
-	$(CC) -I$(INCDIR) -L$(LIBDIR) $(CFLAGS) -lengine $< -o $@.out
+	$(CC) -I$(INCDIR) -L$(LIBDIR) $(CFLAGS) -ltermgl $< -o $@.out
 	LD_LIBRARY_PATH=$(LIBDIR) ./$@.out
 
 .PHONY: clean

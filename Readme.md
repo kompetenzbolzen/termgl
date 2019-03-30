@@ -2,13 +2,13 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9b19f9f7a8d241368f6ee640d824b293)](https://www.codacy.com/app/kompetenzbolzen/engine?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kompetenzbolzen/engine&amp;utm_campaign=Badge_Grade)
 [![CodeFactor](https://www.codefactor.io/repository/github/kompetenzbolzen/engine/badge/master)](https://www.codefactor.io/repository/github/kompetenzbolzen/engine/overview/master)
 
-# engine (the most creative name I could come up with)
+# TermGL
 
-engine is a library for displaying ASCII-graphics in a text console. For more information on how to use, consult the documentation (`make doc`) and look at the example programs in `example/`.
+TermGL is a library for displaying ASCII-graphics in a text console. For more information on how to use, consult the documentation (`make doc`) and look at the example programs in `example/`.
 
 ## Compiling the library
 
-engine should compile just fine with just the c++ standard librarys. The Makefile is set up for clang, but gcc should also work.
+TermGL should compile just fine with just the c++ standard librarys. The Makefile is set up for clang, but gcc should also work.
 Required Packages:
 
     clang
@@ -24,4 +24,4 @@ To build the documentation, install `doxygen` and run `make doc`.
 
 Compile your program with linkerflags:
 
-    -L/path/to/lib -lengine -lstdc++
+    -L/path/to/lib -ltermgL -lstdc++

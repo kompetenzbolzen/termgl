@@ -4,7 +4,20 @@
 
 # TermGL
 
-TermGL is a library for displaying ASCII-graphics in a text console. For more information on how to use, consult the documentation (`make doc`) and look at the example programs in `example/`.
+TermGL is a library for displaying ASCII-graphics in a xterm compatible console (Some parts work in Windows).
+
+List of current features:
+
+ - Automatic terminal size detection, online resizing
+ - Framerate target
+ - Simple drawing functions
+ - Object Handling:
+    - Movement
+    - Collision
+ - Input handling with object mapping
+ - 3D wiremeshes (mostly useless eye-candy)
+
+For more information on how to use, consult the documentation (`make doc`) and look at the example programs in `example/`.
 
 ## Compiling the library
 

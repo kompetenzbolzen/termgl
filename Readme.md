@@ -37,4 +37,4 @@ To build the documentation, install `doxygen` and run `make doc`.
 
 Compile your program with linkerflags:
 
-    -L/path/to/lib -ltermgL -lstdc++
+    -L/path/to/lib -ltermgl -lstdc++

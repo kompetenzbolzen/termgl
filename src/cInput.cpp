@@ -23,8 +23,9 @@ cInput::~cInput()
 
 sInputEvent cInput::poll()
 {
+  const unsigned int buff_len = 5;
   sInputEvent ret;
-  unsigned char buff [6];
+  unsigned char buff [buff_len];
 
   //setup for select
   fd_set rfds;
@@ -47,7 +48,7 @@ sInputEvent cInput::poll()
   }
   else if (buff[0] == '\x1B') //Escape sequence
   {
-    read (STDIN_FILENO, &buff, 5);
+    read (STDIN_FILENO, &buff, buff_len);
     if(buff[0] == '[')
     {
       if(buff[1] == 'M') //Mouse Event

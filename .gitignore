@@ -6,3 +6,5 @@
 build/*
 doc/*
 version.h
+tags
+*.swp

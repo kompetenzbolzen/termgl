@@ -1,25 +1,25 @@
-CC      = clang
-CFLAGS  = -Wall -std=c++11 -fPIC
-LDFLAGS = -shared
-SONAME = termgl
-BUILDDIR = build
-SOURCEDIR = src
-OBJECTDIR = obj
-TESTSOURCE = test
+CC		= clang
+CPPFLAGS	= -Wall -std=c++11  -fPIC
+LDFLAGS		= -shared
+SONAME		= termgl
+
+BUILDDIR	= build
+SOURCEDIR	= src
+OBJECTDIR	= obj
+TESTSOURCE	= test
+OUTPUT		= lib$(SONAME).so.$(VERSION).$(PATCHLEVEL)
+
 #VERSION
-VERSION = 1
-PATCHLEVEL = 0
-OUTPUT = lib$(SONAME).so.$(VERSION).$(PATCHLEVEL)
+VERSION		= 1
+PATCHLEVEL	= 0
 
-SRCS=$(wildcard $(SOURCEDIR)/*.cpp)
-OBJS =$(SRCS:.cpp=.o)
-OBJ =$(OBJS:$(SOURCEDIR)/%=$(OBJECTDIR)/%)
+SRCS = $(wildcard $(SOURCEDIR)/*.cpp)  
+OBJS = $(SRCS:.cpp=.o)
+OBJ  = $(OBJS:$(SOURCEDIR)/%=$(OBJECTDIR)/%)
 
-#OBJ = cObject.o cObjectHandler.o cRender.o cInput.o cWiremesh.o
-
-build: dir genversion $(OBJ)
-	@echo [ LD ] $(OBJ)
-	@$(CC) $(CFLAGS) -o $(BUILDDIR)/lib/$(OUTPUT) $(OBJ) $(LDFLAGS) -Wl,-soname=lib$(SONAME).so.$(VERSION)
+build: dir genversion $(OBJ) 
+	@echo [LD] $(OBJ) 
+	@$(CC) $(CPPFLAGS) -o $(BUILDDIR)/lib/$(OUTPUT) $(OBJ) $(LDFLAGS) -Wl,-soname=lib$(SONAME).so.$(VERSION)
 	@ln -sf $(OUTPUT) $(BUILDDIR)/lib/lib$(SONAME).so.$(VERSION)
 	@ln -sf $(OUTPUT) $(BUILDDIR)/lib/lib$(SONAME).so
 	@cp $(SOURCEDIR)/c*.h $(BUILDDIR)/inc
@@ -35,13 +35,15 @@ debug: CFLAGS += -g -D _DEBUG
 debug: build;
 
 $(OBJECTDIR)/%.o: $(SOURCEDIR)/%.cpp
-	@echo [ CC ] $<
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo [CC] $<
+	@$(CC) $(CPPFLAGS) -c $< -o $@
 
 $(OBJECTDIR)/%.o: example/%.cpp
-	@echo [ CC ] $<
-	@$(CC) $(CFLAGS) -I$(SOURCEDIR) -c $<
+	@echo [CC] $<
+	@$(CC) $(CPPFLAGS) -I$(SOURCEDIR) -c $<
 
+debug: CPPFLAGS+=-g
+debug: build
 
 all: clean build
 
@@ -66,10 +68,10 @@ genversion:
 	@echo "#define BUILDER \"`git config user.name`\"" >> $(SOURCEDIR)/version.h
 	@echo "#define BUILDERMAIL \"`git config user.email`\"" >> $(SOURCEDIR)/version.h
 
-gentest: build $(OBJECTDIR)/$(TESTSOURCE).o
-	@echo [ LD ] $(TESTSOURCE).o
+gentest: debug $(OBJECTDIR)/$(TESTSOURCE).o
+	@echo [LD] $(TESTSOURCE).o
 	@mkdir -p $(BUILDDIR)/test
-	@$(CC) $(DEBUGFLAGS) -o $(BUILDDIR)/test/test $(TESTSOURCE).o $(OBJ) -lstdc++ -lm
+	@$(CC) $(CPPFLAGS) -g -o $(BUILDDIR)/test/test $(TESTSOURCE).o $(OBJ) -lstdc++ -lm
 
 run: gentest
 	@./$(BUILDDIR)/test/test

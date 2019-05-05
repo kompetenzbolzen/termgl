@@ -29,6 +29,9 @@
 #define _ERR_RENDER_BLOCKED_BY_CHILD_ 3
 #define _ERR_SCREEN_TOO_SMALL_ 4
 
+//Testing
+#define _DEBUG
+
 
 //Colors
 #ifdef _WIN32
@@ -47,29 +50,29 @@
 
 	//FG
 	#define _COL_DEFAULT		 	0x00
-	#define _COL_BLACK 				0x1e//30
-	#define _COL_RED 					0x1f//31
-	#define _COL_GREEN 				0x20//32
+	#define _COL_BLACK 			0x1e//30
+	#define _COL_RED 			0x1f//31
+	#define _COL_GREEN 			0x20//32
 	#define _COL_YELLOW 			0x21//33
-	#define _COL_BLUE 				0x22//34
-	#define _COL_WHITE 				0x25//37
+	#define _COL_BLUE 			0x22//34
+	#define _COL_WHITE 			0x25//37
 
 	//BG
 	#define _COL_BLACK_BG 		0x1e00 + 0x0a00//30
-	#define _COL_RED_BG 			0x1f00 + 0x0a00//31
+	#define _COL_RED_BG		0x1f00 + 0x0a00//31
 	#define _COL_GREEN_BG 		0x2000 + 0x0a00//32
 	#define _COL_YELLOW_BG 		0x2100 + 0x0a00//33
-	#define _COL_BLUE_BG 			0x2200 + 0x0a00//34
+	#define _COL_BLUE_BG 		0x2200 + 0x0a00//34
 	#define _COL_WHITE_BG 		0x2500 + 0x0a00//37
 
 	//MOD
-	#define _COL_BOLD 				0x010000
+	#define _COL_BOLD 		0x010000
 	#define _COL_UNDERLINE 		0x040000
-	#define _COL_INVERSE 			0x070000
+	#define _COL_INVERSE 		0x070000
 
 	//Not needed
 	#define _COL_BOLD_OFF 		21
-	#define _COL_UNDERLINE_OFF 24
+	#define _COL_UNDERLINE_OFF	24
 	#define _COL_INVERSE_OFF 	27
 
 #endif // __linux__

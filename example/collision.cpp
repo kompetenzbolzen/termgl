@@ -14,35 +14,35 @@
 class testobject : cObject
 {
 public:
-  testobject()
-  {
-    setSize(10,5);
-    cc = 0;
-    kc = 0;
+	testobject()
+	{
+		setSize(10,5);
+		cc = 0;
+		kc = 0;
 
-    drawRectangle('#', 0, {0,0}, {9,4}, _COL_GREEN, _COL_DEFAULT);
-  }
+		drawRectangle('#', 0, {0,0}, {9,4}, _COL_GREEN, _COL_DEFAULT);
+	}
 
-  ~testobject() { destruct(); }
+	~testobject() { destruct(); }
 
-  virtual void onClick(sPos _pos, unsigned int _button)
-  {
-    cc++;
-    drawText(std::to_string(cc), {2,2}, _COL_RED);
+	virtual void onClick(sPos _pos, unsigned int _button)
+	{
+		cc++;
+		drawText(std::to_string(cc), {2,2}, _COL_RED);
 
-    drawPoint('Q', _pos, _COL_YELLOW);
-  }
+		drawPoint('Q', _pos, _COL_YELLOW);
+	}
 
-  virtual bool onCollisionActive(sPos _hit, int _passiveObject){
-    kc++;
-    drawText(std::to_string(kc), {0,0},  _COL_RED);
-    return true;
-  }
+	virtual bool onCollisionActive(sPos _hit, int _passiveObject){
+		kc++;
+		drawText(std::to_string(kc), {0,0},	_COL_RED);
+		return true;
+	}
 
 	virtual void onChar(unsigned char _c) { drawPoint(_c, {1,1}, _COL_BLUE); }
 private:
-  int cc;
-  int kc;
+	int cc;
+	int kc;
 };
 
 int main(int argc, char* argv[])

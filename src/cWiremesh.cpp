@@ -4,7 +4,7 @@ cWiremesh::cWiremesh() : position({0,0,0}), angle({0,0,0}) { }
 
 cWiremesh::~cWiremesh() { }
 
-void cWiremesh::addVector(sCoord3d _origin, sCoord3d _vector, char _char, WORD _color)
+void cWiremesh::addVector(sCoord3d _origin, sCoord3d _vector, char _char, uint16_t _color)
 {
   vectors.push_back(sVector{_origin, _vector, _char, _color});
 }

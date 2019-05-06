@@ -1,7 +1,14 @@
 #include "cRender.h"
 
+uint16_t ansi_color_fg(uint8_t R, uint8_t G, uint8_t B) {
+	return 16 + 36 * (R/51) + 6 * (G/51) + (B/51);
+}
 
-cRender::cRender(char _backound, WORD _color)
+uint16_t ansi_color_bg(uint8_t R, uint8_t G, uint8_t B) {
+	return ansi_color_fg(R,G,B) << 8;
+}
+
+cRender::cRender(char _backound, uint16_t _color)
 {
 	bBlockRender = false; //If this Constructor is used, this instance is not inherited, thus render() doesn't need to be blocked
 	iLastError = _OK_;
@@ -75,7 +82,7 @@ cRender::~cRender()
 	#endif //__linux__
 }
 
-int cRender::drawPoint(char _c, sPos _pos, WORD _color)
+int cRender::drawPoint(char _c, sPos _pos, uint16_t _color)
 {
 	if (_pos.x >= (int)sizeX || _pos.y >= (int)sizeY || _pos.x < 0 || _pos.y < 0)
 		return _ERR_COORDINATES_INVALID_;
@@ -101,7 +108,7 @@ int cRender::drawPoint(char _c, sPos _pos, WORD _color)
 	return 0;
 }
 
-int cRender::drawLine(char _c, sPos _pos1, sPos _pos2,  WORD _color)
+int cRender::drawLine(char _c, sPos _pos1, sPos _pos2,  uint16_t _color)
 {
 	if(_pos1.x > _pos2.x)
 	{
@@ -155,7 +162,7 @@ int cRender::drawLine(char _c, sPos _pos1, sPos _pos2,  WORD _color)
 	return 0;
 }//drawLine
 
-int cRender::drawText(string _s, sPos _pos, WORD _color)
+int cRender::drawText(string _s, sPos _pos, uint16_t _color)
 {
 	for (unsigned int i = 0; i < _s.length(); i++)
 	{
@@ -164,7 +171,7 @@ int cRender::drawText(string _s, sPos _pos, WORD _color)
 	return 0;
 }
 
-int cRender::drawRectangle(char _border, char _fill, sPos _pos1, sPos _pos2, WORD _borderColor, WORD _fillColor)
+int cRender::drawRectangle(char _border, char _fill, sPos _pos1, sPos _pos2, uint16_t _borderColor, uint16_t _fillColor)
 {
 	//Draw the four outside lines
 	drawLine(_border, _pos1, sPos{ _pos1.x, _pos2.y }, _borderColor);
@@ -219,28 +226,28 @@ int cRender::render(void)
 				char buffer[ buffer_len ];
 				char colorstr[ colorstr_len ];
 
-				uint8_t color[3] = {(uint8_t) (0x0000ff & wColor[o][i]),				//Color
-														(uint8_t)((0x00ff00 & wColor[o][i]) >> 8),	//Background
-														(uint8_t)((0xff0000 & wColor[o][i]) >> 16)};//Modifier
+				uint8_t color[2] = {(uint8_t) (0x00ff & wColor[o][i]),				//Color
+				(uint8_t)((0xff00 & wColor[o][i]) >> 8)};	//Background
 
 				{////
 					int cc = 0;
-					cc = cc + snprintf(&colorstr[cc], colorstr_len - cc - 1, "%u", color[0]);
-					if(color[1])
-					{
-						colorstr[cc] = ';';
-						colorstr[cc + 1] = color[1];
-						cc += 1 + snprintf(&colorstr[cc + 1],colorstr_len - cc - 1, "%u", color[1]);
+					if(color[0] != _COL_DEFAULT && color[0] != wDefColor) {
+						cc = cc + snprintf(&colorstr[cc], colorstr_len - cc - 1, "38;5;%u", color[0]);
 					}
-					if(color[2])
-					{
-						colorstr[cc] = ';';
-						cc += 1 + snprintf(&colorstr[cc + 1], colorstr_len - cc - 1, "%u", color[2]);
+					else {
+						colorstr[0]='0';
+						colorstr[1]='\0';
+						cc+=2;
+					}
+					if(color[1]) {
+						colorstr[cc++] = ';';
+						//colorstr[cc + 1] = color[1];
+						cc += snprintf(&colorstr[cc],colorstr_len - cc - 1, "48;5;%u", color[1]);
 					}
 				}////
 
 				int cbuf = snprintf(buffer, buffer_len - 1,"\e[%u;%uH\e[%sm%c\e[0m", i + 1, o + 1, colorstr, cScreen[o][i]);
-				//      										Position  Color        Origin is at 1,1
+				// 						Position  Color        Origin is at 1,1
 
 				if(!bMute)
 					write (STDOUT_FILENO, buffer, cbuf);
@@ -391,9 +398,9 @@ void cRender::setBufferSize(sPos _size)
 	for (unsigned int i = 0; i < sizeX; i++)
 		cScreen[i] = (char*)malloc(sizeof *cScreen[i] * sizeY);
 
-	wColor = (WORD**)malloc(sizeof *wColor * sizeX);
+	wColor = (uint16_t**)malloc(sizeof *wColor * sizeX);
 	for (unsigned int i = 0; i < sizeX; i++)
-		wColor[i] = (WORD*)malloc(sizeof *wColor[i] * sizeY);
+		wColor[i] = (uint16_t*)malloc(sizeof *wColor[i] * sizeY);
 
 	bChanged = (bool**)malloc(sizeof *bChanged * sizeX);
 	for (unsigned int i = 0; i < sizeX; i++)
@@ -420,7 +427,7 @@ void cRender::setConsoleEcho(bool _enable)
 {
 #ifdef WIN32
     HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
-    DWORD mode;
+    uint16_t mode;
     GetConsoleMode(hStdin, &mode);
 
     if( !_enable )

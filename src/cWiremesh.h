@@ -39,7 +39,7 @@ struct sVector
   sCoord3d direction;
 
   char c;
-  WORD color;
+  uint16_t color;
 };
 
 /**
@@ -56,7 +56,7 @@ public:
   /**
   * Add a line from _origin to (_origin + _vector) in 3D space.
   */
-  void addVector(sCoord3d _origin, sCoord3d _vector, char _char, WORD _color);
+  void addVector(sCoord3d _origin, sCoord3d _vector, char _char, uint16_t _color);
 
   /**
   * Rotates by (x,y,z) degrees around the corresponding axis.

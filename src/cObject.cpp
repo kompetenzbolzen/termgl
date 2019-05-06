@@ -61,9 +61,9 @@ void cObject::setSize(unsigned int _sx, unsigned int _sy)
 	for (unsigned int i = 0; i < _sx; i++)
 		cScreen[i] = (char*)malloc(sizeof *cScreen[i] * _sy);
 
-	wColor = (WORD**)malloc(sizeof *wColor * _sx);
+	wColor = (uint16_t**)malloc(sizeof *wColor * _sx);
 	for (unsigned int i = 0; i < _sx; i++)
-		wColor[i] = (WORD*)malloc(sizeof *wColor[i] * _sy);
+		wColor[i] = (uint16_t*)malloc(sizeof *wColor[i] * _sy);
 
 	for (unsigned int i = 0; i < sizeY; i++) {
 		for (unsigned int o = 0; o < sizeX; o++) {

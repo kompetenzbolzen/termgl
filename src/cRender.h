@@ -14,7 +14,7 @@
 	#include <sys/ioctl.h>
 	#include <stdint.h>
 
-	typedef uint32_t WORD;
+	//typedef uint32_t uint16_t;
 #elif _WIN32
 	#error "Not ported"
   #include <Windows.h>
@@ -50,30 +50,24 @@
 
 	//FG
 	#define _COL_DEFAULT		 	0x00
-	#define _COL_BLACK 			0x1e//30
-	#define _COL_RED 			0x1f//31
-	#define _COL_GREEN 			0x20//32
-	#define _COL_YELLOW 			0x21//33
-	#define _COL_BLUE 			0x22//34
-	#define _COL_WHITE 			0x25//37
+	#define _COL_BLACK 			16//30
+	#define _COL_RED 			9//31
+	#define _COL_GREEN 			10//32
+	#define _COL_YELLOW 			11//33
+	#define _COL_BLUE 			12//34
+	#define _COL_MAGENTA			13
+	#define _COL_LBLUE			14
+	#define _COL_WHITE 			15//37
 
-	//BG
-	#define _COL_BLACK_BG 		0x1e00 + 0x0a00//30
-	#define _COL_RED_BG		0x1f00 + 0x0a00//31
-	#define _COL_GREEN_BG 		0x2000 + 0x0a00//32
-	#define _COL_YELLOW_BG 		0x2100 + 0x0a00//33
-	#define _COL_BLUE_BG 		0x2200 + 0x0a00//34
-	#define _COL_WHITE_BG 		0x2500 + 0x0a00//37
-
-	//MOD
-	#define _COL_BOLD 		0x010000
-	#define _COL_UNDERLINE 		0x040000
-	#define _COL_INVERSE 		0x070000
-
-	//Not needed
-	#define _COL_BOLD_OFF 		21
-	#define _COL_UNDERLINE_OFF	24
-	#define _COL_INVERSE_OFF 	27
+	#define _COL_DEFAULT_BG		 	0x00
+	#define _COL_BLACK_BG			16<<8//30
+	#define _COL_RED_BG			9<<8//31
+	#define _COL_GREEN_BG			10<<8//32
+	#define _COL_YELLOW_BG			11<<8//33
+	#define _COL_BLUE_BG			12<<8//34
+	#define _COL_MAGENTA_BG			13<<8
+	#define _COL_LBLUE_BG			14<<8
+	#define _COL_WHITE_BG			15<<8//37
 
 #endif // __linux__
 
@@ -84,6 +78,11 @@ struct sPos
 	int x;
 	int y;
 };
+
+uint16_t ansi_color_fg(uint8_t R, uint8_t G, uint8_t B);
+
+uint16_t ansi_color_bg(uint8_t R, uint8_t G, uint8_t B);
+
 /** cRender manages a framebuffer the size of the console (window) it is run in.
 *
 * puts console in alternate screen mode
@@ -96,27 +95,27 @@ public:
 	* Resizes console window for Windows
 	* Sets Size to Console Window Size for Linux. Writes Error for _sx or _sy smaller than Screen. Get by getLastError()
 	*/
-	cRender(char _backound, WORD _color);
+	cRender(char _backound, uint16_t _color);
 
 	virtual ~cRender();
 
 	/** Draws _c @ _pos in screenbuffer
 	* _color can be combined by OR: (FG | BG | MOD). Anyone can be left out.
 	*/
-	int drawPoint(char _c, sPos _pos,  WORD _color);
+	int drawPoint(char _c, sPos _pos,  uint16_t _color);
 
 	/** draws Line from _pos1 to _pos2 in screenbuffer
 	*/
-	int drawLine(char _c, sPos _pos1, sPos _pos2,  WORD _color);
+	int drawLine(char _c, sPos _pos1, sPos _pos2,  uint16_t _color);
 
 	/** Draws Text _s @ _pos in screenbuffer
 	* First char is @ _pos
 	*/
-	int drawText(string _s, sPos _pos, WORD _color);
+	int drawText(string _s, sPos _pos, uint16_t _color);
 
 	/** writes rectangle to screenbuffer
 	*/
-	int drawRectangle(char _border, char _fill, sPos _pos1, sPos _pos2, WORD _borderColor, WORD _fillColor);
+	int drawRectangle(char _border, char _fill, sPos _pos1, sPos _pos2, uint16_t _borderColor, uint16_t _fillColor);
 
 	/** Dumps screenbuffer to stdout
 	* prints changed pixels
@@ -177,14 +176,14 @@ protected:
 
 	char **cScreen;
 	//* Pixel Map
-	WORD **wColor;
+	uint16_t **wColor;
 	//* Color Map
 	bool **bChanged;
 	//* Pixel Change Map
 
 	char cBackound;
 	//* Default backround
-	WORD wBackColor;
+	uint16_t wBackColor;
 	//* Default backround color
 	unsigned int sizeX, sizeY;
 	//* Size of screen array
@@ -200,7 +199,7 @@ protected:
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 #endif
 
-	WORD wDefColor;
+	uint16_t wDefColor;
 	//* Default Color
 
 	int iLastError;

@@ -17,6 +17,8 @@ SRCS = $(wildcard $(SOURCEDIR)/*.cpp)
 OBJS = $(SRCS:.cpp=.o)
 OBJ  = $(OBJS:$(SOURCEDIR)/%=$(OBJECTDIR)/%)
 
+PREFIX		= /
+
 build: dir genversion $(OBJ) 
 	@echo [LD] $(OBJ) 
 	@$(CC) $(CPPFLAGS) -o $(BUILDDIR)/lib/$(OUTPUT) $(OBJ) $(LDFLAGS) -Wl,-soname=lib$(SONAME).so.$(VERSION)
@@ -47,8 +49,7 @@ debug: build
 
 all: clean build
 
-.PHONY: clean doc
-
+.PHONY: clean
 clean:
 	@echo [ RM ] $(OBJ)
 	@echo [ RM ] $(TESTSOURCE).o
@@ -79,6 +80,21 @@ run: gentest
 memleak: gentest
 	@valgrind -v --track-origins=yes "./$(BUILDDIR)/test/test"
 
+.PHONY: doc
 doc: genversion
 	@mkdir -p doc
 	@doxygen .doxygen
+
+.PHONY: install
+install: build
+	@echo "Installing..."
+	@install -D $(BUILDDIR)/lib/$(OUTPUT) $(PREFIX)/usr/lib/$(OUTPUT)
+	@ln -sf $(PREFIX)/usr/lib/$(OUTPUT) $(PREFIX)/usr/lib/lib$(SONAME).so.$(VERSION)
+	@ln -sf $(PREFIX)/usr/lib/$(OUTPUT) $(PREFIX)/usr/lib/lib$(SONAME).so
+	@echo "Finished!"
+
+.PHONY: uninstall
+uninstall:
+	@echo "Removing..."
+	@rm $(PREFIX)/usr/lib/lib$(SONAME)*
+	@echo "Finished"

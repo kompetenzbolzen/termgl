@@ -64,6 +64,11 @@ sInputEvent cInput::poll()
 				ret.type = _EVENT_KEY;
 			}
 		}
+		else if(buff[0] == 'O')
+		{
+			ret.c = buff[1];
+			ret.type = _EVENT_FUNCTION1;
+		}
 	}
 	else
 	{

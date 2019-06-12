@@ -145,6 +145,10 @@ int main(int argc, char* argv[])
 						break;
 				};
 			}
+			else if (ie.type == _EVENT_FUNCTION1)
+			{
+				return 0;
+			}
 			else if (ie.type == _EVENT_TERM)
 			{
 				return 0;

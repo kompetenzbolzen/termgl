@@ -98,3 +98,8 @@ uninstall:
 	@echo "Removing..."
 	@rm $(PREFIX)/usr/lib/lib$(SONAME)*
 	@echo "Finished"
+
+.PHONY: install-headers
+install-headers:
+	@echo Installing headers...
+

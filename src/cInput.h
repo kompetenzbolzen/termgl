@@ -18,6 +18,7 @@
 #define _EVENT_KEY		2
 #define _EVENT_MOUSE	3
 #define _EVENT_TERM	 4
+#define _EVENT_FUNCTION1	5
 
 struct sInputEvent
 {

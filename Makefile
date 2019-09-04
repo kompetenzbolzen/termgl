@@ -11,7 +11,7 @@ OUTPUT		= lib$(SONAME).so.$(VERSION).$(PATCHLEVEL)
 
 #VERSION
 VERSION		= 1
-PATCHLEVEL	= 0
+PATCHLEVEL	= 1
 
 SRCS = $(wildcard $(SOURCEDIR)/*.cpp)  
 OBJS = $(SRCS:.cpp=.o)

@@ -1,8 +1,8 @@
 # Maintainer: Joe User <joe.user@example.com>
 
 pkgname=termgl
-pkgver=1.0
-pkgrel=2
+pkgver=1.1
+pkgrel=1
 pkgdesc="Terminal Graphics Library"
 arch=('i686' 'x86_64')
 url="https://github.com/kompetenzbolzen/termgl"
@@ -12,7 +12,7 @@ depends=('glibc')
 makedepends=('clang')
 optdepends=()
 source=("https://github.com/kompetenzbolzen/TermGL/archive/v$pkgver.tar.gz")
-md5sums=('dfb2c3183cdca3c08e561cf53f462c90')
+md5sums=('SKIP')
 
 build() {
 	tar -xf $srcdir/v$pkgver.tar.gz

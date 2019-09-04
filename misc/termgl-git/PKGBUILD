@@ -1,8 +1,8 @@
 # Maintainer: Joe User <joe.user@example.com>
 
 pkgname=termgl
-pkgver=1.0
-pkgrel=2
+pkgver=1.1
+pkgrel=1
 pkgdesc="Terminal Graphics Library"
 arch=('i686' 'x86_64')
 url="https://github.com/kompetenzbolzen/termgl"

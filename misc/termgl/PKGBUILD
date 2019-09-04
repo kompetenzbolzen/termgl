@@ -1,26 +1,27 @@
 # Maintainer: Joe User <joe.user@example.com>
 
-pkgname=libtermgl
+pkgname=termgl
 pkgver=1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Terminal Graphics Library"
 arch=('i686' 'x86_64')
 url="https://github.com/kompetenzbolzen/termgl"
 license=('MIT')
 groups=()
 depends=('glibc')
-makedepends=()
+makedepends=('clang')
 optdepends=()
-source=("git+https://github.com/kompetenzbolzen/termgl")
-md5sums=('SKIP')
+source=("https://github.com/kompetenzbolzen/TermGL/archive/v$pkgver.tar.gz")
+md5sums=('dfb2c3183cdca3c08e561cf53f462c90')
 
 build() {
-        cd $srcdir/termgl
+	tar -xf $srcdir/v$pkgver.tar.gz
+        cd $srcdir/TermGL-$pkgver
         make
 }
 
 package() {
-        cd $srcdir/termgl
+        cd $srcdir/TermGL-$pkgver
         make PREFIX="$pkgdir/" install
 }
 

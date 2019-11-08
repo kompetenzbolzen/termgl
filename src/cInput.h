@@ -49,6 +49,7 @@ public:
 	* * _EVENT_KEY: Escape sequence recorded, stored in .c without escape char
 	* * _EVENT_MOUSE: Console registered click at (.x, .y) with origin at (0,0) (top left). Mouse button stored in b.
 	* * _EVENT_TERM: Console registered Ctrl+C
+	* * _EVENT_FUNCTION1: First few (4?) F-Keys. The rest of the F-Keys is handles by another ESC-Sequence!
 	*/
 	sInputEvent poll();
 

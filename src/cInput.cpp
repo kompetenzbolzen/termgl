@@ -27,6 +27,7 @@ sInputEvent cInput::poll()
 	sInputEvent ret;
 	unsigned char buff [buff_len];
 
+	//TODO maybe poll()?
 	//setup for select
 	fd_set rfds;
 	struct timeval tv;
@@ -42,9 +43,14 @@ sInputEvent cInput::poll()
 		return ret;
 
 	read (STDIN_FILENO, &buff, 1);
-	if (buff[0] == 3) {
-			// User pressd Ctr+C
-			ret.type = _EVENT_TERM;
+	if (buff[0] && buff[0] <= 26) {
+			//Ctrl keys are 1-26. check with CTRL_KEY( ) Macro
+			ret.type = _EVENT_CTRL;
+			ret.c = buff[0];
+
+			//To not break compatability
+			if (buff[0] == CTRL_KEY('c'))
+				ret.type = _EVENT_TERM;
 	}
 	else if (buff[0] == '\x1B') //Escape sequence
 	{
@@ -71,7 +77,7 @@ sInputEvent cInput::poll()
 		}
 	}
 	else
-	{
+	{ 
 		ret.type = _EVENT_CHAR;
 		ret.c = buff[0];
 	}

@@ -1,7 +1,5 @@
-#include <cRender.h>
-#include <cObject.h>
-#include <cObjectHandler.h>
-#include <cInput.h>
+
+#include <termgl.h>
 
 class ball : public cObject
 {

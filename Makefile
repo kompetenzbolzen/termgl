@@ -24,14 +24,16 @@ build: dir genversion $(OBJ)
 	@$(CC) $(CPPFLAGS) -o $(BUILDDIR)/lib/$(OUTPUT) $(OBJ) $(LDFLAGS) -Wl,-soname=lib$(SONAME).so.$(VERSION)
 	@ln -sf $(OUTPUT) $(BUILDDIR)/lib/lib$(SONAME).so.$(VERSION)
 	@ln -sf $(OUTPUT) $(BUILDDIR)/lib/lib$(SONAME).so
-	@cp $(SOURCEDIR)/c*.h $(BUILDDIR)/inc
-	@cp $(SOURCEDIR)/version.h $(BUILDDIR)/inc
+	@cp $(SOURCEDIR)/c*.h $(BUILDDIR)/inc/termgl
+	@cp $(SOURCEDIR)/version.h $(BUILDDIR)/inc/termgl
+	@cp $(SOURCEDIR)/termgl.h $(BUILDDIR)/inc
 
 dir:
 	@mkdir -p $(OBJECTDIR)
 	@mkdir -p $(BUILDDIR)
 	@mkdir -p $(BUILDDIR)/lib
 	@mkdir -p $(BUILDDIR)/inc
+	@mkdir -p $(BUILDDIR)/inc/termgl
 
 debug: CFLAGS += -g -D _DEBUG
 debug: build;
@@ -102,4 +104,10 @@ uninstall:
 .PHONY: install-headers
 install-headers:
 	@echo Installing headers...
+	@install -d $(BUILDDIR)/inc/termgl $(PREFIX)/usr/include/termgl
+	@install -m 644 -D $(BUILDDIR)/inc/termgl/* $(PREFIX)/usr/include/termgl
+	@install -m 644 -D $(BUILDDIR)/inc/termgl.h $(PREFIX)/usr/include/termgl.h
+	@echo Finished
 
+todo:
+	@grep -n TODO src/**

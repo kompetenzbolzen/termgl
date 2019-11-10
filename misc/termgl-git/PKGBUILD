@@ -21,7 +21,7 @@ build() {
 
 package() {
         cd $srcdir/termgl
-        make PREFIX="$pkgdir/" install
+        make PREFIX="$pkgdir/" install install-headers
 }
 
 post_install() {

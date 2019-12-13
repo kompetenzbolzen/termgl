@@ -1,7 +1,4 @@
-#include <cRender.h>
-#include <cObject.h>
-#include <cObjectHandler.h>
-#include <cInput.h>
+#include <termgl.h>
 #include <unistd.h>
 
 class ball : public cObject
@@ -115,10 +112,10 @@ int main()
 					screen.clickEvent({ie.x, ie.y}, 0);
 			}
 			else if (ie.type == _EVENT_CHAR)
-			{
+			{ 
 				//handler.charEvent(ie.c);
 				switch(ie.c)
-				{
+			 	{
 					case 'w':
 						screen.moveObject(iBarLeft, {0,-1}, _MOVE_RELATIVE);
 						break;
@@ -132,6 +129,11 @@ int main()
 			else if (ie.type == _EVENT_TERM)
 			{
 				return 0;
+			}
+			else if(ie.type == _EVENT_CTRL)
+			{
+				if(ie.c == CTRL_KEY('g'))
+					render.enableDebugInfo(true);
 			}
 		}
 		if(!(++cc % 3))

@@ -13,4 +13,6 @@
 #include "termgl/cRender.h"
 #include "termgl/cWiremesh.h"
 
+#include "termgl/version.h"
+
 #endif

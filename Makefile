@@ -112,7 +112,8 @@ install-headers:
 .PHONY: install-man
 install-man: doc
 	@echo Installing man-pages
-	@install -m 644 -D doc/man/man3/* $(PREFIX)/usr/share/man/man3
+	@install -d doc/man/man3 $(PREFIX)/usr/share/man/man3
+	@install -m 644 -D doc/man/man3/* $(PREFIX)/usr/share/man/man3/
 
 todo:
 	@grep -n TODO src/**

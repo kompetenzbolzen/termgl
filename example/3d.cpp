@@ -1,13 +1,7 @@
 #include <unistd.h>
 #include <string>
 
-#include "version.h"
-
-#include "cRender.h"
-#include "cObject.h"
-#include "cObjectHandler.h"
-#include "cInput.h"
-#include "cWiremesh.h"
+#include <termgl.h>
 
 //#include "testobject.h"
 

@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/kompetenzbolzen/TermGL.svg?branch=master)](https://travis-ci.org/kompetenzbolzen/TermGL)
-
 # TermGL
 
 TermGL is a library for displaying ASCII-graphics in a xterm compatible console (Some parts work in Windows).

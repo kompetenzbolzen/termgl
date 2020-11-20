@@ -9,19 +9,19 @@ url="https://github.com/kompetenzbolzen/termgl"
 license=('MIT')
 groups=()
 depends=('glibc')
-makedepends=('clang')
+makedepends=('clang' 'doxygen')
 optdepends=()
 source=("git+https://github.com/kompetenzbolzen/termgl")
 md5sums=('SKIP')
 
 build() {
         cd $srcdir/termgl
-        make
+        make build doc
 }
 
 package() {
         cd $srcdir/termgl
-        make PREFIX="$pkgdir/" install install-headers
+        make PREFIX="$pkgdir/" install install-headers install-man
 }
 
 post_install() {

@@ -9,7 +9,7 @@ url="https://github.com/kompetenzbolzen/termgl"
 license=('MIT')
 groups=()
 depends=('glibc')
-makedepends=('clang')
+makedepends=('clang' 'doxygen')
 optdepends=()
 source=("https://github.com/kompetenzbolzen/TermGL/archive/v$pkgver.tar.gz")
 md5sums=('SKIP')
@@ -17,12 +17,12 @@ md5sums=('SKIP')
 build() {
 	tar -xf $srcdir/v$pkgver.tar.gz
         cd $srcdir/TermGL-$pkgver
-        make
+        make build doc
 }
 
 package() {
         cd $srcdir/TermGL-$pkgver
-        make PREFIX="$pkgdir/" install
+        make PREFIX="$pkgdir/" install install-headers install-man
 }
 
 post_install() {
